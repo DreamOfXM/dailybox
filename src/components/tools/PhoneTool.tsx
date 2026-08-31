@@ -1,65 +1,47 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { BASE_PATH, findTool } from "@/lib/seo";
-import { isValidCnMobile, loadPhoneData, lookupPhone, type PhoneData, type PhoneInfo } from "@/lib/phone";
+import { lookupPhones, type BatchRow } from "@/lib/phone";
 import { Badge, CopyButton, Hint, PageHeader, SectionCard, Stat } from "@/components/ui";
 
 const seo = findTool("phone")!;
 
-interface Row {
-  phone: string;
-  info: PhoneInfo | null;
-  invalid: boolean;
-}
-
 export default function PhoneTool() {
   const [input, setInput] = useState("");
-  const [data, setData] = useState<PhoneData | null>(null);
   const [loadError, setLoadError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [rows, setRows] = useState<Row[]>([]);
-
-  const ensureData = async (): Promise<PhoneData | null> => {
-    if (data) return data;
-    setLoading(true);
-    setLoadError("");
-    try {
-      const d = await loadPhoneData(BASE_PATH);
-      setData(d);
-      return d;
-    } catch (e) {
-      setLoadError(e instanceof Error ? e.message : "号段数据加载失败，请刷新重试");
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [progress, setProgress] = useState("");
+  const [rows, setRows] = useState<BatchRow[]>([]);
 
   const query = async () => {
-    const d = await ensureData();
-    if (!d) return;
     const phones = input
       .split(/[\s,，;；\n]+/)
       .map((s) => s.trim())
       .filter(Boolean)
       .slice(0, 500);
-    setRows(
-      phones.map((p) => ({
-        phone: p,
-        invalid: !isValidCnMobile(p),
-        info: lookupPhone(d, p),
-      })),
-    );
+    if (!phones.length) return;
+    setLoading(true);
+    setLoadError("");
+    setProgress("准备加载号段数据…");
+    try {
+      const result = await lookupPhones(BASE_PATH, phones, (loaded, total) => {
+        setProgress(`加载号段分片 ${loaded}/${total}…`);
+      });
+      setRows(result);
+      setProgress("");
+    } catch (e) {
+      setLoadError(e instanceof Error ? `${e.message}，请检查网络后重试` : "号段数据加载失败，请刷新重试");
+      setProgress("");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const single = rows.length === 1 ? rows[0] : null;
-  const summary = useMemo(() => {
-    const valid = rows.filter((r) => !r.invalid && r.info);
-    const prov = new Set(valid.map((r) => r.info!.province));
-    const isp = new Set(valid.map((r) => r.info!.isp));
-    return { total: rows.length, hit: valid.length, prov: prov.size, isp: isp.size };
-  }, [rows]);
+  const hit = rows.filter((r) => !r.invalid && r.info);
+  const provCount = new Set(hit.map((r) => r.info!.province)).size;
+  const ispCount = new Set(hit.map((r) => r.info!.isp)).size;
 
   const copyText = rows
     .map((r) =>
@@ -90,14 +72,14 @@ export default function PhoneTool() {
             aria-label="手机号输入"
             className="w-full px-4 py-3 rounded-xl font-mono text-xs leading-relaxed resize-y"
           />
-          <div className="flex items-center gap-3 mt-3">
+          <div className="flex items-center gap-3 mt-3 flex-wrap">
             <button
               type="button"
               onClick={query}
               disabled={loading || !input.trim()}
               className="px-4 py-1.5 rounded-lg text-xs font-mono bg-white text-black hover:bg-neutral-200 transition-colors disabled:opacity-40"
             >
-              {loading ? "加载号段数据…" : "查询"}
+              {loading ? progress || "查询中…" : "查询"}
             </button>
             <button
               type="button"
@@ -106,6 +88,7 @@ export default function PhoneTool() {
             >
               填入示例
             </button>
+            {loading && <span className="text-xs font-mono text-neutral-500 animate-pulse">{progress}</span>}
           </div>
           {loadError && <div className="mt-3"><Hint kind="error">{loadError}</Hint></div>}
         </SectionCard>
@@ -131,8 +114,8 @@ export default function PhoneTool() {
 
         {rows.length > 1 && (
           <SectionCard
-            title={`批量结果（${summary.hit}/${summary.total} 命中）`}
-            subtitle={`覆盖 ${summary.prov} 个省份 · ${summary.isp} 家运营商`}
+            title={`批量结果（${hit.length}/${rows.length} 命中）`}
+            subtitle={`覆盖 ${provCount} 个省份 · ${ispCount} 家运营商`}
             aside={<CopyButton text={copyText} label="复制全部" />}
           >
             <div className="overflow-x-auto max-h-96 overflow-y-auto">
@@ -169,7 +152,7 @@ export default function PhoneTool() {
         )}
 
         <Hint kind="info">
-          号段数据约 48 万条（MIT 许可开源库），首次查询加载约 0.8MB 后常驻内存。归属地以号段发卡地为准，携号转网后运营商可能变化。
+          号段数据约 48 万条（MIT 许可开源库），按号段前两位分片懒加载（每片约 0.1-0.2MB），首次查询某号段时加载对应分片后常驻内存。归属地以号段发卡地为准，携号转网后运营商可能变化。
         </Hint>
       </div>
     </>

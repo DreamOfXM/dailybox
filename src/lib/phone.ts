@@ -1,10 +1,11 @@
 /**
- * 手机号归属地查询（纯函数 + 懒加载数据）
- * 数据源：MIT 许可号段库（48.3 万号段，区间编码压缩），构建时置于 public/phone-data.json
- * 查询全程本地二分检索，号码不上传
+ * 手机号归属地查询（纯函数 + 分片懒加载）
+ * 数据源：MIT 许可号段库（48.3 万号段，区间编码），按号码前两位拆分为 7 个分片
+ * （public/phone-data-13.json … phone-data-19.json），查哪个号段才加载哪个分片。
+ * 查询全程本地二分检索，号码不上传。
  */
 
-export interface PhoneData {
+export interface PhoneShard {
   v: number;
   provinces: string[];
   cities: string[];
@@ -47,42 +48,93 @@ export function lookupRange(ranges: number[][], prefix7: number): number[] | nul
   return ans && prefix7 <= ans[1] ? ans : null;
 }
 
-/** 完整查询：手机号 → 省/市/运营商 */
-export function lookupPhone(data: PhoneData, phone: string): PhoneInfo | null {
+/** 在单个分片内查询（纯函数） */
+export function lookupInShard(shard: PhoneShard, phone: string): PhoneInfo | null {
   if (!isValidCnMobile(phone)) return null;
   const prefix7 = Number(phone.trim().slice(0, 7));
-  const row = lookupRange(data.ranges, prefix7);
+  const row = lookupRange(shard.ranges, prefix7);
   if (!row) return null;
   return {
-    province: data.provinces[row[2]] ?? "",
-    city: data.cities[row[3]] ?? "",
-    isp: data.isps[row[4]] ?? "",
+    province: shard.provinces[row[2]] ?? "",
+    city: shard.cities[row[3]] ?? "",
+    isp: shard.isps[row[4]] ?? "",
     segment: String(prefix7),
   };
 }
 
-let cache: PhoneData | null = null;
-let loading: Promise<PhoneData> | null = null;
+const shardCache = new Map<string, PhoneShard>();
+const shardLoading = new Map<string, Promise<PhoneShard>>();
+
+/** 分片键：号码前两位（"13"…"19"） */
+export function shardKey(phone: string): string {
+  return phone.trim().slice(0, 2);
+}
 
 /**
- * 懒加载号段数据（约 0.8MB gzip），加载后常驻内存
- * basePath 由 next/router 提供，静态导出下为 /dailybox
+ * 懒加载单个分片（gzip 后约 30-190KB），加载后常驻内存
+ * 失败时清除 loading 标记允许重试
  */
-export function loadPhoneData(basePath: string): Promise<PhoneData> {
-  if (cache) return Promise.resolve(cache);
-  if (loading) return loading;
-  loading = fetch(`${basePath}/phone-data.json`)
+export function loadPhoneShard(basePath: string, prefix2: string): Promise<PhoneShard> {
+  const cached = shardCache.get(prefix2);
+  if (cached) return Promise.resolve(cached);
+  const inflight = shardLoading.get(prefix2);
+  if (inflight) return inflight;
+
+  const p = fetch(`${basePath}/phone-data-${prefix2}.json`)
     .then((r) => {
-      if (!r.ok) throw new Error(`号段数据加载失败（HTTP ${r.status}），请刷新重试`);
-      return r.json() as Promise<PhoneData>;
+      if (!r.ok) throw new Error(`号段数据 ${prefix2}x 加载失败（HTTP ${r.status}）`);
+      return r.json() as Promise<PhoneShard>;
     })
     .then((d) => {
-      cache = d;
+      shardCache.set(prefix2, d);
+      shardLoading.delete(prefix2);
       return d;
     })
     .catch((e) => {
-      loading = null; // 失败后允许重试
+      shardLoading.delete(prefix2);
       throw e;
     });
-  return loading;
+  shardLoading.set(prefix2, p);
+  return p;
+}
+
+/** 单号查询：自动加载对应分片 */
+export async function lookupPhone(basePath: string, phone: string): Promise<PhoneInfo | null> {
+  if (!isValidCnMobile(phone)) return null;
+  const shard = await loadPhoneShard(basePath, shardKey(phone));
+  return lookupInShard(shard, phone);
+}
+
+export interface BatchRow {
+  phone: string;
+  invalid: boolean;
+  info: PhoneInfo | null;
+}
+
+/**
+ * 批量查询：按前两位分组，只加载涉及的分片（并行）
+ * onShardLoaded 回调用于进度提示
+ */
+export async function lookupPhones(
+  basePath: string,
+  phones: string[],
+  onShardLoaded?: (loaded: number, total: number) => void,
+): Promise<BatchRow[]> {
+  const valid = phones.filter(isValidCnMobile);
+  const keys = [...new Set(valid.map(shardKey))];
+  let loaded = 0;
+  const shards = new Map<string, PhoneShard>();
+  await Promise.all(
+    keys.map(async (k) => {
+      const s = await loadPhoneShard(basePath, k);
+      shards.set(k, s);
+      loaded++;
+      onShardLoaded?.(loaded, keys.length);
+    }),
+  );
+  return phones.map((phone) => {
+    if (!isValidCnMobile(phone)) return { phone, invalid: true, info: null };
+    const shard = shards.get(shardKey(phone));
+    return { phone, invalid: false, info: shard ? lookupInShard(shard, phone) : null };
+  });
 }
