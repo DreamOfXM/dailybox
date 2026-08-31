@@ -21,10 +21,10 @@ describe("数据完整性", () => {
     expect([...shards.keys()].sort()).toEqual(["13", "14", "15", "16", "17", "18", "19"]);
   });
 
-  it("总区间数与压缩前一致（130307）", () => {
+  it("总区间数与压缩前一致（135983）", () => {
     let total = 0;
     for (const s of shards.values()) total += s.ranges.length;
-    expect(total).toBe(130307);
+    expect(total).toBe(135983);
   });
 
   it("每个分片内区间严格升序且不重叠", () => {
@@ -70,6 +70,14 @@ describe("已知号段抽样（权威事实）", () => {
     expect(r).not.toBeNull();
     expect(r!.province).toBe("上海");
     expect(r!.isp).toBe("联通");
+  });
+
+  it("19210617486 → 浙江 杭州 广电（192 号段覆盖）", () => {
+    const r = lookupInShard(shards.get("19")!, "19210617486");
+    expect(r).not.toBeNull();
+    expect(r!.province).toBe("浙江");
+    expect(r!.city).toBe("杭州");
+    expect(r!.isp).toBe("广电");
   });
 
   it("随机 500 个区间抽样与二分查找一致", () => {
