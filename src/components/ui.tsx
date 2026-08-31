@@ -20,6 +20,7 @@ export function JsonLd({ data }: { data: object }) {
 export const TOOL_ICON: Record<string, string> = {
   url: "%", hash: "#", regex: ".*", uuid: "ID", radix: "01", jwt: "JWT", sql: "SQL",
   cron: "⏰", rmb: "¥", idcard: "证", unit: "⇌",
+  mortgage: "房", deposit: "息", irr: "‰", phone: "☎", lunar: "历",
 };
 
 export const TOOL_TILE_GRADIENT: Record<string, string> = {
@@ -27,6 +28,8 @@ export const TOOL_TILE_GRADIENT: Record<string, string> = {
   uuid: "from-violet-500 to-indigo-400", radix: "from-amber-500 to-yellow-400", jwt: "from-rose-500 to-pink-400",
   sql: "from-blue-500 to-indigo-400", cron: "from-orange-500 to-red-400", rmb: "from-red-500 to-rose-400",
   idcard: "from-green-500 to-emerald-400", unit: "from-teal-500 to-cyan-400",
+  mortgage: "from-sky-500 to-blue-500", deposit: "from-lime-500 to-green-400", irr: "from-fuchsia-500 to-purple-400",
+  phone: "from-indigo-500 to-violet-400", lunar: "from-amber-500 to-red-400",
 };
 
 /* ---------- 页面骨架 ---------- */
