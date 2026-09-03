@@ -14,6 +14,20 @@ const NAV_ITEMS: NavItem[] = ALL_TOOLS.map((t) => ({
   title: t.title,
 }));
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXXXXX";
+
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: "DailyBox - 日常工具箱",
+  url: SITE_ORIGIN + BASE_PATH + "/",
+  description:
+    "简洁到极致的免费在线日常工具箱：URL 编解码、MD5/SHA 哈希、正则测试、UUID、进制转换、JWT 解析、SQL 格式化、Cron 表达式、人民币大写、身份证校验、单位换算。全部本地运算，无需注册。",
+  applicationCategory: "DeveloperApplication",
+  operatingSystem: "Web Browser",
+  offers: { "@type": "Offer", price: "0", priceCurrency: "CNY" },
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN + BASE_PATH),
   title: {
@@ -47,6 +61,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className="dark">
+      <head>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA_ID}');`,
+          }}
+        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
+      </head>
       <body className={`${inter.variable} ${mono.variable} font-sans`}>
         <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-[#0a0a0b]/80 backdrop-blur-xl">
           <div className="w-full px-4 sm:px-6 lg:px-10 2xl:px-64 h-14 flex items-center justify-between gap-3">
