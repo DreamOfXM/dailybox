@@ -4,7 +4,8 @@ import { ALL_TOOLS, absUrl } from "@/lib/seo";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
+    // W3C 要求不带毫秒
+  const now = new Date().toISOString().split(".")[0] + "Z";
   const entries = [
     { url: absUrl("/"), changeFrequency: "monthly" as const, priority: 1 },
     ...ALL_TOOLS.map((t) => ({
