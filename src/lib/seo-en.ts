@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE_ORIGIN, BASE_PATH, SITE_NAME, OG_IMAGE, type ToolSeo, absUrl } from "./seo";
+import { SITE_NAME, OG_IMAGE, type ToolSeo, absUrl } from "./seo";
 
 /** English SEO for 12 universal tools */
 export const TOOL_GROUPS_EN: Array<{ group: string; items: ToolSeo[] }> = [
