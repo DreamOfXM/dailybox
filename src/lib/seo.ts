@@ -4,7 +4,7 @@ import type { Metadata } from "next";
  * SEO 辅助：为每个工具页生成 metadata + JSON-LD。
  * 站点部署在项目页子路径 /dailybox，因此 canonical / sitemap 绝对 URL 需带 basePath。
  */
-export const SITE_ORIGIN = "https://hnyxgxm.github.io";
+export const SITE_ORIGIN = "https://dreamofxm.github.io";
 export const BASE_PATH = "/dailybox";
 export const SITE_NAME = "DailyBox 日常工具箱";
 
