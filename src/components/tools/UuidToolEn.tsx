@@ -12,7 +12,7 @@ type Tab = "uuid" | "random";
 export default function UuidTool() {
   const [tab, setTab] = useState<Tab>("uuid");
 
-  /* ---------- UUID Tab ---------- */
+  /* ---------- UUID tab ---------- */
   const [version, setVersion] = useState<"4" | "7">("4");
   const [countStr, setCountStr] = useState("5");
   const [upper, setUpper] = useState(false);
@@ -20,7 +20,7 @@ export default function UuidTool() {
   const [uuids, setUuids] = useState<string[]>([]);
   const [uuidError, setUuidError] = useState("");
 
-  /* ---------- RandomTab ---------- */
+  /* ---------- Random numbers tab ---------- */
   const [minStr, setMinStr] = useState("1");
   const [maxStr, setMaxStr] = useState("100");
   const [decimalsStr, setDecimalsStr] = useState("0");
@@ -35,7 +35,7 @@ export default function UuidTool() {
       return;
     }
     setUuidError("");
-    // rng default crypto.getRandomValues（EN）
+    // rng defaults to crypto.getRandomValues (cryptographically secure)
     setUuids(generateBatch(n, version === "4" ? 4 : 7, { upper, noDash }));
   };
 
@@ -45,7 +45,7 @@ export default function UuidTool() {
     const decimals = Number(decimalsStr);
     const n = Number(numCountStr);
     if (min > max) {
-      setNumError("min EN max");
+      setNumError("Min cannot exceed max");
       return;
     }
     if (!Number.isInteger(n) || n < 1 || n > 1000) {
@@ -63,44 +63,44 @@ export default function UuidTool() {
 
   return (
     <>
-      <PageHeader badge="EN" title={seo.title} subtitle={seo.subtitle} tone="violet" />
+      <PageHeader badge="Dev" title={seo.title} subtitle={seo.subtitle} tone="violet" />
 
       <div className="space-y-6">
         <Segmented<Tab>
-          ariaLabel="EN"
+          ariaLabel="Generator type"
           value={tab}
           onChange={setTab}
           options={[
             { value: "uuid", label: "UUID" },
-            { value: "random", label: "Random" },
+            { value: "random", label: "Random numbers" },
           ]}
         />
 
         {tab === "uuid" ? (
           <>
-            <SectionCard title="ENOptions" subtitle="EN">
+            <SectionCard title="Options" subtitle="Cryptographically secure random source">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
                   <div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-600 mb-2">EN</div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-600 mb-2">Version</div>
                     <Segmented<"4" | "7">
-                      ariaLabel="UUID EN"
+                      ariaLabel="UUID version"
                       value={version}
                       onChange={setVersion}
                       options={[
-                        { value: "4", label: "v4 EN" },
-                        { value: "7", label: "v7 EN" },
+                        { value: "4", label: "UUID v4" },
+                        { value: "7", label: "UUID v7" },
                       ]}
                     />
                   </div>
                   <Toggle checked={upper} onChange={setUpper} label="Uppercase" />
-                  <Toggle checked={noDash} onChange={setNoDash} label="EN" hint="32 ENHex" />
+                  <Toggle checked={noDash} onChange={setNoDash} label="Remove dashes" hint="32-char hex only" />
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-4">
                   <div className="sm:w-44">
-                    <Field label="countEN" hint="1-1000" error={uuidError}>
-                      <NumberInput value={countStr} onChange={setCountStr} suffix="EN" invalid={!!uuidError} />
+                    <Field label="Count" hint="1-1000" error={uuidError}>
+                      <NumberInput value={countStr} onChange={setCountStr} suffix="items" invalid={!!uuidError} />
                     </Field>
                   </div>
                   <button
@@ -108,7 +108,7 @@ export default function UuidTool() {
                     onClick={genUuids}
                     className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white text-sm font-medium shadow-[var(--shadow-1)]"
                   >
-                    EN
+                    Generate
                   </button>
                 </div>
               </div>
@@ -120,7 +120,7 @@ export default function UuidTool() {
                 count={uuids.length}
                 aside={
                   <>
-                    <CopyButton text={uuids.join("\n")} label="CopyAll" />
+                    <CopyButton text={uuids.join("\n")} label="Copy all" />
                     <button
                       type="button"
                       onClick={() => downloadFile("uuids.txt", uuids.join("\n"), "text/plain")}
@@ -144,23 +144,23 @@ export default function UuidTool() {
           </>
         ) : (
           <>
-            <SectionCard title="RandomOptions" subtitle="EN · EN">
+            <SectionCard title="Random options" subtitle="Range inclusive · cryptographically secure">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-                <Field label="EN min" hint="EN">
+                <Field label="Min" hint="Inclusive">
                   <NumberInput value={minStr} onChange={setMinStr} />
                 </Field>
-                <Field label="EN max" hint="EN">
+                <Field label="Max" hint="Inclusive">
                   <NumberInput value={maxStr} onChange={setMaxStr} invalid={Number(minStr) > Number(maxStr)} />
                 </Field>
-                <Field label="ENcountEN" hint="0 = ENcount">
-                  <NumberInput value={decimalsStr} onChange={setDecimalsStr} suffix="EN" />
+                <Field label="Decimal places" hint="0 = integer">
+                  <NumberInput value={decimalsStr} onChange={setDecimalsStr} suffix="dp" />
                 </Field>
-                <Field label="countEN" hint="1-1000">
-                  <NumberInput value={numCountStr} onChange={setNumCountStr} suffix="EN" />
+                <Field label="Count" hint="1-1000">
+                  <NumberInput value={numCountStr} onChange={setNumCountStr} suffix="items" />
                 </Field>
               </div>
               {Number(minStr) > Number(maxStr) ? (
-                <Hint kind="error">min EN max：EN min={minStr}，max={maxStr}</Hint>
+                <Hint kind="error">Min cannot exceed max: current min={minStr}, max={maxStr}</Hint>
               ) : numError ? (
                 <Hint kind="error">{numError}</Hint>
               ) : null}
@@ -170,13 +170,13 @@ export default function UuidTool() {
                   onClick={genNumbers}
                   className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white text-sm font-medium shadow-[var(--shadow-1)]"
                 >
-                  EN
+                  Generate
                 </button>
               </div>
             </SectionCard>
 
             {numbers.length > 0 && (
-              <SectionCard title="Result" count={numbers.length} aside={<CopyButton text={numbers.join("\n")} label="CopyAll" />}>
+              <SectionCard title="Result" count={numbers.length} aside={<CopyButton text={numbers.join("\n")} label="Copy all" />}>
                 <div className="max-h-96 overflow-y-auto rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 space-y-1">
                   {numbers.map((v, i) => (
                     <div key={i} className="font-mono text-sm text-neutral-300 tabular-nums leading-relaxed">

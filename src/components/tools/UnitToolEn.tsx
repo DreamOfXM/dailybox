@@ -16,10 +16,90 @@ const DEFAULT_FROM: Record<UnitCategory["id"], string> = {
   data: "MB",
 };
 
+/** English category names (mirrors UNIT_CATEGORIES ids) */
+const CAT_NAME_EN: Record<string, string> = {
+  length: "Length",
+  mass: "Weight",
+  area: "Area",
+  temperature: "Temperature",
+  data: "Data",
+};
+
+/** English unit names keyed by unit id — matches src/lib/unit.ts exactly */
+const UNIT_NAME_EN: Record<string, string> = {
+  // Length
+  mm: "Millimeter",
+  cm: "Centimeter",
+  m: "Meter",
+  km: "Kilometer",
+  in: "Inch",
+  ft: "Foot",
+  yd: "Yard",
+  mi: "Mile",
+  nmi: "Nautical mile",
+  li: "li (500 m)",
+  zhang: "zhang (3.33 m)",
+  chi: "chi (0.33 m)",
+  cun: "cun (3.33 cm)",
+  // Mass
+  mg: "Milligram",
+  g: "Gram",
+  kg: "Kilogram",
+  t: "Tonne",
+  oz: "Ounce",
+  lb: "Pound",
+  jin: "jin (500 g)",
+  liang: "liang (50 g)",
+  qian: "qian (5 g)",
+  // Area
+  mm2: "Square millimeter",
+  cm2: "Square centimeter",
+  m2: "Square meter",
+  ha: "Hectare",
+  km2: "Square kilometer",
+  in2: "Square inch",
+  ft2: "Square foot",
+  mu: "mu (666.7 m²)",
+  fen: "fen (66.7 m²)",
+  qing: "qing (6.67 ha)",
+  // Temperature
+  c: "Celsius",
+  f: "Fahrenheit",
+  k: "Kelvin",
+  r: "Rankine",
+  // Data
+  bit: "Bit",
+  B: "Byte",
+  KB: "KB",
+  MB: "MB",
+  GB: "GB",
+  TB: "TB",
+};
+
+/** Look up the English display name for a unit; falls back to the CN name from the lib */
+function enUnitName(id: string, fallback: string): string {
+  return UNIT_NAME_EN[id] ?? fallback;
+}
+
+/** Look up the English category name; falls back to the CN name */
+function enCatName(id: string, fallback: string): string {
+  return CAT_NAME_EN[id] ?? fallback;
+}
+
+/** Traditional Chinese units carry hanzi symbols (里/丈/尺/寸) which must not leak into the EN UI */
+function isCjkSymbol(symbol: string): boolean {
+  return /[一-鿿]/.test(symbol);
+}
+
+/** Copy-friendly English label: "li (500 m)" -> "li" */
+function enUnitShort(id: string, fallback: string): string {
+  return enUnitName(id, fallback).split(" (")[0];
+}
+
 export default function UnitTool() {
   const [catId, setCatId] = useState<UnitCategory["id"]>("length");
   const [fromId, setFromId] = useState("m");
-  // OriginalInputstring：allow empty / negative / EN，EN
+  // Raw input string: allows empty / negative / intermediate states; only warns on parse failure
   const [raw, setRaw] = useState("1");
 
   const cat = UNIT_CATEGORIES.find((c) => c.id === catId)!;
@@ -36,7 +116,7 @@ export default function UnitTool() {
     setFromId(DEFAULT_FROM[id]);
   };
 
-  /** EN：EN，InputEN */
+  /** Click a card to set that unit as the new source unit and update the input value */
   const pickSource = (unitId: string) => {
     if (!valid) return;
     const hit = results.find((r) => r.unit.id === unitId);
@@ -47,16 +127,16 @@ export default function UnitTool() {
 
   return (
     <div>
-      <PageHeader badge="EN" title={seo.title} subtitle={seo.subtitle} tone="emerald" />
+      <PageHeader badge="Convert" title={seo.title} subtitle={seo.subtitle} tone="emerald" />
 
       <div className="space-y-6">
-        <SectionCard title="InputENcountEN，EN" subtitle="EN">
+        <SectionCard title="Enter a value — all units update instantly" subtitle="Click any card below to switch the source unit">
           <div className="overflow-x-auto no-scrollbar mb-5">
             <Segmented
               value={catId}
               onChange={changeCategory}
-              options={UNIT_CATEGORIES.map((c) => ({ value: c.id, label: c.name }))}
-              ariaLabel="EN"
+              options={UNIT_CATEGORIES.map((c) => ({ value: c.id, label: enCatName(c.id, c.name) }))}
+              ariaLabel="Unit category"
             />
           </div>
 
@@ -67,19 +147,20 @@ export default function UnitTool() {
               autoComplete="off"
               value={raw}
               onChange={(e) => setRaw(e.target.value)}
-              placeholder="InputcountEN，ENnegative"
-              aria-label="ENcountEN"
+              placeholder="Enter a number (negatives supported)"
+              aria-label="Value to convert"
               className="flex-1 min-w-0 px-4 py-3 rounded-xl font-mono text-[15px]"
             />
             <select
               value={fromId}
               onChange={(e) => setFromId(e.target.value)}
-              aria-label="EN"
+              aria-label="Source unit"
               className="sm:w-48 px-3 py-3 rounded-xl font-mono text-sm"
             >
               {cat.units.map((u) => (
                 <option key={u.id} value={u.id}>
-                  {u.name}（{u.symbol}）
+                  {enUnitName(u.id, u.name)}
+                  {isCjkSymbol(u.symbol) ? "" : ` (${u.symbol})`}
                 </option>
               ))}
             </select>
@@ -87,16 +168,16 @@ export default function UnitTool() {
 
           {!valid && (
             <div className="mt-3">
-              <Hint kind="warn">ENInputENcountEN（ENcountENnegative），InputENAllEN。</Hint>
+              <Hint kind="warn">Please enter a valid number (decimals and negatives supported). Conversions resume automatically once input is valid.</Hint>
             </div>
           )}
         </SectionCard>
 
-        <SectionCard title={`${cat.name} · EN`} count={cat.units.length}>
+        <SectionCard title={`${enCatName(cat.id, cat.name)} — All Units`} count={cat.units.length}>
           <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
             {results.map(({ unit, value }) => {
               const isSource = unit.id === fromId;
-              const copyText = valid ? `${fmtUnit(value)} ${unit.symbol}` : "";
+              const copyText = valid ? `${fmtUnit(value)} ${isCjkSymbol(unit.symbol) ? enUnitShort(unit.id, unit.name) : unit.symbol}` : "";
               return (
                 <div
                   key={unit.id}
@@ -109,7 +190,7 @@ export default function UnitTool() {
                       pickSource(unit.id);
                     }
                   }}
-                  title={`EN「${unit.name}」EN`}
+                  title={`Click to use "${enUnitName(unit.id, unit.name)}" as source unit`}
                   className={`card-hover cursor-pointer select-none text-left rounded-xl border p-4 ${
                     isSource
                       ? "border-emerald-500/50 bg-emerald-500/[0.06]"
@@ -119,8 +200,10 @@ export default function UnitTool() {
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 mb-1.5">
-                        <span className="text-[11px] font-mono text-neutral-500 truncate">{unit.name}</span>
-                        <span className="text-[10px] font-mono text-neutral-600 shrink-0">{unit.symbol}</span>
+                        <span className="text-[11px] font-mono text-neutral-500 truncate">{enUnitName(unit.id, unit.name)}</span>
+                        {isCjkSymbol(unit.symbol) ? null : (
+                          <span className="text-[10px] font-mono text-neutral-600 shrink-0">{unit.symbol}</span>
+                        )}
                       </div>
                       <div
                         className={`font-mono tabular-nums text-lg font-semibold break-all ${
@@ -130,7 +213,7 @@ export default function UnitTool() {
                         {fmtUnit(value)}
                       </div>
                     </div>
-                    {/* EN：CopyEN */}
+                    {/* Stop propagation: copy does not trigger source unit switch */}
                     <div className="shrink-0 -mt-1 -mr-1.5" onClick={(e) => e.stopPropagation()}>
                       <CopyButton text={copyText} />
                     </div>
@@ -140,7 +223,7 @@ export default function UnitTool() {
             })}
           </div>
           <p className="mt-4 text-[11px] font-mono text-neutral-600">
-            EN · EN
+            Fully local conversion · Temperature uses exact formulas, not approximations
           </p>
         </SectionCard>
       </div>

@@ -245,6 +245,107 @@ export function describeCron(f: CronFields): string {
   return fallbackDescribe(f);
 }
 
+/* ==================== English description ==================== */
+
+const DOW_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+/** Fallback: per-field English description (full-range fields shown as *) */
+function fallbackDescribeEn(f: CronFields): string {
+  const vals = (spec: FieldSpec, min: number, max: number): string => {
+    if (isFull(spec.values, min, max)) return "*";
+    const list = spec.values.join(",");
+    return list.length > 40 ? `${list.slice(0, 40)}…` : list;
+  };
+  const parts: string[] = [];
+  if (f.sec) parts.push(`Sec: ${vals(f.sec, 0, 59)}`);
+  parts.push(`Min: ${vals(f.min, 0, 59)}`);
+  parts.push(`Hour: ${vals(f.hour, 0, 23)}`);
+  parts.push(`Day: ${vals(f.dom, 1, 31)}`);
+  parts.push(`Month: ${vals(f.month, 1, 12)}`);
+  parts.push(`Weekday: ${vals(f.dow, 0, 6)}`);
+  return parts.join(" ");
+}
+
+/** English human-readable description mirroring every branch of describeCron */
+export function describeCronEn(f: CronFields): string {
+  const secWild = !f.sec || isFull(f.sec.values, 0, 59);
+  const minFull = isFull(f.min.values, 0, 59);
+  const hourFull = isFull(f.hour.values, 0, 23);
+  const domFull = isFull(f.dom.values, 1, 31);
+  const monFull = isFull(f.month.values, 1, 12);
+  const dowFull = isFull(f.dow.values, 0, 6);
+  const otherWild = domFull && monFull && dowFull;
+
+  if (!secWild) return fallbackDescribeEn(f);
+  if (minFull && hourFull && otherWild) return "Every minute";
+
+  // Every N minutes
+  const mStep = stepOf(f.min.values, 0, 59);
+  if (mStep !== null && hourFull && otherWild) return `Every ${mStep} minutes`;
+
+  // Every N hours at fixed minute
+  const hStep = stepOf(f.hour.values, 0, 23);
+  if (f.min.values.length === 1 && hStep !== null && otherWild) {
+    return `Every ${hStep} hours at minute ${pad2(f.min.values[0])}`;
+  }
+
+  if (f.min.values.length === 1 && f.hour.values.length === 1) {
+    const t = `${pad2(f.hour.values[0])}:${pad2(f.min.values[0])}`;
+    if (!domFull && !monFull && dowFull && f.dom.values.length === 1 && f.month.values.length === 1) {
+      return `Annual on ${f.month.values[0]}/${f.dom.values[0]} at ${t}`;
+    }
+    if (!domFull && monFull && dowFull) {
+      return `Monthly on day ${f.dom.values.join(", ")} at ${t}`;
+    }
+    if (!dowFull && domFull && monFull) {
+      return `Weekly on ${f.dow.values.map((d) => DOW_EN[d]).join(", ")} at ${t}`;
+    }
+    if (otherWild) return `Daily at ${t}`;
+  }
+
+  if (f.min.values.length === 1 && hourFull && otherWild) {
+    return `Hourly at minute ${pad2(f.min.values[0])}`;
+  }
+
+  return fallbackDescribeEn(f);
+}
+
+/** Map Chinese parseCron failure messages to English equivalents */
+export function cronIssueEn(msg: string): string {
+  // Field-count errors
+  if (/秒模式.*应有\s*6\s*个字段/.test(msg)) {
+    const m = /实际\s*(\d+)\s*个/.exec(msg);
+    return `Seconds-mode cron expression requires 6 fields (sec min hour day month weekday), got ${m?.[1] ?? "?"}.`;
+  }
+  if (/cron\s*表达式应有\s*5\s*个字段/.test(msg)) {
+    const m = /实际\s*(\d+)\s*个/.exec(msg);
+    return `Cron expression requires 5 fields (min hour day month weekday), got ${m?.[1] ?? "?"}.`;
+  }
+  // Per-field errors (label prefix varies by field kind)
+  if (/字段存在空的列表项/.test(msg)) {
+    return "A field contains an empty list item.";
+  }
+  if (/字段含有非法字符/.test(msg)) {
+    return "A field contains invalid characters.";
+  }
+  if (/字段值.*越界/.test(msg)) {
+    return "A field value is out of range.";
+  }
+  if (/字段步长必须为正整数/.test(msg)) {
+    return "A field step value must be a positive integer.";
+  }
+  if (/字段范围起点.*不能大于终点/.test(msg)) {
+    return "A field range start exceeds its end.";
+  }
+  if (/字段格式非法/.test(msg)) {
+    return "A field has an invalid format.";
+  }
+  if (/字段解析失败/.test(msg)) {
+    return "A field failed to parse.";
+  }
+  return "Invalid cron expression.";
+}
+
 /* ==================== 下次执行时间推算 ==================== */
 
 /**

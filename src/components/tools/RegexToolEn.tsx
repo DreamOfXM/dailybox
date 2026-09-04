@@ -2,33 +2,33 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { findToolEn } from "@/lib/seo-en";
-import { parseRegex, runMatches, explainRegex, type MatchInfo } from "@/lib/regex";
+import { parseRegex, runMatches, explainRegex, regexIssueEn, type MatchInfo } from "@/lib/regex";
 import { Badge, CopyButton, Field, Hint, PageHeader, SectionCard } from "@/components/ui";
 
 const seo = findToolEn("regex")!;
 
-/** Common regex：One-click fill pattern */
+/** Common regex patterns: one-click fill */
 const PRESETS: Array<{ label: string; pattern: string }> = [
   { label: "Phone", pattern: "^1[3-9]\\d{9}$" },
   { label: "Email", pattern: "^[\\w.+-]+@[\\w-]+\\.[\\w.]+$" },
   { label: "IPv4", pattern: "^((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$" },
   { label: "URL", pattern: "^https?:\\/\\/[^\\s]+$" },
   { label: "Chinese", pattern: "[\\u4e00-\\u9fa5]+" },
-  { label: "EN", pattern: "^\\d{17}[\\dXx]$" },
+  { label: "ID Card", pattern: "^\\d{17}[\\dXx]$" },
 ];
 
 const DEFAULT_TEXT =
-  "ENPhoneEN 13812345678，Email zhangsan@example.com，EN IP 192.168.1.1，EN https://example.com/login。EN：EN 15900008888。";
+  "Phone 13812345678, email zhangsan@example.com, server IP 192.168.1.1, website https://example.com/login. Alternate contact: 15900008888.";
 
-/** ENcountEN */
+/** Maximum number of match segments to display in the list */
 const LIST_LIMIT = 100;
 
-/** ENResultEN React ENcountEN：EN emerald EN mark，ENOutput */
+/** Split test text into React nodes by match results: matched segments get emerald background mark, rest output as-is */
 function buildHighlight(text: string, matches: MatchInfo[]): ReactNode[] {
   const nodes: ReactNode[] = [];
   let cursor = 0;
   for (const m of matches) {
-    if (m.length === 0) continue; // EN
+    if (m.length === 0) continue; // Zero-width match cannot be highlighted
     if (m.index > cursor) nodes.push(text.slice(cursor, m.index));
     nodes.push(
       <mark key={`${m.index}-${m.length}`} className="bg-emerald-500/25 text-emerald-300 rounded px-0.5">
@@ -60,11 +60,11 @@ export default function RegexTool() {
 
   return (
     <>
-      <PageHeader badge="EN" title={seo.title} subtitle={seo.subtitle} tone="violet" />
+      <PageHeader badge="Dev" title={seo.title} subtitle={seo.subtitle} tone="violet" />
 
       <div className="space-y-6">
-        {/* ENInput */}
-        <SectionCard title="EN" subtitle="pattern + flags">
+        {/* Regex input */}
+        <SectionCard title="Pattern" subtitle="pattern + flags">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <Field label="Pattern">
@@ -72,7 +72,7 @@ export default function RegexTool() {
                   type="text"
                   value={pattern}
                   onChange={(e) => setPattern(e.target.value)}
-                  placeholder="InputEN，EN \d+"
+                  placeholder="Enter a regex, e.g. \d+"
                   autoComplete="off"
                   spellCheck={false}
                   className="w-full px-4 py-3 rounded-xl font-mono text-[15px]"
@@ -80,7 +80,7 @@ export default function RegexTool() {
               </Field>
             </div>
             <div className="sm:w-36">
-              <Field label="Flags" hint="EN">
+              <Field label="Flags" hint="Multiple allowed">
                 <input
                   type="text"
                   value={flags}
@@ -96,7 +96,7 @@ export default function RegexTool() {
 
           {/* Common regex */}
           <div className="mt-4">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-600 mb-2">EN · EN</div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-600 mb-2">Common patterns · click to fill</div>
             <div className="flex flex-wrap gap-2">
               {PRESETS.map((p) => (
                 <button
@@ -118,39 +118,39 @@ export default function RegexTool() {
 
           {pattern !== "" && parsed.issue && (
             <div className="mt-4">
-              <Hint kind="error">{parsed.issue}</Hint>
+              <Hint kind="error">{regexIssueEn(parsed.issue)}</Hint>
             </div>
           )}
         </SectionCard>
 
-        {/* EN + EN */}
-        <SectionCard title="EN" subtitle="ENAllEN">
+        {/* Test string + highlight preview */}
+        <SectionCard title="Test string" subtitle="Live highlight of all matches">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={5}
-            placeholder="EN…"
+            placeholder="Paste text to test…"
             spellCheck={false}
             className="w-full px-4 py-3 rounded-xl font-mono text-sm leading-relaxed resize-y"
           />
           <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 font-mono text-sm leading-relaxed whitespace-pre-wrap break-all text-neutral-300 min-h-12">
-            {highlight.length > 0 ? highlight : <span className="text-neutral-600">（EN）</span>}
+            {highlight.length > 0 ? highlight : <span className="text-neutral-600">(No match)</span>}
           </div>
         </SectionCard>
 
-        {/* ENResultEN */}
+        {/* Match results list */}
         <SectionCard
-          title="ENResult"
-          subtitle={parsed.re ? `flags: ${parsed.re.flags || "（EN）"}` : undefined}
+          title="Matches"
+          subtitle={parsed.re ? `flags: ${parsed.re.flags || "(none)"}` : undefined}
           count={matches.length}
-          aside={matches.length > 0 ? <CopyButton text={matchedText} label="CopyAllEN" /> : undefined}
+          aside={matches.length > 0 ? <CopyButton text={matchedText} label="Copy all" /> : undefined}
         >
           {pattern === "" ? (
-            <Hint kind="info">InputENResult</Hint>
+            <Hint kind="info">Enter a regex to see match results.</Hint>
           ) : parsed.issue ? (
-            <Hint kind="error">EN，EN</Hint>
+            <Hint kind="error">Regex failed to compile. Please check the error above.</Hint>
           ) : matches.length === 0 ? (
-            <Hint kind="info">EN</Hint>
+            <Hint kind="info">No matches found.</Hint>
           ) : (
             <div>
               {matches.slice(0, LIST_LIMIT).map((m, i) => (
@@ -159,20 +159,20 @@ export default function RegexTool() {
                     <Badge tone="violet">#{i + 1}</Badge>
                     <span className="text-[11px] font-mono text-neutral-600 tabular-nums">index {m.index}</span>
                     <code className="font-mono text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded break-all">
-                      {m.length === 0 ? "（EN）" : m.full}
+                      {m.length === 0 ? "(zero-width)" : m.full}
                     </code>
                   </div>
                   {(m.groups.length > 0 || m.named) && (
                     <div className="mt-1.5 pl-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-mono">
                       {m.groups.map((g, gi) => (
                         <span key={gi} className="text-neutral-500">
-                          ${gi + 1}=<span className="text-neutral-300">{g === null ? "∅ EN" : g}</span>
+                          ${gi + 1}=<span className="text-neutral-300">{g === null ? "∅ not matched" : g}</span>
                         </span>
                       ))}
                       {m.named &&
                         Object.entries(m.named).map(([k, v]) => (
                           <span key={k} className="text-violet-400">
-                            {k}=<span className="text-neutral-300">{v ?? "∅ EN"}</span>
+                            {k}=<span className="text-neutral-300">{v ?? "∅ not matched"}</span>
                           </span>
                         ))}
                     </div>
@@ -182,7 +182,7 @@ export default function RegexTool() {
               {matches.length > LIST_LIMIT && (
                 <div className="mt-3">
                   <Hint kind="warn">
-                    total {matches.length} EN，EN {LIST_LIMIT} EN
+                    total {matches.length} matches, showing first {LIST_LIMIT} only
                   </Hint>
                 </div>
               )}
@@ -190,24 +190,24 @@ export default function RegexTool() {
           )}
         </SectionCard>
 
-        {/* EN token ChineseEN */}
-        <SectionCard title="EN" subtitle="EN token ChineseEN">
+        {/* Token-by-token explanation */}
+        <SectionCard title="Explanation" subtitle="Token-by-token breakdown">
           {tokens.length === 0 ? (
-            <Hint kind="info">InputEN</Hint>
+            <Hint kind="info">Enter a regex to see a token-by-token explanation.</Hint>
           ) : (
             <div className="overflow-hidden rounded-xl border border-white/[0.06]">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-white/[0.03] text-left text-[10px] font-mono uppercase tracking-wider text-neutral-500">
                     <th className="px-3 py-2 w-1/3">Token</th>
-                    <th className="px-3 py-2">EN</th>
+                    <th className="px-3 py-2">Meaning</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tokens.map((t, i) => (
                     <tr key={i} className="border-t border-white/[0.04]">
                       <td className="px-3 py-1.5 font-mono text-violet-300 whitespace-pre-wrap break-all align-top">{t.token}</td>
-                      <td className="px-3 py-1.5 text-neutral-400">{t.desc}</td>
+                      <td className="px-3 py-1.5 text-neutral-400">{t.descEn}</td>
                     </tr>
                   ))}
                 </tbody>

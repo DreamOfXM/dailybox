@@ -31,6 +31,21 @@ function parseRanges(expr: string, total: number): { indices: number[]; error?: 
   return { indices: Array.from(new Set(out)).sort((x, y) => x - y) };
 }
 
+/** Map Chinese error messages from pdf.ts to English equivalents. */
+function enMsg(msg: string): string {
+  if (/加密/.test(msg)) return "This PDF is encrypted and cannot be processed. Please decrypt it first.";
+  if (/不支持中文|WinAnsi|cannot be encoded/i.test(msg)) return "Built-in font does not support CJK characters. Use ASCII text only.";
+  if (/不是有效的 PDF|已损坏|Invalid PDF/i.test(msg)) return "The file is not a valid PDF or may be corrupted.";
+  if (/无法读取/.test(msg)) return "Unable to read the PDF.";
+  if (/请先选择至少一个/.test(msg)) return "Please select at least one PDF file first.";
+  if (/第.+?个文件/.test(msg)) return msg.replace(/第 (\d+) 个文件：(.+)/, "File $1: $2");
+  if (/合并失败/.test(msg)) return "Merge failed.";
+  if (/请至少选择一个页面/.test(msg)) return "Please select at least one page.";
+  if (/超出范围/.test(msg)) return msg.replace(/页码 (\d+) 超出范围（共 (\d+) 页）/, "Page $1 out of range (document has $2 pages)");
+  if (/抽取页面失败/.test(msg)) return "Failed to extract pages.";
+  return msg;
+}
+
 export default function PdfToolEn() {
   const [mode, setMode] = useState<Mode>("merge");
   const [files, setFiles] = useState<File[]>([]);
@@ -59,7 +74,7 @@ export default function PdfToolEn() {
     if (!f) return;
     const meta = await readPdfMeta(await f.arrayBuffer());
     if (meta.ok) setSplitTotal(meta.value.pageCount);
-    else setErr(meta.message);
+    else setErr(enMsg(meta.message));
   }, []);
 
   const parsed = useMemo(() => (splitTotal ? parseRanges(range, splitTotal) : { indices: [] }), [range, splitTotal]);
@@ -71,7 +86,7 @@ export default function PdfToolEn() {
     setMsg("Loading pdf-lib and merging…");
     const r = await mergePdfs(await Promise.all(files.map((f) => f.arrayBuffer())));
     setBusy(false);
-    if (!r.ok) return setErr(r.message);
+    if (!r.ok) return setErr(enMsg(r.message));
     downloadFile("merged.pdf", r.value as unknown as BlobPart, "application/pdf");
     setMsg(`Merged ${files.length} PDFs (${(r.value.byteLength / 1024).toFixed(0)} KB) — download started`);
   }, [files]);
@@ -83,7 +98,7 @@ export default function PdfToolEn() {
     setMsg("Extracting pages…");
     const r = await extractPages(await splitFile.arrayBuffer(), parsed.indices);
     setBusy(false);
-    if (!r.ok) return setErr(r.message);
+    if (!r.ok) return setErr(enMsg(r.message));
     downloadFile("split.pdf", r.value as unknown as BlobPart, "application/pdf");
     setMsg(`Extracted ${parsed.indices.length} pages (${(r.value.byteLength / 1024).toFixed(0)} KB) — download started`);
   }, [splitFile, parsed]);

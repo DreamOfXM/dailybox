@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MAX_MATCHES, explainRegex, parseRegex, runMatches } from "../regex";
+import { MAX_MATCHES, explainRegex, parseRegex, runMatches, regexIssueEn } from "../regex";
 
 describe("parseRegex", () => {
   it("合法模式与标志组合", () => {
@@ -150,5 +150,71 @@ describe("explainRegex", () => {
     expect(t.map((x) => x.token)).toEqual(["\\b", "\\B", "\\0", "c"]);
     expect(t[0].desc).toContain("单词边界");
     expect(t[3].desc).toContain("字面量");
+  });
+});
+
+describe("explainRegex descEn", () => {
+  const CJK = /[一-鿿]/;
+
+  const patterns = ["\\d+", "(?<year>\\d{4})-(\\d{2})", "[^abc]", "a|b", "^foo$", "(?=x)\\w*"];
+
+  for (const p of patterns) {
+    it(`descEn non-empty and no CJK for pattern ${JSON.stringify(p)}`, () => {
+      const tokens = explainRegex(p);
+      for (const t of tokens) {
+        expect(t.descEn, `token=${t.token}`).toBeTruthy();
+        expect(t.descEn, `token=${t.token} contains CJK`).not.toMatch(CJK);
+      }
+    });
+  }
+
+  it("spot-check: \\d -> 'Digit 0-9'", () => {
+    const tokens = explainRegex("\\d+");
+    const dToken = tokens.find((t) => t.token === "\\d");
+    expect(dToken?.descEn).toBe("Digit 0-9");
+  });
+
+  it("spot-check: (?= -> 'Positive lookahead'", () => {
+    const tokens = explainRegex("(?=x)\\w*");
+    const laToken = tokens.find((t) => t.token === "(?=");
+    expect(laToken?.descEn).toContain("Positive lookahead");
+  });
+
+  it("CN desc still Chinese for \\d (guards against CN regression)", () => {
+    const tokens = explainRegex("\\d+");
+    const dToken = tokens.find((t) => t.token === "\\d");
+    expect(dToken?.desc).toMatch(CJK);
+    expect(dToken?.desc).toContain("数字");
+  });
+});
+
+describe("regexIssueEn", () => {
+  it("maps invalid flag issue to English", () => {
+    const r = parseRegex("a", "z");
+    expect(r.issue).toBeDefined();
+    const en = regexIssueEn(r.issue!);
+    expect(en).toMatch(/Invalid flag/);
+    expect(en).not.toMatch(/[一-鿿]/);
+  });
+
+  it("maps duplicate flag issue to English", () => {
+    const r = parseRegex("a", "gg");
+    expect(r.issue).toBeDefined();
+    const en = regexIssueEn(r.issue!);
+    expect(en).toMatch(/Duplicate flag/);
+    expect(en).not.toMatch(/[一-鿿]/);
+  });
+
+  it("maps syntax error issue to English", () => {
+    const r = parseRegex("(", "");
+    expect(r.issue).toBeDefined();
+    const en = regexIssueEn(r.issue!);
+    expect(en).toMatch(/Regex syntax error/);
+    expect(en).not.toMatch(/[一-鿿]/);
+  });
+
+  it("unknown message falls back to generic English", () => {
+    const en = regexIssueEn("something unexpected");
+    expect(en).toBe("Invalid regular expression.");
   });
 });

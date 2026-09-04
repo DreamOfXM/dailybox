@@ -21,7 +21,7 @@ export default function EnHome() {
     <div>
       <section className="text-center mb-10">
         <h1 className="text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-white to-neutral-500 bg-clip-text text-transparent">DailyBox EN</h1>
-        <p className="text-neutral-500 max-w-md mx-auto">12 universal tools for developers — URL, Hash, Regex, UUID, Base, JWT, SQL, Cron, PDF, Image, Video, Unit. All local.</p>
+        <p className="text-neutral-500 max-w-md mx-auto">28 universal tools — encoding, text, crypto, dev, time, PDF, image, video, units, design and finance. All local, nothing uploads.</p>
         <Link href="/dailybox/" className="inline-flex mt-4 text-xs font-mono text-neutral-500 hover:text-white">← 中文版</Link>
       </section>
       <div className="max-w-xl mx-auto mb-8">
@@ -30,7 +30,7 @@ export default function EnHome() {
       {groups.map((g) => (
         <section key={g.group} className="mb-10">
           <h2 className="text-xs font-mono uppercase tracking-widest text-neutral-600 mb-3">{g.group} · {g.items.length}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
             {g.items.map((t) => (
               <Link key={t.slug} href={`/en/${t.slug}`} className="card-hover group relative p-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] flex flex-col gap-3 overflow-hidden">
                 <div className={`absolute inset-0 bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug] || "from-white/5 to-white/5"} opacity-0 group-hover:opacity-[0.05] transition-opacity duration-500 pointer-events-none`} />
@@ -48,7 +48,7 @@ export default function EnHome() {
           </div>
         </section>
       ))}
-      <p className="text-center text-xs font-mono text-neutral-700 mt-10">12 tools · English version · {FLAT.length} tools total</p>
+      <p className="text-center text-xs font-mono text-neutral-700 mt-10">{FLAT.length} tools · English version · all computed in your browser</p>
     </div>
   );
 }

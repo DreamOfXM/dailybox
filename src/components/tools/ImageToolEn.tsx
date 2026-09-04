@@ -62,7 +62,7 @@ export default function ImageTool() {
     <div>
       <PageHeader badge="Files" title={seo.title} subtitle={seo.subtitle} tone="emerald" />
       <div className="space-y-6">
-        <SectionCard title="Upload Images" subtitle="JPG/PNG/WebP Batch，EN Canvas Compress locally, no upload">
+        <SectionCard title="Upload Images" subtitle="JPG/PNG/WebP batch — local Canvas compression, no server upload">
           <input type="file" accept="image/*" multiple onChange={onFiles} className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-sm file:text-white hover:file:bg-white/[0.1]" />
           {files.length > 0 && <p className="text-xs font-mono text-neutral-500 mt-2">Selected {files.length} images, {(files.reduce((a, f) => a + f.size, 0) / 1024).toFixed(0)} KB</p>}
           <div className="flex flex-wrap gap-4 mt-4">
@@ -74,13 +74,13 @@ export default function ImageTool() {
           <Hint>All done in browser Canvas, for e-commerce/blog images, batch dozens.</Hint>
         </SectionCard>
         {results.length > 0 && (
-          <SectionCard title="Result" subtitle={`${results.length} ENGenerated，ENDownload`} count={results.length}>
+          <SectionCard title="Result" subtitle={`${results.length} images generated — click to download`} count={results.length}>
             <div className="space-y-2">
               {results.map((r) => (
                 <div key={r.name} className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3">
                   <div className="min-w-0">
                     <div className="text-sm text-white truncate">{r.name}</div>
-                    <div className="text-xs font-mono text-neutral-500">{(r.origSize / 1024).toFixed(0)}KB → {(r.size / 1024).toFixed(0)}KB {r.size < r.origSize ? `EN ${(((r.origSize - r.size) / r.origSize) * 100).toFixed(0)}%` : ""}</div>
+                    <div className="text-xs font-mono text-neutral-500">{(r.origSize / 1024).toFixed(0)}KB → {(r.size / 1024).toFixed(0)}KB {r.size < r.origSize ? `saved ${(((r.origSize - r.size) / r.origSize) * 100).toFixed(0)}%` : ""}</div>
                   </div>
                   <a href={r.url} download={r.name} className="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-xs">Download</a>
                 </div>

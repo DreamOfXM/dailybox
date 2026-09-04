@@ -2,24 +2,24 @@
 
 import { useMemo, useState } from "react";
 import { findToolEn } from "@/lib/seo-en";
-import { parseCron, describeCron, nextRuns } from "@/lib/cron";
+import { parseCron, describeCronEn, cronIssueEn, nextRuns } from "@/lib/cron";
 import { CopyButton, Hint, PageHeader, SectionCard, Toggle } from "@/components/ui";
 
 const seo = findToolEn("cron")!;
 
-/** Common templates：One-click fill（All are 5 field expr） */
+/** Common presets: one-click fill (all are 5-field expressions) */
 const PRESETS: Array<{ label: string; expr: string }> = [
   { label: "Every minute", expr: "* * * * *" },
-  { label: "EN 5 EN", expr: "*/5 * * * *" },
-  { label: "EN", expr: "0 * * * *" },
-  { label: "EN 08:30", expr: "30 8 * * *" },
-  { label: "EN 09:00", expr: "0 9 * * 1" },
-  { label: "EN 1 EN 00:00", expr: "0 0 1 * *" },
+  { label: "Every 5 minutes", expr: "*/5 * * * *" },
+  { label: "Hourly", expr: "0 * * * *" },
+  { label: "Daily at 08:30", expr: "30 8 * * *" },
+  { label: "Weekdays 09:00", expr: "0 9 * * 1-5" },
+  { label: "1st of month 00:00", expr: "0 0 1 * *" },
 ];
 
-/** EN：zh-CN EN，EN，EN */
+/** Next run times: en-US localized, includes weekday, seconds shown only in seconds mode */
 function formatRun(d: Date, withSecond: boolean): string {
-  return d.toLocaleString("zh-CN", {
+  return d.toLocaleString("en-US", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -37,45 +37,45 @@ export default function CronTool() {
 
   const parsed = useMemo(() => parseCron(expr, { seconds }), [expr, seconds]);
 
-  // EN 5 EN；InputEN
+  // Compute next 5 run times only when parsed successfully; recalc on input or mode change
   const runs = useMemo(() => {
     if (!parsed.ok) return [];
     return nextRuns(parsed.value, new Date(), 5);
   }, [parsed]);
 
-  const description = parsed.ok ? describeCron(parsed.value) : "";
+  const description = parsed.ok ? describeCronEn(parsed.value) : "";
   const normalized = expr.trim().replace(/\s+/g, " ");
 
   const applyPreset = (p: { label: string; expr: string }) => {
     setExpr(p.expr);
-    setSeconds(false); // ENAll are 5 EN，EN
+    setSeconds(false); // Presets are all 5-field; switch back to standard mode
   };
 
   return (
     <>
-      <PageHeader badge="EN" title={seo.title} subtitle={seo.subtitle} tone="blue" />
+      <PageHeader badge="Time" title={seo.title} subtitle={seo.subtitle} tone="blue" />
 
       <div className="space-y-6">
-        {/* ENInput */}
+        {/* Expression input */}
         <SectionCard
-          title="Cron EN"
-          subtitle={seconds ? "EN EN EN EN EN EN（6 EN）" : "EN EN EN EN EN（5 EN）"}
+          title="Cron expression"
+          subtitle={seconds ? "Sec Min Hour Day Month Weekday (6 fields)" : "Min Hour Day Month Weekday (5 fields)"}
           aside={
             <Toggle
               checked={seconds}
               onChange={setSeconds}
-              label="EN"
-              hint="6 EN"
+              label="Include seconds"
+              hint="6-field mode"
             />
           }
         >
           <input
             value={expr}
             onChange={(e) => setExpr(e.target.value)}
-            placeholder={seconds ? "EN 0 */5 * * * *" : "EN */5 * * * *"}
+            placeholder={seconds ? "e.g. 0 */5 * * * *" : "e.g. */5 * * * *"}
             autoComplete="off"
             spellCheck={false}
-            aria-label="Cron EN"
+            aria-label="Cron expression"
             className="w-full px-4 py-3 rounded-xl font-mono text-[15px]"
           />
 
@@ -100,15 +100,15 @@ export default function CronTool() {
 
           {!parsed.ok && (
             <div className="mt-3">
-              <Hint kind="error">{parsed.message}</Hint>
+              <Hint kind="error">{cronIssueEn(parsed.message)}</Hint>
             </div>
           )}
         </SectionCard>
 
         {parsed.ok && (
           <>
-            {/* ChineseDescription */}
-            <SectionCard title="EN" subtitle="describeCron · EN" aside={<CopyButton text={normalized} label="CopyEN" />}>
+            {/* Human-readable description */}
+            <SectionCard title="Human readable" subtitle="plain English" aside={<CopyButton text={normalized} label="Copy expression" />}>
               <p className="text-2xl sm:text-3xl font-semibold text-white leading-snug">
                 {description}
               </p>
@@ -117,10 +117,10 @@ export default function CronTool() {
               </code>
             </SectionCard>
 
-            {/* EN 5 EN */}
-            <SectionCard title="EN 5 EN" subtitle="nextRuns · EN" count={runs.length}>
+            {/* Next 5 runs */}
+            <SectionCard title="Next 5 runs" subtitle="nextRuns · from current time" count={runs.length}>
               {runs.length === 0 ? (
-                <Hint kind="warn">ENcountEN，EN（EN 2 EN 30 EN）。</Hint>
+                <Hint kind="warn">Scan limit reached without finding enough run times. Please check if the expression is too unusual (e.g. only around Feb 30).</Hint>
               ) : (
                 <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {runs.map((d, i) => (
@@ -139,7 +139,7 @@ export default function CronTool() {
                         {formatRun(d, seconds)}
                       </span>
                       {i === 0 && (
-                        <span className="ml-auto text-[10px] font-mono text-blue-400 whitespace-nowrap">EN</span>
+                        <span className="ml-auto text-[10px] font-mono text-blue-400 whitespace-nowrap">Nearest</span>
                       )}
                     </li>
                   ))}

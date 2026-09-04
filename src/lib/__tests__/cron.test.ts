@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { TryResult } from "../base64";
-import { buildCron, describeCron, nextRuns, parseCron, type CronFields } from "../cron";
+import { buildCron, describeCron, describeCronEn, cronIssueEn, nextRuns, parseCron, type CronFields } from "../cron";
 
 /** 解包 TryResult，失败直接抛错让测试红掉 */
 function unwrap(r: TryResult<CronFields>): CronFields {
@@ -216,5 +216,70 @@ describe("buildCron", () => {
   it("everyNMinutes 产物语义正确", () => {
     const f = unwrap(parseCron(buildCron({ kind: "everyNMinutes", n: 15 })));
     expect(f.min.values).toEqual([0, 15, 30, 45]);
+  });
+});
+
+const NO_CJK = /[一-鿿]/;
+
+describe("describeCronEn", () => {
+  it("* * * * * → Every minute", () => {
+    const s = describeCronEn(unwrap(parseCron("* * * * *")));
+    expect(s).toBe("Every minute");
+    expect(s).not.toMatch(NO_CJK);
+  });
+
+  it("*/5 * * * * contains 'Every 5 minutes'", () => {
+    const s = describeCronEn(unwrap(parseCron("*/5 * * * *")));
+    expect(s).toContain("Every 5 minutes");
+    expect(s).not.toMatch(NO_CJK);
+  });
+
+  it("30 8 * * * contains 08:30", () => {
+    const s = describeCronEn(unwrap(parseCron("30 8 * * *")));
+    expect(s).toContain("08:30");
+    expect(s).not.toMatch(NO_CJK);
+  });
+
+  it("0 9 * * 1-5 contains weekday names", () => {
+    const s = describeCronEn(unwrap(parseCron("0 9 * * 1-5")));
+    expect(s).toMatch(/Mon|Tue|Wed|Thu|Fri/);
+    expect(s).not.toMatch(NO_CJK);
+  });
+
+  it("complex expression falls back without CJK", () => {
+    const s = describeCronEn(unwrap(parseCron("0,20,40 8-18 1,15 3,6,9,12 *")));
+    expect(s).not.toMatch(NO_CJK);
+  });
+});
+
+describe("cronIssueEn", () => {
+  it("returns non-Chinese for a bad input", () => {
+    const r = parseCron("a b c d e");
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      const en = cronIssueEn(r.message);
+      expect(en).not.toMatch(NO_CJK);
+      expect(en.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("field count error maps to English", () => {
+    const r = parseCron("* * *");
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      const en = cronIssueEn(r.message);
+      expect(en).toContain("5 fields");
+      expect(en).not.toMatch(NO_CJK);
+    }
+  });
+
+  it("out-of-range error maps to English", () => {
+    const r = parseCron("61 * * * *");
+    expect(r.ok).toBe(false);
+    if (!r.ok) {
+      const en = cronIssueEn(r.message);
+      expect(en).toContain("out of range");
+      expect(en).not.toMatch(NO_CJK);
+    }
   });
 });

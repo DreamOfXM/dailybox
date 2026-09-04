@@ -13,6 +13,12 @@ type Mode = "component" | "uri" | "form";
 /** Example with Unicode, spaces & reserved chars */
 const EXAMPLE = "https://example.com/search?q=toolbox&lang=en";
 
+/** Map Chinese error messages from urlcode.ts to English equivalents. */
+function enMsg(msg: string): string {
+  if (/解码失败/.test(msg)) return msg.replace(/解码失败（(.+?) 模式）：输入包含非法或残缺的 % 转义序列/, "Decoding failed ($1 mode): input contains invalid or incomplete percent-escape sequences");
+  return msg;
+}
+
 export default function UrlTool() {
   const [direction, setDirection] = useState<Direction>("encode");
   const [mode, setMode] = useState<Mode>("component");
@@ -25,10 +31,10 @@ export default function UrlTool() {
       return { text: fn(input) };
     }
     const r = decodeUrl(input, mode);
-    return r.ok ? { text: r.value } : { text: "", error: r.message };
+    return r.ok ? { text: r.value } : { text: "", error: enMsg(r.message) };
   }, [input, direction, mode]);
 
-  /** Feed backInput，and auto reverseDirection（Encode↔Decode），for round-trip */
+  /** Feed result back into input and auto-reverse direction (Encode/Decode) for round-trip verification */
   const feedBack = () => {
     if (!result.text) return;
     setInput(result.text);
@@ -37,7 +43,7 @@ export default function UrlTool() {
 
   return (
     <div>
-      <PageHeader badge="Encode" title={seo.title} subtitle={seo.subtitle} tone="blue" />
+      <PageHeader badge="Encoding" title={seo.title} subtitle={seo.subtitle} tone="blue" />
 
       <div className="space-y-6">
         <SectionCard
@@ -66,19 +72,19 @@ export default function UrlTool() {
               value={mode}
               onChange={setMode}
               options={[
-                { value: "component", label: "component" },
-                { value: "uri", label: "Full URI" },
-                { value: "form", label: "Form" },
+                { value: "component", label: "Component" },
+                { value: "uri", label: "Full URL" },
+                { value: "form", label: "Form URL" },
               ]}
-              ariaLabel="EncodeEN"
+              ariaLabel="Encoding mode"
             />
           </div>
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             rows={5}
-            placeholder="Inputor pasteEncode / DecodeEN，ResultEN"
-            aria-label="InputEN"
+            placeholder="Enter or paste text to encode / decode — result appears below"
+            aria-label="Input content"
             className="w-full px-4 py-3 rounded-xl font-mono text-sm leading-relaxed resize-y"
           />
         </SectionCard>
@@ -93,9 +99,9 @@ export default function UrlTool() {
                 disabled={!result.text}
                 className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] disabled:opacity-40 transition-colors"
               >
-                ↙ Feed backInput
+                ↙ Feed back as input
               </button>
-              <CopyButton text={result.text} label="Copy" />
+              <CopyButton text={result.text} label="Copy result" />
             </>
           }
         >
@@ -104,7 +110,7 @@ export default function UrlTool() {
             value={result.text}
             rows={5}
             placeholder="Result will appear here"
-            aria-label="OutputResult"
+            aria-label="Output result"
             className="w-full px-4 py-3 rounded-xl font-mono text-sm leading-relaxed resize-y"
           />
           {result.error && (
@@ -115,8 +121,9 @@ export default function UrlTool() {
         </SectionCard>
 
         <Hint kind="info">
-          Mode differences：component（encodeURIComponent）ENEncode & / ? = EN，ENcount；Full URI（encodeURI）ENEncode
-          : / ? & EN URL EN，EN；Form（application/x-www-form-urlencoded）EN +，ENFormEN。
+          Mode differences: Component (encodeURIComponent) encodes reserved characters like &amp; / ? =, ideal for query parameters.
+          Full URL (encodeURI) preserves URL syntax characters like : / ? &amp;, ideal for complete links.
+          Form URL (application/x-www-form-urlencoded) converts spaces to +, ideal for form submissions.
         </Hint>
       </div>
     </div>

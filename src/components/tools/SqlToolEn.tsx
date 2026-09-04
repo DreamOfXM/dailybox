@@ -8,7 +8,7 @@ import { CopyButton, Hint, PageHeader, SectionCard, Toggle, downloadFile } from 
 
 const seo = findToolEn("sql")!;
 
-/* ---------- Syntax highlight（Render only，No char change） ---------- */
+/* ---------- Syntax highlighting (render-only, no character changes) ---------- */
 const HL_KEYWORDS = new Set([
   "SELECT", "FROM", "WHERE", "GROUP", "BY", "ORDER", "HAVING", "LIMIT", "OFFSET", "FETCH",
   "UNION", "ALL", "INTERSECT", "EXCEPT", "JOIN", "LEFT", "RIGHT", "FULL", "INNER", "OUTER",
@@ -22,7 +22,7 @@ const HL_FUNCS = new Set([
   "CEIL", "ABS", "MOD", "DATE", "YEAR", "MONTH", "DAY", "IF", "RANK", "ROW_NUMBER",
 ]);
 
-/** Line by line tokenize Color：string/EN，EN/ENcount/countEN */
+/** Line-by-line tokenize with color: strings/comments protected as whole segments, keywords/functions/numbers colored separately */
 function highlightLine(line: string): ReactNode[] {
   const out: ReactNode[] = [];
   const re = /('[^']*'|"[^"]*"|`[^`]*`|--[^\n]*|\/\*[\s\S]*?\*\/|\b\d+(?:\.\d+)?\b|\b[A-Za-z_][A-Za-z0-9_]*\b|[^\sA-Za-z0-9_]+|\s+)/g;
@@ -31,7 +31,7 @@ function highlightLine(line: string): ReactNode[] {
   while ((m = re.exec(line)) !== null) {
     const t = m[0];
     const ch = t[0];
-    let cls = "text-neutral-400"; // EN
+    let cls = "text-neutral-400"; // Punctuation default
     if (ch === "'" || ch === '"' || ch === "`") cls = "text-amber-300";
     else if (t.startsWith("--") || t.startsWith("/*")) cls = "text-neutral-600 italic";
     else if (/^\d/.test(t)) cls = "text-orange-300";
@@ -78,15 +78,22 @@ function SqlHighlighted({ code }: { code: string }) {
   );
 }
 
-/** EN：ENFormatEN */
+/** Default example: an unformatted common query */
 const SAMPLE_SQL =
   "select u.id, u.name, count(o.id) as order_count from users u left join orders o on o.user_id = u.id where u.status = 'active' and o.created_at >= '2026-01-01' group by u.id, u.name having count(o.id) > 3 order by order_count desc limit 20;";
+
+/** Map Chinese error messages from sql.ts to English equivalents. */
+function enMsg(msg: string): string {
+  if (/请输入 SQL/.test(msg)) return "Please enter a SQL statement";
+  if (/内容为空或仅含注释/.test(msg)) return "SQL content is empty or contains only comments";
+  return msg;
+}
 
 export default function SqlTool() {
   const [sql, setSql] = useState(SAMPLE_SQL);
   const [upper, setUpper] = useState(true);
   const [commaNl, setCommaNl] = useState(true);
-  // ENFormatENResult，ENpages
+  // Show formatted sample result on first render, avoid blank page
   const [result, setResult] = useState<TryResult<string>>(() =>
     formatSql(SAMPLE_SQL, { upperCase: true, commaNewline: true }),
   );
@@ -97,13 +104,13 @@ export default function SqlTool() {
 
   return (
     <>
-      <PageHeader badge="EN" title={seo.title} subtitle={seo.subtitle} tone="blue" />
+      <PageHeader badge="Dev" title={seo.title} subtitle={seo.subtitle} tone="blue" />
 
       <div className="space-y-6">
         {/* Input */}
         <SectionCard
-          title="EN SQL"
-          subtitle="SELECT / INSERT / UPDATE / DELETE · stringEN"
+          title="Input SQL"
+          subtitle="SELECT / INSERT / UPDATE / DELETE · strings and comments preserved"
           aside={
             <button
               type="button"
@@ -121,22 +128,22 @@ export default function SqlTool() {
             value={sql}
             onChange={(e) => setSql(e.target.value)}
             rows={7}
-            placeholder="EN SQL EN…"
+            placeholder="Paste your SQL here…"
             autoComplete="off"
             spellCheck={false}
             aria-label="SQL Input"
             className="w-full px-4 py-3 rounded-xl font-mono text-xs leading-relaxed resize-y whitespace-pre overflow-x-auto"
           />
 
-          {/* Options + FormatEN */}
+          {/* Options + Format */}
           <div className="flex items-center gap-6 flex-wrap mt-3">
             <Toggle
               checked={upper}
               onChange={(v) => {
                 setUpper(v);
-                runFormat(sql, v, commaNl); // ENOptionsEN
+                runFormat(sql, v, commaNl); // Reformat immediately on option change
               }}
-              label="ENUppercase"
+              label="Uppercase keywords"
               hint="SELECT / FROM / WHERE…"
             />
             <Toggle
@@ -145,23 +152,23 @@ export default function SqlTool() {
                 setCommaNl(v);
                 runFormat(sql, upper, v);
               }}
-              label="EN"
-              hint="ENLine by lineEN"
+              label="Break after commas"
+              hint="List items on separate lines"
             />
             <button
               type="button"
               onClick={() => runFormat(sql, upper, commaNl)}
               className="px-4 py-1.5 rounded-lg text-xs font-mono bg-white text-black hover:bg-neutral-200 transition-colors"
             >
-              FormatEN
+              Format
             </button>
           </div>
         </SectionCard>
 
         {/* Output */}
         <SectionCard
-          title="FormatENResult"
-          subtitle="EN · JOIN EN · EN"
+          title="Formatted"
+          subtitle="Clauses on new lines · JOIN indented · local processing"
           aside={
             result.ok ? (
               <>
@@ -180,7 +187,7 @@ export default function SqlTool() {
           {result.ok ? (
             <SqlHighlighted code={result.value} />
           ) : (
-            <Hint kind="error">{result.message}</Hint>
+            <Hint kind="error">{enMsg(result.message)}</Hint>
           )}
         </SectionCard>
       </div>

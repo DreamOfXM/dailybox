@@ -24,17 +24,17 @@ export default function HashTool() {
   const [shaValues, setShaValues] = useState<Record<string, string> | null>(null);
   const [cryptoOk, setCryptoOk] = useState(true);
 
-  /** MD5 Pure JS sync impl，Direct useMemo Live calc */
+  /** MD5 is pure JS sync implementation, computed live via useMemo */
   const md5Text = useMemo(() => {
     if (!input) return "";
     const bytes = md5(input);
     return format === "base64" ? toBase64(bytes) : toHex(bytes, { upper });
   }, [input, format, upper]);
 
-  /** Inputbytescount（UTF-8） */
+  /** Input byte count (UTF-8) */
   const byteCount = useMemo(() => new TextEncoder().encode(input).length, [input]);
 
-  /** SHA EN Web Crypto（EN）；crypto.subtle EN */
+  /** SHA family uses Web Crypto (async); falls back with hint when crypto.subtle is unavailable */
   useEffect(() => {
     if (!input) {
       setShaValues(null);
@@ -70,12 +70,12 @@ export default function HashTool() {
 
   return (
     <div>
-      <PageHeader badge="EN" title={seo.title} subtitle={seo.subtitle} tone="violet" />
+      <PageHeader badge="Crypto" title={seo.title} subtitle={seo.subtitle} tone="violet" />
 
       <div className="space-y-6">
         <SectionCard
           title="Input"
-          subtitle="EN UTF-8 EncodeEN"
+          subtitle="Byte count by UTF-8 encoding"
           aside={
             <span className="text-[11px] font-mono text-neutral-500 tabular-nums">
               {byteCount} bytes
@@ -86,8 +86,8 @@ export default function HashTool() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             rows={5}
-            placeholder="InputEN，EN MD5 / SHA-1 / SHA-256 / SHA-384 / SHA-512，countEN"
-            aria-label="EN"
+            placeholder="Type or paste text to compute MD5 / SHA-1 / SHA-256 / SHA-384 / SHA-512 in real time. Data stays in your browser."
+            aria-label="Text to hash"
             className="w-full px-4 py-3 rounded-xl font-mono text-sm leading-relaxed resize-y"
           />
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3 mt-4">
@@ -98,13 +98,13 @@ export default function HashTool() {
                 { value: "hex", label: "hex" },
                 { value: "base64", label: "base64" },
               ]}
-              ariaLabel="OutputFormat"
+              ariaLabel="Output format"
             />
-            <Toggle checked={upper} onChange={setUpper} label="Uppercase" hint="hex only" />
+            <Toggle checked={upper} onChange={setUpper} label="Upper case" hint="hex only" />
           </div>
         </SectionCard>
 
-        <SectionCard title="Hash Results" subtitle="InputEN · ENCopy" count={5}>
+        <SectionCard title="Digests" subtitle="Updates live as you type · one-click copy per row" count={5}>
           <div className="space-y-2.5">
             {ALGO_ROWS.map((row) => {
               const isSha = row.key !== "md5";

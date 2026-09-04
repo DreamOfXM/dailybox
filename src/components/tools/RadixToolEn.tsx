@@ -19,28 +19,28 @@ const BASE_META: Record<Base, { label: string; name: string; hint: string }> = {
 
 const UINT32_LIMIT = 2n ** 32n;
 
-/** Generate cardInputENChineseEN（EN） */
+/** Generate an error message when a card has invalid input (locates first illegal character) */
 function describeInvalid(raw: string, base: Base): string {
   const name = BASE_META[base].name;
   let s = raw.trim();
-  if (s === "") return `ENInput${name}count`;
+  if (s === "") return `Please enter a ${name} number`;
   if (s.startsWith("-") || s.startsWith("+")) s = s.slice(1);
   const prefixes: Partial<Record<Base, string>> = { 2: "0b", 8: "0o", 16: "0x" };
   const p = prefixes[base];
   if (p && s.toLowerCase().startsWith(p)) s = s.slice(2);
   for (const ch of s) {
     const d = RADIX_DIGITS.indexOf(ch.toLowerCase());
-    if (d < 0 || d >= base) return `EN${name}EN: ${ch}`;
+    if (d < 0 || d >= base) return `Invalid ${name} character: ${ch}`;
   }
-  return `「${raw.trim()}」EN${name}count`;
+  return `"${raw.trim()}" is not a valid ${name} number`;
 }
 
 export default function RadixTool() {
-  /** ENOriginalInputEN */
+  /** Raw input drafts per base */
   const [drafts, setDrafts] = useState<Record<Base, string>>({ 2: "", 8: "", 10: "", 16: "" });
-  /** EN：ENOriginalInput，ENResult */
+  /** The card currently being edited: preserves raw input, other cards show converted result */
   const [active, setActive] = useState<Base | null>(null);
-  /** EN（ENInputEN） */
+  /** Last valid value (other cards keep using it when current input is invalid) */
   const [value, setValue] = useState<bigint | null>(null);
   const [touched, setTouched] = useState(false);
 
@@ -50,11 +50,11 @@ export default function RadixTool() {
     setTouched(true);
     const parsed = parseRadix(raw, base);
     if (parsed !== null) setValue(parsed);
-    else if (raw.trim() === "") setValue(null); // Clear：ENClear
-    // EN：EN，EN
+    else if (raw.trim() === "") setValue(null); // Clear: also clears other cards
+    // Invalid character: keeps last valid value, only this card shows error
   };
 
-  /** EN：ENOriginalInput，ENResult */
+  /** Display value for a card: editing card shows raw input, others show converted result */
   const displayOf = (base: Base): string => {
     if (active === base) return drafts[base];
     return value !== null ? toRadix(value, base) : "";
@@ -64,11 +64,11 @@ export default function RadixTool() {
     if (active !== base) return "";
     const raw = drafts[base];
     if (parseRadix(raw, base) !== null) return "";
-    if (raw.trim() === "") return touched ? "ENInputcountEN" : "";
+    if (raw.trim() === "") return touched ? "Please enter a value" : "";
     return describeInvalid(raw, base);
   };
 
-  /* ---------- EN：0 ≤ v < 2^32 ---------- */
+  /* ---------- Bit breakdown: 0 <= v < 2^32 ---------- */
   const showBits = value !== null && value >= 0n && value < UINT32_LIMIT;
   const setBits: Array<{ bit: number; weight: bigint }> = [];
   if (showBits && value !== null) {
@@ -80,10 +80,10 @@ export default function RadixTool() {
 
   return (
     <>
-      <PageHeader badge="EN" title={seo.title} subtitle={seo.subtitle} tone="amber" />
+      <PageHeader badge="Dev" title={seo.title} subtitle={seo.subtitle} tone="amber" />
 
       <div className="space-y-6">
-        {/* ENInput */}
+        {/* Four linked input cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {BASES.map((base) => {
             const meta = BASE_META[base];
@@ -113,7 +113,7 @@ export default function RadixTool() {
                   placeholder={meta.hint}
                   autoComplete="off"
                   spellCheck={false}
-                  aria-label={`${meta.name}Input`}
+                  aria-label={`${meta.name} input`}
                   className="w-full px-3 py-2.5 rounded-xl font-mono text-sm break-all"
                 />
                 {err && <p className="mt-1.5 text-xs text-red-400 font-mono">{err}</p>}
@@ -123,14 +123,14 @@ export default function RadixTool() {
         </div>
 
         {value === null && touched && (
-          <Hint kind="info">ENInputcountEN，EN（ENcount，BigInt EN）</Hint>
+          <Hint kind="info">Enter a number in any card — the other three update in real time (supports arbitrarily large integers via BigInt)</Hint>
         )}
 
-        {/* EN：EN / EN */}
+        {/* Bit breakdown: inspect bitmasks / protocol fields */}
         {showBits && value !== null && (
-          <SectionCard title="EN" subtitle={`DEC ${value.toString()} · 32 EN`}>
+          <SectionCard title="Bit Breakdown" subtitle={`DEC ${value.toString()} · 32-bit view`}>
             <div className="space-y-4">
-              {/* 32 ENBinaryEN，EN 4 EN，EN 1 EN */}
+              {/* 32-bit binary string, grouped by 4 bits with spaces, set bits highlighted */}
               <div className="font-mono text-base sm:text-lg tracking-wide break-all leading-relaxed">
                 {bin32.split("").map((ch, i) => (
                   <span key={i}>
@@ -140,11 +140,11 @@ export default function RadixTool() {
                 ))}
               </div>
 
-              {/* EN 1 EN：bit3(8) + bit1(2) */}
+              {/* Set bits: bit3(8) + bit1(2) */}
               <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 font-mono text-xs sm:text-sm text-neutral-300 break-all">
-                <span className="text-neutral-600 mr-2">EN 1 EN</span>
+                <span className="text-neutral-600 mr-2">Set bits</span>
                 {setBits.length === 0 ? (
-                  <span className="text-neutral-600">EN（EN 0）</span>
+                  <span className="text-neutral-600">None (value is 0)</span>
                 ) : (
                   setBits.map((b, i) => (
                     <span key={b.bit}>
@@ -156,13 +156,13 @@ export default function RadixTool() {
                 )}
               </div>
 
-              {/* ENcount */}
+              {/* Common mask readings */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] font-mono">
                 {[
                   { k: "HEX", v: "0x" + value.toString(16) },
                   { k: "OCT", v: value.toString(8) },
-                  { k: "EN 1 ENcount", v: String(setBits.length) },
-                  { k: "EN", v: setBits.length > 0 ? `bit${setBits[0].bit}` : "—" },
+                  { k: "Set bit count", v: String(setBits.length) },
+                  { k: "Highest bit", v: setBits.length > 0 ? `bit${setBits[0].bit}` : "—" },
                 ].map((it) => (
                   <div key={it.k} className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-2.5 py-2">
                     <div className="text-neutral-600 mb-0.5">{it.k}</div>
