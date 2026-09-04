@@ -2,17 +2,13 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { ALL_TOOLS, navLabel, SITE_ORIGIN, BASE_PATH, OG_IMAGE } from "@/lib/seo";
-import { DesktopNavLinks, MobileNav, type NavItem } from "@/components/ui";
+import { SITE_ORIGIN, BASE_PATH, OG_IMAGE } from "@/lib/seo";
+import SiteNav from "@/components/SiteNav";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
-const NAV_ITEMS: NavItem[] = ALL_TOOLS.map((t) => ({
-  slug: t.slug,
-  label: navLabel(t.slug),
-  title: t.title,
-}));
+
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXXXXX";
 
@@ -79,10 +75,7 @@ export default function RootLayout({
               </div>
               <span className="font-semibold text-white tracking-tight">dailybox</span>
             </Link>
-            {/* 桌面端：11 个链接横滚，shrink-0 + whitespace-nowrap 防折行 */}
-            <DesktopNavLinks items={NAV_ITEMS} />
-            {/* 移动端：抽屉导航 */}
-            <MobileNav items={NAV_ITEMS} />
+            <SiteNav />
           </div>
         </nav>
         <main className="relative z-10 w-full px-4 sm:px-6 lg:px-10 2xl:px-64 pt-24 pb-20">
