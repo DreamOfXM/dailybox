@@ -376,8 +376,10 @@ export function downloadFile(name: string, content: BlobPart, mime: string) {
 }
 
 /* ---------- 复制按钮（带 toast） ---------- */
-export function CopyButton({ text, label = "复制" }: { text: string; label?: string }) {
+export function CopyButton({ text, label }: { text: string; label?: string }) {
   const [state, setState] = useState<"idle" | "ok" | "fail">("idle");
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
   const onCopy = useCallback(async () => {
     const ok = await copyText(text);
     setState(ok ? "ok" : "fail");
@@ -396,7 +398,7 @@ export function CopyButton({ text, label = "复制" }: { text: string; label?: s
       }`}
       aria-live="polite"
     >
-      {state === "ok" ? "已复制" : state === "fail" ? "失败" : label}
+      {state === "ok" ? (isEn ? "Copied" : "已复制") : state === "fail" ? (isEn ? "Failed" : "失败") : label ?? (isEn ? "Copy" : "复制")}
     </button>
   );
 }
