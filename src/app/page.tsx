@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <div>
       {/* ---------- Hero ---------- */}
-      <section className="text-center mb-10">
+      <section className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.06] bg-white/[0.03] text-xs font-mono text-neutral-500 mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
           免费 · 无需注册 · 全部本地运算
@@ -49,7 +49,7 @@ export default function Home() {
       </section>
 
       {/* ---------- 搜索 + 预设标签 ---------- */}
-      <section className="mb-14" aria-label="搜索工具">
+      <section className="mb-10" aria-label="搜索工具">
         <div className="relative max-w-2xl mx-auto">
           <svg
             className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 pointer-events-none"
@@ -107,27 +107,27 @@ export default function Home() {
 
       {/* ---------- 分组卡片 ---------- */}
       {groups.map((group) => (
-        <section key={group.group} className="mb-16">
-          <h2 className="flex items-center gap-2.5 text-sm font-semibold text-neutral-300 mb-6">
+        <section key={group.group} className="mb-10">
+          <h2 className="flex items-center gap-2.5 text-sm font-semibold text-neutral-300 mb-4">
             <span className="w-1.5 h-5 rounded-full bg-gradient-to-b from-emerald-400 to-emerald-600" />
             {group.group}
             <span className="text-neutral-600 font-mono text-xs tabular-nums">{group.items.length}</span>
             {q && <span className="text-neutral-600 font-normal text-xs">（共 {group.items.length} 个）</span>}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
             {group.items.map((t) => (
               <Link
                 key={t.slug}
                 href={`/${t.slug}`}
                 onClick={() => recordToolVisit(t.slug)}
-                className="card-hover group relative p-5 sm:p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] flex flex-col gap-3.5 overflow-hidden"
+                className="card-hover group relative p-4 sm:p-5 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] flex flex-col gap-3 overflow-hidden"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug]} opacity-0 group-hover:opacity-[0.05] transition-opacity duration-500 pointer-events-none`} />
-                <div className="relative z-10 flex items-center gap-3.5">
-                  <span className={`w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug]} flex items-center justify-center text-lg font-bold font-mono text-white shadow-[var(--shadow-1)]`}>
+                <div className="relative z-10 flex items-center gap-3">
+                  <span className={`w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug]} flex items-center justify-center text-base font-bold font-mono text-white shadow-[var(--shadow-1)]`}>
                     {TOOL_ICON[t.slug]}
                   </span>
-                  <span className="text-base font-semibold text-neutral-200 group-hover:text-white transition-colors leading-snug min-w-0">
+                  <span className="text-sm sm:text-base font-semibold text-neutral-200 group-hover:text-white transition-colors leading-snug min-w-0">
                     {t.title}
                   </span>
                 </div>

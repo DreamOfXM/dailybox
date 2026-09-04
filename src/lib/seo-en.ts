@@ -34,7 +34,7 @@ export const TOOL_GROUPS_EN: Array<{ group: string; items: ToolSeo[] }> = [
   {
     group: "Files",
     items: [
-      { slug: "pdf", title: "PDF Toolkit", subtitle: "Merge · Split · Compress", description: "Browser PDF toolkit: merge, split, compress, encrypt with pdf-lib WASM, no upload.", keywords: ["PDF merge", "PDF split", "compress PDF", "online PDF"] },
+      { slug: "pdf", title: "PDF Merge & Split", subtitle: "Merge many · Extract pages", description: "Browser PDF tool: merge multiple PDFs in order, or split/extract a page range into a new file, powered by pdf-lib entirely locally, no upload.", keywords: ["PDF merge", "PDF split", "extract PDF pages", "online PDF"] },
       { slug: "image", title: "Image Compress & Convert", subtitle: "JPG/PNG/WebP · Bulk", description: "Compress and convert JPG/PNG/WebP in bulk, resize and quality control via Canvas/WASM, local.", keywords: ["image compress", "image converter", "jpg to png", "webp"] },
       { slug: "video", title: "Video Compress & Convert", subtitle: "MP4/WebM · Compress", description: "Compress and convert MP4/WebM with ffmpeg.wasm locally, 720p, no upload.", keywords: ["video compress", "video converter", "mp4 to webm", "ffmpeg"] },
     ],
