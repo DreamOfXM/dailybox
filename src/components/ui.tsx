@@ -56,6 +56,8 @@ export function PageHeader({
   /** 可选：标题右侧附加内容（新增可选 prop，不影响既有调用） */
   extra?: ReactNode;
 }) {
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
   const tones: Record<string, string> = {
     blue: "text-blue-400 border-blue-500/20 bg-blue-500/10",
     emerald: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
@@ -65,13 +67,13 @@ export function PageHeader({
   return (
     <header className="mb-10">
       <Link
-        href="/"
+        href={isEn ? "/en" : "/"}
         className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-600 hover:text-white mb-8 transition-colors"
       >
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
         </svg>
-        返回全部工具
+        {isEn ? "Back to all tools" : "返回全部工具"}
       </Link>
       <div className="flex items-center gap-3 mb-2 flex-wrap">
         <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider border ${tones[tone]}`}>
@@ -494,6 +496,21 @@ export interface NavItem {
   slug: string;
   label: string;
   title?: string;
+}
+
+/** 页脚文案随语言切换，避免 EN 页混入中文 / CN 页混入英文 */
+export function SiteFooter() {
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
+  return (
+    <>
+      <span>© 2026 dailybox · {isEn ? "All local — nothing ever uploads" : "全部本地运算，数据不上传"}</span>
+      <span className="flex items-center gap-1.5">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        {isEn ? "all systems operational" : "服务运行正常"}
+      </span>
+    </>
+  );
 }
 
 function useActiveSlug() {

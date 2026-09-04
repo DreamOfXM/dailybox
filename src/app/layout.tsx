@@ -4,6 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import { SITE_ORIGIN, BASE_PATH, OG_IMAGE } from "@/lib/seo";
 import SiteNav from "@/components/SiteNav";
+import { SiteFooter } from "@/components/ui";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -83,11 +84,7 @@ export default function RootLayout({
         </main>
         <footer className="relative z-10 border-t border-white/[0.06]">
           <div className="w-full px-4 sm:px-6 lg:px-10 2xl:px-64 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-600 font-mono">
-            <span>© 2026 dailybox · 全部本地运算，数据不上传</span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              all systems operational
-            </span>
+            <SiteFooter />
           </div>
         </footer>
       </body>
