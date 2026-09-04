@@ -125,6 +125,14 @@ export const TOOL_GROUPS: Array<{ group: string; items: ToolSeo[] }> = [
     ],
   },
   {
+    group: "文件",
+    items: [
+      { slug: "pdf", title: "PDF 工具箱", subtitle: "合并 · 拆分 · 压缩 · 加密", description: "在线 PDF 工具箱，浏览器本地合并多个 PDF、拆分页数、压缩体积、加解密与加水印，基于 pdf-lib/pdflib WASM，无需上传，适合合同、简历、报告处理。", keywords: ["PDF合并", "PDF拆分", "PDF压缩", "PDF工具", "pdf在线"], faqs: [{ q: "PDF 会上传到服务器吗？", a: "不会。合并、拆分、压缩全部在浏览器本地通过 WASM 完成，文件不经过任何服务器。" }] },
+      { slug: "image", title: "图片压缩转换", subtitle: "JPG/PNG/WebP · 批量 · 尺寸", description: "在线图片压缩与格式转换，支持 JPG/PNG/WebP 互转、批量压缩、尺寸缩放与质量调节，Canvas + WASM 本地处理，原图不上传，适合电商、博客配图。", keywords: ["图片压缩", "图片转换", "JPG转PNG", "WebP", "批量压缩"] },
+      { slug: "video", title: "视频压缩转码", subtitle: "MP4/WebM · 压缩 · 剪切", description: "在线视频压缩与转码工具，支持 MP4/WebM 互转、分辨率压缩与片段剪切，ffmpeg.wasm 本地运算，超大视频懒加载，不上传隐私安全。", keywords: ["视频压缩", "视频转码", "MP4转WebM", "ffmpeg", "在线视频工具"] },
+    ],
+  },
+  {
     group: "生活",
     items: [
       { slug: "rmb", title: "人民币大写", subtitle: "金额转大写 · 四舍五入到分", description: "在线人民币大写金额转换，按财务规范处理零折叠、角分与整字，四舍五入到分，支持负数与超大金额，开票报销高频刚需。", keywords: ["人民币大写", "金额大写", "财务大写", "大写转换"] },
@@ -155,6 +163,9 @@ const NAV_LABELS: Record<string, string> = {
   jwt: "JWT",
   sql: "SQL",
   cron: "Cron",
+  pdf: "PDF",
+  image: "图片",
+  video: "视频",
   rmb: "大写",
   idcard: "身份证",
   unit: "单位",
