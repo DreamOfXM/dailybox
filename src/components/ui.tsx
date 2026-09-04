@@ -18,16 +18,23 @@ export function JsonLd({ data }: { data: object }) {
 
 /* ---------- 工具图标 / 渐变色（首页卡片与最近使用共用） ---------- */
 export const TOOL_ICON: Record<string, string> = {
-  url: "%", hash: "#", regex: ".*", uuid: "ID", radix: "01", jwt: "JWT", sql: "SQL",
-  cron: "⏰", rmb: "¥", idcard: "证", unit: "⇌",
+  url: "%", qrcode: "▦", wordcount: "字", caseconvert: "Aa", textcompare: "⇆", dedupe: "≠", fanjian: "繁", textbinary: "01",
+  hash: "#", regex: ".*", uuid: "ID", radix: "0b", jwt: "JWT", sql: "SQL",
+  cron: "⏰", pdf: "PDF", image: "图", video: "▶", colorconvert: "◧",
+  rmb: "¥", idcard: "证", unit: "⇌",
   mortgage: "房", deposit: "息", irr: "‰", phone: "☎", lunar: "历",
 };
 
 export const TOOL_TILE_GRADIENT: Record<string, string> = {
-  url: "from-cyan-500 to-blue-400", hash: "from-slate-500 to-neutral-400", regex: "from-purple-500 to-fuchsia-400",
+  url: "from-cyan-500 to-blue-400", qrcode: "from-blue-500 to-cyan-400", wordcount: "from-teal-500 to-emerald-400",
+  caseconvert: "from-sky-500 to-blue-400", textcompare: "from-cyan-500 to-teal-400", dedupe: "from-emerald-500 to-green-400",
+  fanjian: "from-rose-400 to-orange-400", textbinary: "from-slate-500 to-cyan-500",
+  hash: "from-slate-500 to-neutral-400", regex: "from-purple-500 to-fuchsia-400",
   uuid: "from-violet-500 to-indigo-400", radix: "from-amber-500 to-yellow-400", jwt: "from-rose-500 to-pink-400",
-  sql: "from-blue-500 to-indigo-400", cron: "from-orange-500 to-red-400", rmb: "from-red-500 to-rose-400",
-  idcard: "from-green-500 to-emerald-400", unit: "from-teal-500 to-cyan-400",
+  sql: "from-blue-500 to-indigo-400", cron: "from-orange-500 to-red-400",
+  pdf: "from-red-500 to-rose-400", image: "from-fuchsia-500 to-purple-400", video: "from-indigo-500 to-violet-400",
+  colorconvert: "from-pink-500 to-fuchsia-400",
+  rmb: "from-red-500 to-rose-400", idcard: "from-green-500 to-emerald-400", unit: "from-teal-500 to-cyan-400",
   mortgage: "from-sky-500 to-blue-500", deposit: "from-lime-500 to-green-400", irr: "from-fuchsia-500 to-purple-400",
   phone: "from-indigo-500 to-violet-400", lunar: "from-amber-500 to-red-400",
 };

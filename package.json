@@ -15,7 +15,9 @@
     "@ffmpeg/util": "^0.12.2",
     "lunar-javascript": "^1.7.7",
     "next": "15.3.4",
+    "opencc-js": "^1.4.2",
     "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

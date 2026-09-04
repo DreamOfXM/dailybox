@@ -43,16 +43,16 @@ export default function Home() {
             日常工具箱
           </span>
         </h1>
-        <p className="text-base sm:text-lg text-neutral-500 max-w-md mx-auto">
-          {ALL_TOOLS.length} 个原子化在线工具，按 <span className="text-neutral-400">编码 / 加密 / 开发 / 时间 / 生活</span> 五类整理
+        <p className="text-base sm:text-lg text-neutral-500 max-w-lg mx-auto">
+          {ALL_TOOLS.length} 个原子化在线工具 · {TOOL_GROUPS.length} 大分类 · 全部本地运算
         </p>
       </section>
 
       {/* ---------- 搜索 + 预设标签 ---------- */}
-      <section className="mb-12" aria-label="搜索工具">
-        <div className="relative max-w-xl mx-auto">
+      <section className="mb-14" aria-label="搜索工具">
+        <div className="relative max-w-2xl mx-auto">
           <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 pointer-events-none"
+            className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 pointer-events-none"
             fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
@@ -63,7 +63,7 @@ export default function Home() {
             onChange={(e) => setQuery(e.target.value)}
             placeholder="搜索工具：名称、关键词，如「正则」「单位」…"
             aria-label="搜索工具"
-            className="w-full pl-11 pr-10 py-3 rounded-2xl text-sm font-mono"
+            className="w-full pl-12 pr-11 py-3.5 rounded-2xl text-sm font-mono"
           />
           {query && (
             <button
@@ -107,27 +107,27 @@ export default function Home() {
 
       {/* ---------- 分组卡片 ---------- */}
       {groups.map((group) => (
-        <section key={group.group} className="mb-12">
-          <h2 className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-neutral-600 mb-4">
-            <span className="w-1 h-1 rounded-full bg-emerald-500" />
+        <section key={group.group} className="mb-16">
+          <h2 className="flex items-center gap-2.5 text-sm font-semibold text-neutral-300 mb-6">
+            <span className="w-1.5 h-5 rounded-full bg-gradient-to-b from-emerald-400 to-emerald-600" />
             {group.group}
-            <span className="text-neutral-800 tabular-nums">· {group.items.length}</span>
-            {q && <span className="text-neutral-700 normal-case tracking-normal">（共 {group.items.length} 个）</span>}
+            <span className="text-neutral-600 font-mono text-xs tabular-nums">{group.items.length}</span>
+            {q && <span className="text-neutral-600 font-normal text-xs">（共 {group.items.length} 个）</span>}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
             {group.items.map((t) => (
               <Link
                 key={t.slug}
                 href={`/${t.slug}`}
                 onClick={() => recordToolVisit(t.slug)}
-                className="card-hover group relative p-4 sm:p-5 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] flex flex-col gap-3 overflow-hidden"
+                className="card-hover group relative p-5 sm:p-6 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] flex flex-col gap-3.5 overflow-hidden"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug]} opacity-0 group-hover:opacity-[0.05] transition-opacity duration-500 pointer-events-none`} />
-                <div className="relative z-10 flex items-center gap-3">
-                  <span className={`w-10 h-10 shrink-0 rounded-xl bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug]} flex items-center justify-center text-base font-bold font-mono text-white shadow-[var(--shadow-1)]`}>
+                <div className="relative z-10 flex items-center gap-3.5">
+                  <span className={`w-12 h-12 shrink-0 rounded-xl bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug]} flex items-center justify-center text-lg font-bold font-mono text-white shadow-[var(--shadow-1)]`}>
                     {TOOL_ICON[t.slug]}
                   </span>
-                  <span className="text-sm sm:text-base font-semibold text-neutral-200 group-hover:text-white transition-colors leading-snug min-w-0">
+                  <span className="text-base font-semibold text-neutral-200 group-hover:text-white transition-colors leading-snug min-w-0">
                     {t.title}
                   </span>
                 </div>

@@ -100,6 +100,18 @@ export const TOOL_GROUPS: Array<{ group: string; items: ToolSeo[] }> = [
     group: "编码",
     items: [
       { slug: "url", title: "URL 编解码", subtitle: "组件 · URI · 表单 三种模式", description: "在线 URL 编码解码工具，支持 encodeURIComponent、encodeURI、表单 application/x-www-form-urlencoded 三种模式，容错解码残缺百分号序列，中文与 emoji 完整支持。本地运算，数据不上传。", keywords: ["URL编码", "URL解码", "encodeURIComponent", "URL转码"] },
+      { slug: "qrcode", title: "二维码生成", subtitle: "文本/链接转码 · 尺寸容错可调", description: "在线二维码生成器，文本或链接即刻转码，支持尺寸、容错等级与前后景色自定义，可下载 PNG，收款码、分享链接场景刚需。本地生成，内容不上传。", keywords: ["二维码生成", "二维码制作", "QR码", "收款码", "链接转二维码"] },
+    ],
+  },
+  {
+    group: "文本",
+    items: [
+      { slug: "wordcount", title: "字数统计", subtitle: "字符/单词/行数 · 阅读时长", description: "在线字数统计工具，实时统计字符数、去空格字符、单词数、行数与预计阅读时长，中英文混排准确计数，写作、文案、投稿必备。", keywords: ["字数统计", "字数统计工具", "字符数", "单词数", "字数计算"] },
+      { slug: "caseconvert", title: "大小写转换", subtitle: "大写/小写/驼峰/下划线", description: "在线文本大小写转换，支持全部大写、全部小写、首字母大写、驼峰命名、下划线命名互转，编程命名与文本处理一键搞定。", keywords: ["大小写转换", "大写转小写", "驼峰转换", "下划线转换"] },
+      { slug: "textcompare", title: "文本对比", subtitle: "逐行差异 · 新增/删除高亮", description: "在线文本差异对比工具，逐行高亮新增、删除与修改，统计差异行数，适合代码、配置、文档版本比对，本地运算不上传。", keywords: ["文本对比", "文本差异", "内容对比", "diff", "版本对比"] },
+      { slug: "dedupe", title: "去重排序", subtitle: "去重 · 排序 · 空行清理", description: "在线文本去重排序工具，一键去除重复行、按字典序/长度排序、清理空行与首尾空格，处理名单、关键词、数据列表高效。", keywords: ["去重", "文本去重", "排序", "去重排序", "删除重复"] },
+      { slug: "fanjian", title: "繁简转换", subtitle: "简体↔繁体 · 双向互转", description: "在线繁体简体互转工具，简体转繁体、繁体转简体一键完成，用词习惯符合两岸规范，阅读、排版、跨境沟通必备。", keywords: ["繁简转换", "繁体转简体", "简体转繁体", "繁简互转"] },
+      { slug: "textbinary", title: "字符↔二进制", subtitle: "文本转二进制 · 双向", description: "在线文本与二进制互转工具，文本转 01 二进制、二进制还原文本，支持中文 UTF-8 与自定义分隔符，学习、调试、CTF 场景适用。", keywords: ["文本转二进制", "二进制转文本", "text to binary", "01转换"] },
     ],
   },
   {
@@ -133,6 +145,12 @@ export const TOOL_GROUPS: Array<{ group: string; items: ToolSeo[] }> = [
     ],
   },
   {
+    group: "设计",
+    items: [
+      { slug: "colorconvert", title: "颜色转换", subtitle: "HEX/RGB/HSL · 取色 · 预览", description: "在线颜色转换工具，HEX、RGB、HSL 三种格式互转，可视化取色器与实时预览，一键复制任意格式，设计、前端开发配色必备。", keywords: ["颜色转换", "HEX转RGB", "RGB转HSL", "颜色选择器", "取色器"] },
+    ],
+  },
+  {
     group: "生活",
     items: [
       { slug: "rmb", title: "人民币大写", subtitle: "金额转大写 · 四舍五入到分", description: "在线人民币大写金额转换，按财务规范处理零折叠、角分与整字，四舍五入到分，支持负数与超大金额，开票报销高频刚需。", keywords: ["人民币大写", "金额大写", "财务大写", "大写转换"] },
@@ -156,6 +174,13 @@ export function findTool(slug: string): ToolSeo | undefined {
 /** 顶栏紧凑标签：短、不换行，避免中文被竖排折断 */
 const NAV_LABELS: Record<string, string> = {
   url: "URL",
+  qrcode: "二维码",
+  wordcount: "字数",
+  caseconvert: "大小写",
+  textcompare: "对比",
+  dedupe: "去重",
+  fanjian: "繁简",
+  textbinary: "二进制",
   hash: "Hash",
   regex: "正则",
   uuid: "UUID",
@@ -166,6 +191,7 @@ const NAV_LABELS: Record<string, string> = {
   pdf: "PDF",
   image: "图片",
   video: "视频",
+  colorconvert: "颜色",
   rmb: "大写",
   idcard: "身份证",
   unit: "单位",
