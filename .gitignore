@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# generated pdfjs worker (copied by scripts/copy-pdf-worker.mjs on predev/prebuild)
+/public/pdf.worker.min.mjs
+
 # production
 /build
 
