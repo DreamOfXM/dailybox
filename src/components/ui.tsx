@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { copyText } from "@/lib/format";
 import type { ToolSeo } from "@/lib/seo";
+import { ALL_TOOLS_EN } from "@/lib/seo-en";
 
 /* ---------- 结构化数据 ---------- */
 export function JsonLd({ data }: { data: object }) {
@@ -512,6 +513,42 @@ export function SiteFooter() {
         {isEn ? "all systems operational" : "服务运行正常"}
       </span>
     </>
+  );
+}
+
+/** 顶栏 logo：EN 页点回 EN 首页，CN 页点回 CN 首页 */
+export function SiteBrand() {
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
+  return (
+    <Link href={isEn ? "/en" : "/"} className="flex items-center gap-2 group shrink-0">
+      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-xs font-bold group-hover:shadow-lg group-hover:shadow-emerald-500/25 transition-shadow">
+        D
+      </div>
+      <span className="font-semibold text-white tracking-tight">dailybox</span>
+    </Link>
+  );
+}
+
+/** 顶栏语言切换：优先跳到当前页的另一语言版本；CN 独有工具在 EN 无对应页时回退到 EN 首页 */
+export function SiteLangToggle() {
+  const pathname = usePathname() || "";
+  const p = pathname.replace(/\/+$/, "") || "/";
+  const isEn = p.startsWith("/en");
+  let href: string;
+  if (isEn) {
+    href = p === "/en" ? "/" : p.slice(3) || "/";
+  } else {
+    const slug = p.replace(/^\//, "");
+    href = slug && !ALL_TOOLS_EN.some((t) => t.slug === slug) ? "/en" : `/en${p === "/" ? "" : p}`;
+  }
+  return (
+    <Link
+      href={href}
+      className="shrink-0 text-xs font-mono text-neutral-500 hover:text-white px-2 py-1 rounded-md border border-white/[0.08] hover:border-white/25 transition-colors"
+    >
+      {isEn ? "中文" : "EN"}
+    </Link>
   );
 }
 
