@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
 import { SITE_ORIGIN, BASE_PATH, OG_IMAGE } from "@/lib/seo";
 import SiteNav from "@/components/SiteNav";
-import { SiteFooter } from "@/components/ui";
+import { SiteFooter, SiteBrand, SiteLangToggle } from "@/components/ui";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
@@ -70,13 +69,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${mono.variable} font-sans`}>
         <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-[#0a0a0b]/80 backdrop-blur-xl">
           <div className="w-full px-4 sm:px-6 lg:px-10 2xl:px-64 h-14 flex items-center justify-between gap-3">
-            <Link href="/" className="flex items-center gap-2 group shrink-0">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-xs font-bold group-hover:shadow-lg group-hover:shadow-emerald-500/25 transition-shadow">
-                D
-              </div>
-              <span className="font-semibold text-white tracking-tight">dailybox</span>
-            </Link>
+            <SiteBrand />
             <SiteNav />
+            <SiteLangToggle />
           </div>
         </nav>
         <main className="relative z-10 w-full px-4 sm:px-6 lg:px-10 2xl:px-64 pt-24 pb-20">
