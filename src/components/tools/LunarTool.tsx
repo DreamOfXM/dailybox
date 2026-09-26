@@ -71,15 +71,15 @@ export default function LunarTool() {
             <SectionCard title="选择公历日期" subtitle="覆盖 1900-2100 年权威历算">
               <div className="grid grid-cols-3 gap-4 max-w-md">
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">年</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">年</span>
                   <input value={sy} onChange={(e) => setSy(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">月</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">月</span>
                   <input value={sm} onChange={(e) => setSm(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">日</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">日</span>
                   <input value={sd} onChange={(e) => setSd(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
               </div>
@@ -100,10 +100,10 @@ export default function LunarTool() {
                 }
               >
                 <div className="text-center py-4">
-                  <div className="text-3xl sm:text-4xl font-bold text-amber-300 mb-2">
+                  <div className="text-3xl sm:text-4xl font-bold text-warn mb-2">
                     {s2l.value.monthCn}月{s2l.value.dayCn}
                   </div>
-                  <div className="text-sm text-neutral-400">
+                  <div className="text-sm text-ink2">
                     {s2l.value.ganZhi}年（{s2l.value.shengXiao}）· {s2l.value.weekdayCn}
                   </div>
                 </div>
@@ -119,7 +119,7 @@ export default function LunarTool() {
                     <Badge key={f} tone="rose">{f}</Badge>
                   ))}
                   {s2l.value.nextJieQi.name && (
-                    <span className="text-xs text-neutral-500 ml-auto">
+                    <span className="text-xs text-ink3 ml-auto">
                       下一节气：{s2l.value.nextJieQi.name}（{s2l.value.nextJieQi.dateStr}）
                     </span>
                   )}
@@ -134,15 +134,15 @@ export default function LunarTool() {
             <SectionCard title="输入农历日期" subtitle="闰月勾选「闰月」开关；不存在的日期会明确提示">
               <div className="grid grid-cols-3 gap-4 max-w-md">
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">农历年</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">农历年</span>
                   <input value={ly} onChange={(e) => setLy(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">农历月（1-12）</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">农历月（1-12）</span>
                   <input value={lm} onChange={(e) => setLm(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">农历日（1-30）</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">农历日（1-30）</span>
                   <input value={ld} onChange={(e) => setLd(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
               </div>
@@ -158,10 +158,10 @@ export default function LunarTool() {
             ) : (
               <SectionCard title="对应公历日期" aside={<CopyButton text={`农历 ${ly} 年${leap ? "闰" : ""}${lm}月${ld}日 = 公历 ${l2s.value.y}-${pad(l2s.value.m)}-${pad(l2s.value.d)}（${l2s.value.weekdayCn}）`} label="复制结果" />}>
                 <div className="text-center py-4">
-                  <div className="text-3xl sm:text-4xl font-bold text-emerald-300 mb-2 font-mono">
+                  <div className="text-3xl sm:text-4xl font-bold text-accd mb-2 font-mono">
                     {l2s.value.y}-{pad(l2s.value.m)}-{pad(l2s.value.d)}
                   </div>
-                  <div className="text-sm text-neutral-400">{l2s.value.weekdayCn}</div>
+                  <div className="text-sm text-ink2">{l2s.value.weekdayCn}</div>
                 </div>
               </SectionCard>
             )}
@@ -173,11 +173,11 @@ export default function LunarTool() {
             <SectionCard title="农历生日" subtitle="查询未来若干年里，农历生日对应的公历日期">
               <div className="grid grid-cols-2 gap-4 max-w-sm">
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">农历月（1-12）</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">农历月（1-12）</span>
                   <input value={bm} onChange={(e) => setBm(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
                 <label className="block">
-                  <span className="text-xs text-neutral-500 mb-1.5 block">农历日（1-30）</span>
+                  <span className="text-xs text-ink3 mb-1.5 block">农历日（1-30）</span>
                   <input value={bd} onChange={(e) => setBd(e.target.value)} inputMode="numeric" className={numInput} />
                 </label>
               </div>
@@ -213,7 +213,7 @@ export default function LunarTool() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-xs font-mono">
                     <thead>
-                      <tr className="text-neutral-500 border-b border-white/[0.06]">
+                      <tr className="text-ink3 border-b border-line">
                         <th className="text-left py-2 pr-4">年份</th>
                         <th className="text-left py-2 px-4">公历日期</th>
                         <th className="text-left py-2 px-4">星期</th>
@@ -222,10 +222,10 @@ export default function LunarTool() {
                     </thead>
                     <tbody>
                       {birthdays.value.map((b) => (
-                        <tr key={b.solarYear} className="border-b border-white/[0.04]">
-                          <td className="py-2.5 pr-4 text-neutral-300">{b.solarYear}</td>
-                          <td className="py-2.5 px-4 text-neutral-200">{b.solar}</td>
-                          <td className="py-2.5 px-4 text-neutral-400">{b.weekdayCn}</td>
+                        <tr key={b.solarYear} className="border-b border-line">
+                          <td className="py-2.5 pr-4 text-ink">{b.solarYear}</td>
+                          <td className="py-2.5 px-4 text-ink">{b.solar}</td>
+                          <td className="py-2.5 px-4 text-ink2">{b.weekdayCn}</td>
                           <td className="py-2.5 pl-4">{b.leapFallback && <Badge tone="amber">非闰月 fallback</Badge>}</td>
                         </tr>
                       ))}

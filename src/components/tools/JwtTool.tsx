@@ -46,7 +46,7 @@ export default function JwtTool() {
             <button
               type="button"
               onClick={() => setToken(SAMPLE_TOKEN)}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               填入示例
             </button>
@@ -73,14 +73,14 @@ export default function JwtTool() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Header */}
               <SectionCard title="Header" subtitle="算法与类型" aside={<CopyButton text={headerJson} label="复制" />}>
-                <pre className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 font-mono text-xs text-neutral-300 whitespace-pre-wrap break-all overflow-x-auto">
+                <pre className="rounded-xl border border-line bg-surface p-4 font-mono text-xs text-ink whitespace-pre-wrap break-all overflow-x-auto">
                   {headerJson}
                 </pre>
               </SectionCard>
 
               {/* Payload */}
               <SectionCard title="Payload" subtitle="载荷声明" aside={<CopyButton text={payloadJson} label="复制" />}>
-                <pre className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 font-mono text-xs text-neutral-300 whitespace-pre-wrap break-all overflow-x-auto">
+                <pre className="rounded-xl border border-line bg-surface p-4 font-mono text-xs text-ink whitespace-pre-wrap break-all overflow-x-auto">
                   {payloadJson}
                 </pre>
               </SectionCard>
@@ -89,7 +89,7 @@ export default function JwtTool() {
             {/* Signature */}
             <SectionCard title="Signature" subtitle="签名段原文（本工具不验签）">
               {result.value.signature !== undefined ? (
-                <code className="block rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 font-mono text-xs text-neutral-300 break-all">
+                <code className="block rounded-xl border border-line bg-surface p-4 font-mono text-xs text-ink break-all">
                   {result.value.signature}
                 </code>
               ) : (
@@ -102,10 +102,10 @@ export default function JwtTool() {
               {claims.length === 0 ? (
                 <Hint kind="info">payload 中没有数值型的 iat / nbf / exp 时间声明</Hint>
               ) : (
-                <div className="overflow-x-auto rounded-xl border border-white/[0.06]">
+                <div className="overflow-x-auto rounded-xl border border-line">
                   <table className="w-full text-sm min-w-130">
                     <thead>
-                      <tr className="bg-white/[0.03] text-left text-[10px] font-mono uppercase tracking-wider text-neutral-500">
+                      <tr className="bg-surface text-left text-[10px] font-mono uppercase tracking-wider text-ink3">
                         <th className="px-3 py-2">Claim</th>
                         <th className="px-3 py-2">本地时间</th>
                         <th className="px-3 py-2">相对时间</th>
@@ -116,15 +116,15 @@ export default function JwtTool() {
                       {claims.map((c) => {
                         const meta = STATUS_META[c.status];
                         return (
-                          <tr key={c.claim} className="border-t border-white/[0.04]">
+                          <tr key={c.claim} className="border-t border-line">
                             <td className="px-3 py-2 font-mono text-xs">
-                              <span className="text-blue-400">{c.claim}</span>
-                              <span className="text-neutral-600 ml-1.5">{CLAIM_LABEL[c.claim]}</span>
+                              <span className="text-info">{c.claim}</span>
+                              <span className="text-ink3 ml-1.5">{CLAIM_LABEL[c.claim]}</span>
                             </td>
-                            <td className="px-3 py-2 font-mono text-xs text-neutral-300 tabular-nums whitespace-nowrap">
+                            <td className="px-3 py-2 font-mono text-xs text-ink tabular-nums whitespace-nowrap">
                               {c.local}
                             </td>
-                            <td className="px-3 py-2 font-mono text-xs text-neutral-400 whitespace-nowrap">{c.relative}</td>
+                            <td className="px-3 py-2 font-mono text-xs text-ink2 whitespace-nowrap">{c.relative}</td>
                             <td className="px-3 py-2">
                               <Badge tone={meta.tone}>{meta.label}</Badge>
                             </td>

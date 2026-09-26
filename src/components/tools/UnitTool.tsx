@@ -112,19 +112,19 @@ export default function UnitTool() {
                   title={`点击以「${unit.name}」作为源单位`}
                   className={`card-hover cursor-pointer select-none text-left rounded-xl border p-4 ${
                     isSource
-                      ? "border-emerald-500/50 bg-emerald-500/[0.06]"
-                      : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.035]"
+                      ? "border-acc/55 bg-acc/[0.06]"
+                      : "border-line bg-surface hover:bg-surface2"
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 mb-1.5">
-                        <span className="text-[11px] font-mono text-neutral-500 truncate">{unit.name}</span>
-                        <span className="text-[10px] font-mono text-neutral-600 shrink-0">{unit.symbol}</span>
+                        <span className="text-[11px] font-mono text-ink3 truncate">{unit.name}</span>
+                        <span className="text-[10px] font-mono text-ink3 shrink-0">{unit.symbol}</span>
                       </div>
                       <div
                         className={`font-mono tabular-nums text-lg font-semibold break-all ${
-                          isSource ? "text-emerald-400" : "text-neutral-200"
+                          isSource ? "text-acc" : "text-ink"
                         }`}
                       >
                         {fmtUnit(value)}
@@ -139,7 +139,7 @@ export default function UnitTool() {
               );
             })}
           </div>
-          <p className="mt-4 text-[11px] font-mono text-neutral-600">
+          <p className="mt-4 text-[11px] font-mono text-ink3">
             纯本地换算 · 温度为精确公式非近似
           </p>
         </SectionCard>

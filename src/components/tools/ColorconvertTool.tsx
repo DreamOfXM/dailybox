@@ -79,7 +79,7 @@ export default function ColorconvertTool() {
 
   // 色块上的文字对比：按亮度选黑/白
   const luma = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
-  const onColorText = luma > 160 ? "text-black/70" : "text-white/85";
+  const onColorText = luma > 160 ? "text-ink/70" : "text-ink/85";
 
   const inputCls = "flex-1 min-w-0 px-4 py-3 rounded-xl font-mono text-[15px]";
 
@@ -91,7 +91,7 @@ export default function ColorconvertTool() {
         {/* 实时预览 */}
         <SectionCard title="预览" subtitle="改任意输入框 · 色块实时同步">
           <div
-            className="relative h-40 rounded-xl border border-white/[0.08] overflow-hidden transition-colors"
+            className="relative h-40 rounded-xl border border-line overflow-hidden transition-colors"
             style={{ backgroundColor: hexStr }}
             role="img"
             aria-label={`当前颜色 ${hexStr}`}
@@ -108,7 +108,7 @@ export default function ColorconvertTool() {
               value={hexStr.toLowerCase()}
               onChange={(e) => onPicker(e.target.value)}
               aria-label="取色器"
-              className="w-12 h-10 shrink-0 rounded-lg border border-white/[0.08] bg-transparent cursor-pointer"
+              className="w-12 h-10 shrink-0 rounded-lg border border-line bg-transparent cursor-pointer"
             />
             <div className="flex items-center gap-2">
               {PRESETS.map((p) => (
@@ -118,14 +118,14 @@ export default function ColorconvertTool() {
                   title={p.name}
                   onClick={() => applyHex(p.hex)}
                   className={`w-7 h-7 rounded-full border transition-transform hover:scale-110 ${
-                    hexStr === p.hex ? "border-white" : "border-white/10"
+                    hexStr === p.hex ? "border-ink" : "border-line2"
                   }`}
                   style={{ backgroundColor: p.hex }}
                   aria-label={`预设颜色 ${p.name} ${p.hex}`}
                 />
               ))}
             </div>
-            <span className="text-xs font-mono text-neutral-600">取色器或点击预设色板快速取色</span>
+            <span className="text-xs font-mono text-ink3">取色器或点击预设色板快速取色</span>
           </div>
         </SectionCard>
 

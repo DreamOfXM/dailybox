@@ -31,7 +31,7 @@ function buildHighlight(text: string, matches: MatchInfo[]): ReactNode[] {
     if (m.length === 0) continue; // 零宽匹配无法高亮
     if (m.index > cursor) nodes.push(text.slice(cursor, m.index));
     nodes.push(
-      <mark key={`${m.index}-${m.length}`} className="bg-emerald-500/25 text-emerald-300 rounded px-0.5">
+      <mark key={`${m.index}-${m.length}`} className="bg-acc/25 text-accd rounded px-0.5">
         {text.slice(m.index, m.index + m.length)}
       </mark>,
     );
@@ -96,7 +96,7 @@ export default function RegexTool() {
 
           {/* 常用正则库 */}
           <div className="mt-4">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-600 mb-2">常用正则 · 点击填入</div>
+            <div className="text-[10px] font-mono uppercase tracking-wider text-ink3 mb-2">常用正则 · 点击填入</div>
             <div className="flex flex-wrap gap-2">
               {PRESETS.map((p) => (
                 <button
@@ -106,8 +106,8 @@ export default function RegexTool() {
                   onClick={() => setPattern(p.pattern)}
                   className={`px-3 py-1.5 rounded-full text-xs font-mono border transition-colors ${
                     pattern === p.pattern
-                      ? "border-violet-500/40 bg-violet-500/10 text-violet-300"
-                      : "border-white/[0.08] bg-white/[0.03] text-neutral-400 hover:text-white hover:bg-white/[0.06]"
+                      ? "border-viol/45 bg-violp text-viol"
+                      : "border-line bg-surface text-ink2 hover:text-ink hover:bg-surface"
                   }`}
                 >
                   {p.label}
@@ -133,8 +133,8 @@ export default function RegexTool() {
             spellCheck={false}
             className="w-full px-4 py-3 rounded-xl font-mono text-sm leading-relaxed resize-y"
           />
-          <div className="mt-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 font-mono text-sm leading-relaxed whitespace-pre-wrap break-all text-neutral-300 min-h-12">
-            {highlight.length > 0 ? highlight : <span className="text-neutral-600">（无匹配）</span>}
+          <div className="mt-3 rounded-xl border border-line bg-surface p-4 font-mono text-sm leading-relaxed whitespace-pre-wrap break-all text-ink min-h-12">
+            {highlight.length > 0 ? highlight : <span className="text-ink3">（无匹配）</span>}
           </div>
         </SectionCard>
 
@@ -154,25 +154,25 @@ export default function RegexTool() {
           ) : (
             <div>
               {matches.slice(0, LIST_LIMIT).map((m, i) => (
-                <div key={`${m.index}-${i}`} className="py-2.5 border-b border-white/[0.04] last:border-0">
+                <div key={`${m.index}-${i}`} className="py-2.5 border-b border-line last:border-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <Badge tone="violet">#{i + 1}</Badge>
-                    <span className="text-[11px] font-mono text-neutral-600 tabular-nums">index {m.index}</span>
-                    <code className="font-mono text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded break-all">
+                    <span className="text-[11px] font-mono text-ink3 tabular-nums">index {m.index}</span>
+                    <code className="font-mono text-sm text-accd bg-accp border border-acct px-1.5 py-0.5 rounded break-all">
                       {m.length === 0 ? "（零宽匹配）" : m.full}
                     </code>
                   </div>
                   {(m.groups.length > 0 || m.named) && (
                     <div className="mt-1.5 pl-1 flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-mono">
                       {m.groups.map((g, gi) => (
-                        <span key={gi} className="text-neutral-500">
-                          ${gi + 1}=<span className="text-neutral-300">{g === null ? "∅ 未匹配" : g}</span>
+                        <span key={gi} className="text-ink3">
+                          ${gi + 1}=<span className="text-ink">{g === null ? "∅ 未匹配" : g}</span>
                         </span>
                       ))}
                       {m.named &&
                         Object.entries(m.named).map(([k, v]) => (
-                          <span key={k} className="text-violet-400">
-                            {k}=<span className="text-neutral-300">{v ?? "∅ 未匹配"}</span>
+                          <span key={k} className="text-viol">
+                            {k}=<span className="text-ink">{v ?? "∅ 未匹配"}</span>
                           </span>
                         ))}
                     </div>
@@ -195,19 +195,19 @@ export default function RegexTool() {
           {tokens.length === 0 ? (
             <Hint kind="info">输入正则表达式后自动解释每个符号的含义</Hint>
           ) : (
-            <div className="overflow-hidden rounded-xl border border-white/[0.06]">
+            <div className="overflow-hidden rounded-xl border border-line">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-white/[0.03] text-left text-[10px] font-mono uppercase tracking-wider text-neutral-500">
+                  <tr className="bg-surface text-left text-[10px] font-mono uppercase tracking-wider text-ink3">
                     <th className="px-3 py-2 w-1/3">Token</th>
                     <th className="px-3 py-2">含义</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tokens.map((t, i) => (
-                    <tr key={i} className="border-t border-white/[0.04]">
-                      <td className="px-3 py-1.5 font-mono text-violet-300 whitespace-pre-wrap break-all align-top">{t.token}</td>
-                      <td className="px-3 py-1.5 text-neutral-400">{t.desc}</td>
+                    <tr key={i} className="border-t border-line">
+                      <td className="px-3 py-1.5 font-mono text-viol whitespace-pre-wrap break-all align-top">{t.token}</td>
+                      <td className="px-3 py-1.5 text-ink2">{t.desc}</td>
                     </tr>
                   ))}
                 </tbody>

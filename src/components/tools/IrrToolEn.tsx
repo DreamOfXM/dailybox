@@ -66,7 +66,7 @@ export default function IrrToolEn() {
                     setPeriods(s.periods);
                     setFee(s.fee);
                   }}
-                  className="text-xs font-mono px-2.5 py-1 rounded-md text-violet-400 hover:text-violet-300 hover:bg-white/[0.05] transition-colors"
+                  className="text-xs font-mono px-2.5 py-1 rounded-md text-viol hover:text-viol hover:bg-surface transition-colors"
                 >
                   {s.name}
                 </button>
@@ -76,19 +76,19 @@ export default function IrrToolEn() {
         >
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">Amount received (CNY)</span>
+              <span className="text-xs text-ink3 mb-1.5 block">Amount received (CNY)</span>
               <input value={principal} onChange={(e) => setPrincipal(e.target.value)} inputMode="decimal" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">Monthly payment (CNY)</span>
+              <span className="text-xs text-ink3 mb-1.5 block">Monthly payment (CNY)</span>
               <input value={payment} onChange={(e) => setPayment(e.target.value)} inputMode="decimal" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">Periods (months)</span>
+              <span className="text-xs text-ink3 mb-1.5 block">Periods (months)</span>
               <input value={periods} onChange={(e) => setPeriods(e.target.value)} inputMode="numeric" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">Upfront fee (CNY, 0 if none)</span>
+              <span className="text-xs text-ink3 mb-1.5 block">Upfront fee (CNY, 0 if none)</span>
               <input value={fee} onChange={(e) => setFee(e.target.value)} inputMode="decimal" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
           </div>
@@ -118,7 +118,7 @@ export default function IrrToolEn() {
             {f > 0 && (
               <div className="mt-4 flex items-center gap-2 flex-wrap">
                 <Badge tone="amber">Note</Badge>
-                <span className="text-xs text-neutral-400">
+                <span className="text-xs text-ink2">
                   The upfront fee of {f} CNY implies a nominal fee rate of about {pct(nominalFeeRate)}. Combined with monthly payments, the true annualized rate reaches {pct(result.value.annualNominal)} — always check IRR before borrowing, not just the advertised fee rate.
                 </span>
               </div>

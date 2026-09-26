@@ -28,7 +28,7 @@ export default function FanjianTool() {
           title="输入"
           subtitle="输入即实时转换 · 数据不出浏览器"
           aside={
-            <span className="text-[11px] font-mono text-neutral-500 tabular-nums">
+            <span className="text-[11px] font-mono text-ink3 tabular-nums">
               {Array.from(input).length} 字符
             </span>
           }
@@ -57,8 +57,8 @@ export default function FanjianTool() {
               disabled={!input}
               className={`px-2.5 py-1 rounded-md text-xs font-mono border transition-all ${
                 input
-                  ? "text-neutral-400 border-white/[0.06] hover:border-white/20 hover:text-white"
-                  : "text-neutral-600 border-white/[0.04] cursor-not-allowed"
+                  ? "text-ink2 border-line hover:border-line2 hover:text-ink"
+                  : "text-ink3 border-line cursor-not-allowed"
               }`}
             >
               清空

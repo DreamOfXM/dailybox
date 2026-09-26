@@ -57,7 +57,7 @@ export default function DepositTool() {
         <SectionCard title="存款参数" subtitle="国内定期存款为单利口径 · 复利适用于理财/国债等场景">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">本金（元）</span>
+              <span className="text-xs text-ink3 mb-1.5 block">本金（元）</span>
               <input
                 value={principal}
                 onChange={(e) => setPrincipal(e.target.value)}
@@ -67,7 +67,7 @@ export default function DepositTool() {
               />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">年利率（%）</span>
+              <span className="text-xs text-ink3 mb-1.5 block">年利率（%）</span>
               <input
                 value={rate}
                 onChange={(e) => setRate(e.target.value)}
@@ -77,7 +77,7 @@ export default function DepositTool() {
               />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">期限（年）</span>
+              <span className="text-xs text-ink3 mb-1.5 block">期限（年）</span>
               <input
                 value={years}
                 onChange={(e) => setYears(e.target.value)}
@@ -134,7 +134,7 @@ export default function DepositTool() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs font-mono">
                 <thead>
-                  <tr className="text-neutral-500 border-b border-white/[0.06]">
+                  <tr className="text-ink3 border-b border-line">
                     <th className="text-left py-2 pr-4">期限</th>
                     <th className="text-right py-2 px-4">到期利息</th>
                     <th className="text-right py-2 px-4">到期本息</th>
@@ -143,10 +143,10 @@ export default function DepositTool() {
                 </thead>
                 <tbody>
                   {plans.map((plan, i) => (
-                    <tr key={plan.name} className="border-b border-white/[0.04]">
-                      <td className="py-2.5 pr-4 text-neutral-300">{plan.name}</td>
-                      <td className="py-2.5 px-4 text-right text-neutral-400">{fmtMoney(plan.interest)}</td>
-                      <td className="py-2.5 px-4 text-right text-neutral-200">{fmtMoney(plan.maturity)}</td>
+                    <tr key={plan.name} className="border-b border-line">
+                      <td className="py-2.5 pr-4 text-ink">{plan.name}</td>
+                      <td className="py-2.5 px-4 text-right text-ink2">{fmtMoney(plan.interest)}</td>
+                      <td className="py-2.5 px-4 text-right text-ink">{fmtMoney(plan.maturity)}</td>
                       <td className="py-2.5 pl-4 text-right">{i === 0 && <Badge tone="emerald">最优</Badge>}</td>
                     </tr>
                   ))}

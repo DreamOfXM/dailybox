@@ -53,7 +53,7 @@ export default function IdcardTool() {
             <button
               type="button"
               onClick={() => setId(SAMPLE_ID)}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               填入示例
             </button>
@@ -68,7 +68,7 @@ export default function IdcardTool() {
             aria-label="身份证号"
             className="w-full px-4 py-3 rounded-xl font-mono text-[15px] tracking-wider"
           />
-          <p className="mt-2 text-[11px] font-mono text-neutral-600">
+          <p className="mt-2 text-[11px] font-mono text-ink3">
             示例号 {SAMPLE_ID} 仅用于演示校验流程，不对应任何真实身份；本工具不提供任何号码生成功能。
           </p>
         </SectionCard>
@@ -80,7 +80,7 @@ export default function IdcardTool() {
             subtitle="生日位前补 19 · 重算校验位"
             aside={<CopyButton text={outcome.upgraded} label="复制 18 位号" />}
           >
-            <code className="block rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 font-mono text-base text-neutral-200 tracking-wider break-all">
+            <code className="block rounded-xl border border-line bg-surface p-4 font-mono text-base text-ink tracking-wider break-all">
               {outcome.upgraded}
             </code>
           </SectionCard>

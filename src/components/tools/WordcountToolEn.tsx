@@ -40,7 +40,7 @@ export default function WordcountToolEn() {
             <button
               type="button"
               onClick={() => setInput(EXAMPLE)}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-emerald-400 hover:text-emerald-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-acc hover:text-accd hover:bg-surface transition-colors"
             >
               Fill example
             </button>
@@ -79,9 +79,9 @@ export default function WordcountToolEn() {
           {empty ? (
             <Hint kind="info">Enter some text to estimate reading time.</Hint>
           ) : (
-            <p className="font-mono tabular-nums text-2xl font-semibold text-emerald-300" aria-live="polite">
+            <p className="font-mono tabular-nums text-2xl font-semibold text-accd" aria-live="polite">
               {stats.readMinutes < 0.1 ? "<0.1" : stats.readMinutes}
-              <span className="text-sm text-neutral-500 ml-1.5 font-normal">min</span>
+              <span className="text-sm text-ink3 ml-1.5 font-normal">min</span>
             </p>
           )}
         </SectionCard>

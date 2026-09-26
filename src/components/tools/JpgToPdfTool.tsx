@@ -122,7 +122,7 @@ export default function JpgToPdfTool() {
               accept="image/jpeg,image/png"
               multiple
               onChange={onFiles}
-              className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+              className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
             />
 
             {/* Image list */}
@@ -132,20 +132,20 @@ export default function JpgToPdfTool() {
                   <li
                     key={it.id}
                     className={`flex items-center gap-3 p-2 rounded-xl border ${
-                      it.supported ? "border-white/[0.06] bg-white/[0.02]" : "border-red-500/20 bg-red-500/5"
+                      it.supported ? "border-line bg-surface" : "border-errline bg-errbg"
                     }`}
                   >
                     <img
                       src={it.url}
                       alt=""
-                      className="w-12 h-12 object-cover rounded-lg shrink-0 bg-black/30"
+                      className="w-12 h-12 object-cover rounded-lg shrink-0 bg-ground2"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-mono text-neutral-300 truncate">{it.file.name}</p>
-                      <p className="text-[10px] font-mono text-neutral-500">{(it.file.size / 1024).toFixed(0)} KB</p>
+                      <p className="text-xs font-mono text-ink truncate">{it.file.name}</p>
+                      <p className="text-[10px] font-mono text-ink3">{(it.file.size / 1024).toFixed(0)} KB</p>
                     </div>
                     {!it.supported && (
-                      <span className="text-[10px] font-mono text-red-400 shrink-0 max-w-[180px] leading-tight">
+                      <span className="text-[10px] font-mono text-errink shrink-0 max-w-[180px] leading-tight">
                         仅支持 JPG/PNG，请先用「图片压缩转换」转格式
                       </span>
                     )}
@@ -153,20 +153,20 @@ export default function JpgToPdfTool() {
                       <button
                         onClick={() => moveItem(it.id, -1)}
                         disabled={idx === 0}
-                        className="px-1.5 py-1 text-[10px] font-mono rounded-md text-neutral-400 hover:text-white hover:bg-white/[0.06] disabled:opacity-30"
+                        className="px-1.5 py-1 text-[10px] font-mono rounded-md text-ink2 hover:text-ink hover:bg-surface disabled:opacity-30"
                       >
                         ↑前移
                       </button>
                       <button
                         onClick={() => moveItem(it.id, 1)}
                         disabled={idx === items.length - 1}
-                        className="px-1.5 py-1 text-[10px] font-mono rounded-md text-neutral-400 hover:text-white hover:bg-white/[0.06] disabled:opacity-30"
+                        className="px-1.5 py-1 text-[10px] font-mono rounded-md text-ink2 hover:text-ink hover:bg-surface disabled:opacity-30"
                       >
                         ↓后移
                       </button>
                       <button
                         onClick={() => removeItem(it.id)}
-                        className="px-1.5 py-1 text-[10px] font-mono rounded-md text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                        className="px-1.5 py-1 text-[10px] font-mono rounded-md text-errink hover:text-errink hover:bg-errbg"
                       >
                         删除
                       </button>
@@ -216,7 +216,7 @@ export default function JpgToPdfTool() {
             <button
               onClick={runConvert}
               disabled={supportedCount === 0 || busy}
-              className="px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+              className="px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
             >
               {busy ? "生成中…" : "生成并下载 PDF"}
             </button>
@@ -225,8 +225,8 @@ export default function JpgToPdfTool() {
           {hasUnsupported && (
             <Hint kind="warn">列表中有不支持的图片格式，这些图片将被排除。可先用「图片压缩转换」转为 JPG/PNG。</Hint>
           )}
-          {msg && <p className="text-xs font-mono text-emerald-400 mt-3">{msg}</p>}
-          {err && <p className="text-xs font-mono text-red-400 mt-3">{err}</p>}
+          {msg && <p className="text-xs font-mono text-acc mt-3">{msg}</p>}
+          {err && <p className="text-xs font-mono text-errink mt-3">{err}</p>}
         </SectionCard>
 
         <Hint>

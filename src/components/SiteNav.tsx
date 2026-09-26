@@ -1,19 +1,22 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ALL_TOOLS, navLabel } from "@/lib/seo";
+import { ALL_TOOLS } from "@/lib/seo";
 import { ALL_TOOLS_EN } from "@/lib/seo-en";
-import { DesktopNavLinks, MobileNav, type NavItem } from "@/components/ui";
+import { CategoryLinks, MobileNav, type NavItem } from "@/components/ui";
 
 export default function SiteNav() {
   const pathname = usePathname() || "";
   const isEn = pathname.startsWith("/en");
-  const items: NavItem[] = isEn
-    ? ALL_TOOLS_EN.map((t) => ({ slug: `en/${t.slug}`, label: t.slug.toUpperCase(), title: t.title }))
-    : ALL_TOOLS.map((t) => ({ slug: t.slug, label: navLabel(t.slug), title: t.title }));
+  const items: NavItem[] = (isEn ? ALL_TOOLS_EN : ALL_TOOLS).map((t) => ({
+    slug: t.slug,
+    href: isEn ? `/en/${t.slug}` : `/${t.slug}`,
+    label: t.slug,
+    title: t.title,
+  }));
   return (
     <>
-      <DesktopNavLinks items={items} />
+      <CategoryLinks />
       <MobileNav items={items} />
     </>
   );

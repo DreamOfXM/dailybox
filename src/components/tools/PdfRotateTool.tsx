@@ -93,12 +93,12 @@ export default function PdfRotateTool() {
             type="file"
             accept="application/pdf"
             onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
           />
 
           {meta && (
             <div className="space-y-4 mt-4">
-              <p className="text-xs font-mono text-neutral-500">
+              <p className="text-xs font-mono text-ink3">
                 共 {meta.pageCount} 页 · {(meta.byteLength / 1024).toFixed(0)} KB
               </p>
 
@@ -107,28 +107,28 @@ export default function PdfRotateTool() {
                 <button
                   onClick={() => applyAll(90)}
                   disabled={busy}
-                  className="px-4 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
                 >
                   全部顺时针 90°
                 </button>
                 <button
                   onClick={() => applyAll(180)}
                   disabled={busy}
-                  className="px-4 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
                 >
                   全部 180°
                 </button>
                 <button
                   onClick={() => applyAll(270)}
                   disabled={busy}
-                  className="px-4 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
                 >
                   全部逆时针 90°
                 </button>
                 <button
                   onClick={resetAll}
                   disabled={busy}
-                  className="px-4 py-2 rounded-xl bg-white/[0.06] text-white text-sm font-medium disabled:opacity-40"
+                  className="px-4 py-2 rounded-xl bg-surface text-ink text-sm font-medium disabled:opacity-40"
                 >
                   重置
                 </button>
@@ -142,25 +142,25 @@ export default function PdfRotateTool() {
                   return (
                     <div
                       key={i}
-                      className="flex flex-col items-center gap-2 p-3 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl border border-line bg-surface"
                     >
-                      <span className="text-xs font-mono text-neutral-500">
+                      <span className="text-xs font-mono text-ink3">
                         第 {i + 1} 页
                       </span>
                       {/* Visual page orientation indicator */}
                       <div className="relative w-12 h-16 flex items-center justify-center">
                         <div
-                          className="w-8 h-11 border-2 border-white/30 rounded-sm transition-transform duration-300"
+                          className="w-8 h-11 border-2 border-line2 rounded-sm transition-transform duration-300"
                           style={{ transform: `rotate(${resultAngle}deg)` }}
                         />
                       </div>
-                      <span className="text-xs font-mono text-white">
+                      <span className="text-xs font-mono text-ink">
                         {resultAngle}°
                       </span>
                       <button
                         onClick={() => applyOne(i, 90)}
                         disabled={busy}
-                        className="px-3 py-1 rounded-lg bg-white/[0.06] text-white text-xs font-medium disabled:opacity-40 hover:bg-white/[0.1]"
+                        className="px-3 py-1 rounded-lg bg-surface text-ink text-xs font-medium disabled:opacity-40 hover:bg-surface2"
                       >
                         ⟳ 旋转 90°
                       </button>
@@ -177,7 +177,7 @@ export default function PdfRotateTool() {
                 <button
                   onClick={runDownload}
                   disabled={!hasOps || busy}
-                  className="mt-3 px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                  className="mt-3 px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
                 >
                   {busy ? "处理中…" : "旋转并下载"}
                 </button>
@@ -185,8 +185,8 @@ export default function PdfRotateTool() {
             </div>
           )}
 
-          {msg && <p className="text-xs font-mono text-emerald-400 mt-3">{msg}</p>}
-          {err && <p className="text-xs font-mono text-red-400 mt-3">{err}</p>}
+          {msg && <p className="text-xs font-mono text-acc mt-3">{msg}</p>}
+          {err && <p className="text-xs font-mono text-errink mt-3">{err}</p>}
         </SectionCard>
 
         <Hint>

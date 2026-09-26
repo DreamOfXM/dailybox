@@ -43,10 +43,10 @@ function enMsg(msg: string): string {
 }
 
 /** Comparison card row */
-function Row({ label, value, tone = "text-neutral-200" }: { label: string; value: string; tone?: string }) {
+function Row({ label, value, tone = "text-ink" }: { label: string; value: string; tone?: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 py-1.5 border-b border-white/[0.04] last:border-0">
-      <span className="text-[11px] font-mono text-neutral-500 shrink-0">{label}</span>
+    <div className="flex items-baseline justify-between gap-3 py-1.5 border-b border-line last:border-0">
+      <span className="text-[11px] font-mono text-ink3 shrink-0">{label}</span>
       <span className={`font-mono tabular-nums text-sm ${tone}`}>{value}</span>
     </div>
   );
@@ -163,7 +163,7 @@ export default function MortgageToolEn() {
                   aria-label="Annual interest rate (%)"
                   className="w-full px-4 py-3 rounded-xl font-mono text-[15px] pr-10"
                 />
-                <span className="absolute right-4 text-xs font-mono text-neutral-600 pointer-events-none">%</span>
+                <span className="absolute right-4 text-xs font-mono text-ink3 pointer-events-none">%</span>
               </div>
             </Field>
           </div>
@@ -194,22 +194,22 @@ export default function MortgageToolEn() {
                   <div
                     key={m}
                     className={`rounded-xl border p-4 ${
-                      isPrincipal ? "border-emerald-500/30 bg-emerald-500/[0.05]" : "border-white/[0.06] bg-white/[0.02]"
+                      isPrincipal ? "border-acct bg-acc/[0.05]" : "border-line bg-surface"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-mono text-neutral-400">{METHOD_NAME[m]}</span>
+                      <span className="text-xs font-mono text-ink2">{METHOD_NAME[m]}</span>
                       {isPrincipal && <Badge tone="emerald">Lower total interest</Badge>}
                     </div>
                     <div className="mb-3">
-                      <div className="text-[11px] font-mono text-neutral-500 mb-1">First month payment</div>
-                      <div className={`font-mono tabular-nums text-2xl font-semibold ${isPrincipal ? "text-emerald-300" : "text-blue-300"}`}>
+                      <div className="text-[11px] font-mono text-ink3 mb-1">First month payment</div>
+                      <div className={`font-mono tabular-nums text-2xl font-semibold ${isPrincipal ? "text-accd" : "text-info"}`}>
                         {money(s.monthlyFirst)}
-                        <span className="text-xs text-neutral-500 ml-1 font-normal">CNY</span>
+                        <span className="text-xs text-ink3 ml-1 font-normal">CNY</span>
                       </div>
                     </div>
                     <Row label="Last month payment" value={`${money(s.monthlyLast)} CNY`} />
-                    <Row label="Total interest" value={`${money(s.totalInterest)} CNY`} tone={isPrincipal ? "text-emerald-300" : "text-neutral-200"} />
+                    <Row label="Total interest" value={`${money(s.totalInterest)} CNY`} tone={isPrincipal ? "text-accd" : "text-ink"} />
                     <Row label="Total payment" value={`${money(s.totalPayment)} CNY`} />
                   </div>
                 );
@@ -231,7 +231,7 @@ export default function MortgageToolEn() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs font-mono tabular-nums min-w-[520px]">
                 <thead>
-                  <tr className="text-neutral-500 border-b border-white/[0.08]">
+                  <tr className="text-ink3 border-b border-line">
                     <th className="py-2 pr-2 text-left font-normal">Period</th>
                     <th className="py-2 px-2 text-right font-normal">Payment</th>
                     <th className="py-2 px-2 text-right font-normal">Principal</th>
@@ -241,8 +241,8 @@ export default function MortgageToolEn() {
                 </thead>
                 <tbody>
                   {visibleRows.map((row) => (
-                    <tr key={row.period} className="text-neutral-300 border-b border-white/[0.04] hover:bg-white/[0.03]">
-                      <td className="py-1.5 pr-2 text-neutral-500">{row.period}</td>
+                    <tr key={row.period} className="text-ink border-b border-line hover:bg-surface">
+                      <td className="py-1.5 pr-2 text-ink3">{row.period}</td>
                       <td className="py-1.5 px-2 text-right">{money(row.payment)}</td>
                       <td className="py-1.5 px-2 text-right">{money(row.principal)}</td>
                       <td className="py-1.5 px-2 text-right">{money(row.interest)}</td>
@@ -256,7 +256,7 @@ export default function MortgageToolEn() {
               <button
                 type="button"
                 onClick={() => setShowAll((v) => !v)}
-                className="px-3 py-1.5 rounded-md text-xs font-mono border text-neutral-400 border-white/[0.06] hover:border-white/20 hover:text-white transition-all"
+                className="px-3 py-1.5 rounded-md text-xs font-mono border text-ink2 border-line hover:border-line2 hover:text-ink transition-all"
               >
                 {showAll ? "Collapse" : `Show all ${rows.length} periods`}
               </button>
@@ -308,7 +308,7 @@ export default function MortgageToolEn() {
                     <Stat label="Interest saved" value={money(prepay.savedInterest)} unit="CNY" tone="good" emphasis />
                     <Stat label="Remaining balance after prepay" value={money(prepay.remainingAfter)} unit="CNY" />
                   </div>
-                  <p className="mt-3 text-[11px] font-mono text-neutral-600">
+                  <p className="mt-3 text-[11px] font-mono text-ink3">
                     Lump-sum prepayment after period {periodStr}. Remaining balance recalculated under {METHOD_NAME[tableMethod]} over {prepay.targetMonths} periods.
                   </p>
                 </>
@@ -330,7 +330,7 @@ export default function MortgageToolEn() {
           ]}
         />
 
-        <p className="text-[11px] font-mono text-neutral-600">Results are for reference only. Actual terms depend on your lender.</p>
+        <p className="text-[11px] font-mono text-ink3">Results are for reference only. Actual terms depend on your lender.</p>
       </div>
     </div>
   );

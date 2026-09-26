@@ -114,19 +114,19 @@ export default function PdfOrganizeToolEn() {
             type="file"
             accept="application/pdf"
             onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
           />
 
           {meta && (
             <div className="space-y-4 mt-4">
               <div className="flex items-center justify-between flex-wrap gap-2">
-                <p className="text-xs font-mono text-neutral-500">
+                <p className="text-xs font-mono text-ink3">
                   Keeping {order.length} / {meta.pageCount} pages · {deletedCount} removed
                 </p>
                 <button
                   onClick={resetOrder}
                   disabled={busy}
-                  className="px-3 py-1 rounded-lg bg-white/[0.06] text-white text-xs font-medium disabled:opacity-40 hover:bg-white/[0.1]"
+                  className="px-3 py-1 rounded-lg bg-surface text-ink text-xs font-medium disabled:opacity-40 hover:bg-surface2"
                 >
                   Reset order
                 </button>
@@ -139,19 +139,19 @@ export default function PdfOrganizeToolEn() {
                   return (
                     <div
                       key={`${origIdx}-${pos}`}
-                      className="flex flex-col items-center gap-2 p-3 rounded-xl border border-white/[0.06] bg-white/[0.02]"
+                      className="flex flex-col items-center gap-2 p-3 rounded-xl border border-line bg-surface"
                     >
-                      <span className="text-xs font-mono text-neutral-500">
+                      <span className="text-xs font-mono text-ink3">
                         New #{pos + 1}
                       </span>
                       {/* Placeholder card representing the page */}
-                      <div className="w-14 h-18 border-2 border-white/20 rounded-md flex items-center justify-center">
-                        <span className="text-lg font-bold text-white/60">
+                      <div className="w-14 h-18 border-2 border-line2 rounded-md flex items-center justify-center">
+                        <span className="text-lg font-bold text-ink/60">
                           {origIdx + 1}
                         </span>
                       </div>
                       {page && (
-                        <span className="text-[10px] font-mono text-neutral-600">
+                        <span className="text-[10px] font-mono text-ink3">
                           {Math.round(page.width)}×{Math.round(page.height)}
                         </span>
                       )}
@@ -159,21 +159,21 @@ export default function PdfOrganizeToolEn() {
                         <button
                           onClick={() => moveUp(pos)}
                           disabled={pos === 0 || busy}
-                          className="px-2 py-1 rounded-lg bg-white/[0.06] text-white text-[10px] font-medium disabled:opacity-40 hover:bg-white/[0.1]"
+                          className="px-2 py-1 rounded-lg bg-surface text-ink text-[10px] font-medium disabled:opacity-40 hover:bg-surface2"
                         >
                           ↑ Up
                         </button>
                         <button
                           onClick={() => moveDown(pos)}
                           disabled={pos === order.length - 1 || busy}
-                          className="px-2 py-1 rounded-lg bg-white/[0.06] text-white text-[10px] font-medium disabled:opacity-40 hover:bg-white/[0.1]"
+                          className="px-2 py-1 rounded-lg bg-surface text-ink text-[10px] font-medium disabled:opacity-40 hover:bg-surface2"
                         >
                           ↓ Down
                         </button>
                         <button
                           onClick={() => removePage(pos)}
                           disabled={busy}
-                          className="px-2 py-1 rounded-lg bg-red-900/30 text-red-300 text-[10px] font-medium disabled:opacity-40 hover:bg-red-900/50"
+                          className="px-2 py-1 rounded-lg bg-errbg text-errink text-[10px] font-medium disabled:opacity-40 hover:bg-errbg"
                         >
                           Delete
                         </button>
@@ -191,7 +191,7 @@ export default function PdfOrganizeToolEn() {
                 <button
                   onClick={runDownload}
                   disabled={order.length === 0 || busy}
-                  className="mt-3 px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                  className="mt-3 px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
                 >
                   {busy ? "Processing…" : "Organize & download"}
                 </button>
@@ -199,8 +199,8 @@ export default function PdfOrganizeToolEn() {
             </div>
           )}
 
-          {msg && <p className="text-xs font-mono text-emerald-400 mt-3">{msg}</p>}
-          {err && <p className="text-xs font-mono text-red-400 mt-3">{err}</p>}
+          {msg && <p className="text-xs font-mono text-acc mt-3">{msg}</p>}
+          {err && <p className="text-xs font-mono text-errink mt-3">{err}</p>}
         </SectionCard>
 
         <Hint>

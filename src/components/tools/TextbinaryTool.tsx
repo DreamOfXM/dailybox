@@ -47,7 +47,7 @@ export default function TextbinaryTool() {
                 setDirection("t2b");
                 setInput(EXAMPLE_TEXT);
               }}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               填入示例
             </button>
@@ -63,16 +63,16 @@ export default function TextbinaryTool() {
               ]}
               ariaLabel="转换方向"
             />
-            <label className="flex items-center gap-2 text-xs font-mono text-neutral-500">
+            <label className="flex items-center gap-2 text-xs font-mono text-ink3">
               分隔符
               <input
                 value={sep}
                 onChange={(e) => setSep(e.target.value)}
                 placeholder="空格"
                 aria-label="字节分隔符"
-                className="w-24 px-3 py-1.5 rounded-md font-mono text-sm border border-white/[0.06] bg-white/[0.03] focus:outline-none focus:border-white/20"
+                className="w-24 px-3 py-1.5 rounded-md font-mono text-sm border border-line bg-surface focus:outline-none focus:border-line2"
               />
-              {sep === "" && <span className="text-neutral-700">无分隔符（连续 01 串）</span>}
+              {sep === "" && <span className="text-ink3">无分隔符（连续 01 串）</span>}
             </label>
           </div>
           <textarea
@@ -97,7 +97,7 @@ export default function TextbinaryTool() {
                 type="button"
                 onClick={feedBack}
                 disabled={!result.text}
-                className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] disabled:opacity-40 transition-colors"
+                className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface disabled:opacity-40 transition-colors"
               >
                 ↙ 结果填回输入
               </button>

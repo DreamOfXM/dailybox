@@ -129,13 +129,13 @@ export default function PdfToolEn() {
                 accept="application/pdf"
                 multiple
                 onChange={onMergeFiles}
-                className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+                className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
               />
               {files.length > 0 && (
-                <ol className="text-xs font-mono text-neutral-500 space-y-1">
+                <ol className="text-xs font-mono text-ink3 space-y-1">
                   {files.map((f, i) => (
                     <li key={i}>
-                      {i + 1}. {f.name} <span className="text-neutral-700">· {(f.size / 1024).toFixed(0)} KB</span>
+                      {i + 1}. {f.name} <span className="text-ink3">· {(f.size / 1024).toFixed(0)} KB</span>
                     </li>
                   ))}
                 </ol>
@@ -143,7 +143,7 @@ export default function PdfToolEn() {
               <button
                 onClick={runMerge}
                 disabled={!files.length || busy}
-                className="px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                className="px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
               >
                 {busy ? "Processing…" : "Merge & download"}
               </button>
@@ -154,11 +154,11 @@ export default function PdfToolEn() {
                 type="file"
                 accept="application/pdf"
                 onChange={onSplitFile}
-                className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+                className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
               />
               {splitTotal > 0 && (
                 <div className="space-y-2">
-                  <p className="text-xs font-mono text-neutral-500">{splitTotal} pages · enter the page range to keep / extract</p>
+                  <p className="text-xs font-mono text-ink3">{splitTotal} pages · enter the page range to keep / extract</p>
                   <input
                     value={range}
                     onChange={(e) => {
@@ -169,7 +169,7 @@ export default function PdfToolEn() {
                     className="w-full px-4 py-3 rounded-xl font-mono text-sm"
                   />
                   {range && !parsed.error && parsed.indices.length > 0 && (
-                    <p className="text-xs font-mono text-emerald-400">
+                    <p className="text-xs font-mono text-acc">
                       Will extract {parsed.indices.length} pages: {parsed.indices.map((i) => i + 1).join(", ")}
                     </p>
                   )}
@@ -178,16 +178,16 @@ export default function PdfToolEn() {
               <button
                 onClick={runSplit}
                 disabled={!splitFile || !!parsed.error || !parsed.indices.length || busy}
-                className="px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                className="px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
               >
                 {busy ? "Processing…" : "Extract & download"}
               </button>
             </div>
           )}
 
-          {msg && <p className="text-xs font-mono text-emerald-400 mt-3">{msg}</p>}
-          {err && <p className="text-xs font-mono text-red-400 mt-3">{err}</p>}
-          {parsed.error && mode === "split" && range && <p className="text-xs font-mono text-amber-400 mt-2">{parsed.error}</p>}
+          {msg && <p className="text-xs font-mono text-acc mt-3">{msg}</p>}
+          {err && <p className="text-xs font-mono text-errink mt-3">{err}</p>}
+          {parsed.error && mode === "split" && range && <p className="text-xs font-mono text-warn mt-2">{parsed.error}</p>}
         </SectionCard>
 
         <Hint>

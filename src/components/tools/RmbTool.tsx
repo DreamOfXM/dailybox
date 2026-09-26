@@ -35,8 +35,8 @@ export default function RmbTool() {
                 onClick={() => setAmount(q)}
                 className={`px-2.5 py-1 rounded-md text-xs font-mono border transition-all ${
                   amount === q
-                    ? "text-emerald-300 border-emerald-500/40 bg-emerald-500/10"
-                    : "text-neutral-400 border-white/[0.06] hover:border-white/20 hover:text-white"
+                    ? "text-accd border-acct bg-accp"
+                    : "text-ink2 border-line hover:border-line2 hover:text-ink"
                 }`}
               >
                 {q}
@@ -53,7 +53,7 @@ export default function RmbTool() {
         >
           {result.ok ? (
             <p
-              className="text-2xl sm:text-3xl font-semibold text-emerald-300 leading-snug break-all font-mono"
+              className="text-2xl sm:text-3xl font-semibold text-accd leading-snug break-all font-mono"
               aria-live="polite"
             >
               {result.value}

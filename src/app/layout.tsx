@@ -3,12 +3,10 @@ import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { SITE_ORIGIN, BASE_PATH, OG_IMAGE } from "@/lib/seo";
 import SiteNav from "@/components/SiteNav";
-import { SiteFooter, SiteBrand, SiteLangToggle } from "@/components/ui";
+import { SiteFooter, SiteBrand, SiteLangToggle, NavCta } from "@/components/ui";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
-
-
+const inter = Inter({ subsets: ["latin"], variable: "--font-latin" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbmono" });
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-G7TXV4XC2B";
 
@@ -39,7 +37,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     title: "DailyBox - 日常工具箱",
-    description: "11 个免费在线工具：哈希、正则、UUID、进制、JWT、Cron、大写金额、身份证校验、单位换算等。",
+    description: "33 个免费在线工具：哈希、正则、UUID、进制、JWT、Cron、PDF 合并拆分、大写金额、身份证校验、单位换算等。",
     url: SITE_ORIGIN + BASE_PATH,
     siteName: "DailyBox",
     type: "website",
@@ -56,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN" className="dark">
+    <html lang="zh-CN">
       <head>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
         <script
@@ -66,22 +64,19 @@ export default function RootLayout({
         />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       </head>
-      <body className={`${inter.variable} ${mono.variable} font-sans`}>
-        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/[0.06] bg-[#0a0a0b]/80 backdrop-blur-xl">
-          <div className="w-full px-4 sm:px-6 lg:px-10 2xl:px-64 h-14 flex items-center justify-between gap-3">
+      <body className={`${inter.variable} ${mono.variable} font-sans bg-ground text-ink`}>
+        <nav className="sticky top-0 z-50 border-b border-line bg-ground/92 backdrop-blur-md">
+          <div className="mx-auto max-w-[1180px] px-4 sm:px-8 min-h-[66px] flex flex-wrap items-center gap-x-6 gap-y-1 py-2">
             <SiteBrand />
             <SiteNav />
             <SiteLangToggle />
+            <NavCta />
           </div>
         </nav>
-        <main className="relative z-10 w-full px-4 sm:px-6 lg:px-10 2xl:px-64 pt-24 pb-20">
+        <main className="mx-auto max-w-[1180px] px-4 sm:px-8 pt-10 pb-16">
           {children}
         </main>
-        <footer className="relative z-10 border-t border-white/[0.06]">
-          <div className="w-full px-4 sm:px-6 lg:px-10 2xl:px-64 py-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-600 font-mono">
-            <SiteFooter />
-          </div>
-        </footer>
+        <SiteFooter />
       </body>
     </html>
   );

@@ -53,7 +53,7 @@ export default function IrrTool() {
                     setPeriods(s.periods);
                     setFee(s.fee);
                   }}
-                  className="text-xs font-mono px-2.5 py-1 rounded-md text-violet-400 hover:text-violet-300 hover:bg-white/[0.05] transition-colors"
+                  className="text-xs font-mono px-2.5 py-1 rounded-md text-viol hover:text-viol hover:bg-surface transition-colors"
                 >
                   {s.name}
                 </button>
@@ -63,19 +63,19 @@ export default function IrrTool() {
         >
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">到手金额（元）</span>
+              <span className="text-xs text-ink3 mb-1.5 block">到手金额（元）</span>
               <input value={principal} onChange={(e) => setPrincipal(e.target.value)} inputMode="decimal" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">每期还款（元）</span>
+              <span className="text-xs text-ink3 mb-1.5 block">每期还款（元）</span>
               <input value={payment} onChange={(e) => setPayment(e.target.value)} inputMode="decimal" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">期数（月）</span>
+              <span className="text-xs text-ink3 mb-1.5 block">期数（月）</span>
               <input value={periods} onChange={(e) => setPeriods(e.target.value)} inputMode="numeric" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">前置费用（元，可 0）</span>
+              <span className="text-xs text-ink3 mb-1.5 block">前置费用（元，可 0）</span>
               <input value={fee} onChange={(e) => setFee(e.target.value)} inputMode="decimal" className="w-full px-4 py-2.5 rounded-xl font-mono text-sm" />
             </label>
           </div>
@@ -105,7 +105,7 @@ export default function IrrTool() {
             {f > 0 && (
               <div className="mt-4 flex items-center gap-2 flex-wrap">
                 <Badge tone="amber">注意</Badge>
-                <span className="text-xs text-neutral-400">
+                <span className="text-xs text-ink2">
                   前置费用 {f} 元的名义费率约 {pct(nominalFeeRate)}，叠加月供后真实年化达 {pct(result.value.annualNominal)}——借钱前先看 IRR，别只看宣传费率
                 </span>
               </div>

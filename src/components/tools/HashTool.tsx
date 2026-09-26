@@ -77,7 +77,7 @@ export default function HashTool() {
           title="输入"
           subtitle="按 UTF-8 编码计算"
           aside={
-            <span className="text-[11px] font-mono text-neutral-500 tabular-nums">
+            <span className="text-[11px] font-mono text-ink3 tabular-nums">
               {byteCount} 字节
             </span>
           }
@@ -114,11 +114,11 @@ export default function HashTool() {
               return (
                 <div
                   key={row.key}
-                  className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3.5"
+                  className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4 rounded-xl border border-line bg-surface p-3.5"
                 >
                   <div className="w-24 shrink-0 sm:pt-0.5">
-                    <div className="text-xs font-mono text-neutral-300">{row.label}</div>
-                    <div className="text-[10px] font-mono text-neutral-600">{row.bits}</div>
+                    <div className="text-xs font-mono text-ink">{row.label}</div>
+                    <div className="text-[10px] font-mono text-ink3">{row.bits}</div>
                   </div>
                   {showCryptoHint ? (
                     <div className="flex-1 min-w-0">
@@ -126,7 +126,7 @@ export default function HashTool() {
                     </div>
                   ) : (
                     <>
-                      <code className="flex-1 min-w-0 font-mono text-[13px] leading-relaxed break-all text-neutral-200">
+                      <code className="flex-1 min-w-0 font-mono text-[13px] leading-relaxed break-all text-ink">
                         {v || (pending ? "计算中…" : "—")}
                       </code>
                       <div className="shrink-0">

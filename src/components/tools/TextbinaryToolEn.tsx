@@ -59,7 +59,7 @@ export default function TextbinaryToolEn() {
                 setDirection("t2b");
                 setInput(EXAMPLE_TEXT);
               }}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               Load example
             </button>
@@ -75,16 +75,16 @@ export default function TextbinaryToolEn() {
               ]}
               ariaLabel="Direction"
             />
-            <label className="flex items-center gap-2 text-xs font-mono text-neutral-500">
+            <label className="flex items-center gap-2 text-xs font-mono text-ink3">
               Separator
               <input
                 value={sep}
                 onChange={(e) => setSep(e.target.value)}
                 placeholder="Space"
                 aria-label="Byte separator"
-                className="w-24 px-3 py-1.5 rounded-md font-mono text-sm border border-white/[0.06] bg-white/[0.03] focus:outline-none focus:border-white/20"
+                className="w-24 px-3 py-1.5 rounded-md font-mono text-sm border border-line bg-surface focus:outline-none focus:border-line2"
               />
-              {sep === "" && <span className="text-neutral-700">No separator (continuous 01 stream)</span>}
+              {sep === "" && <span className="text-ink3">No separator (continuous 01 stream)</span>}
             </label>
           </div>
           <textarea
@@ -109,7 +109,7 @@ export default function TextbinaryToolEn() {
                 type="button"
                 onClick={feedBack}
                 disabled={!result.text}
-                className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] disabled:opacity-40 transition-colors"
+                className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface disabled:opacity-40 transition-colors"
               >
                 ↙ Feed back to input
               </button>

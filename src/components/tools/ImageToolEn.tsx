@@ -63,26 +63,26 @@ export default function ImageTool() {
       <PageHeader badge="Files" title={seo.title} subtitle={seo.subtitle} tone="emerald" />
       <div className="space-y-6">
         <SectionCard title="Upload Images" subtitle="JPG/PNG/WebP batch — local Canvas compression, no server upload">
-          <input type="file" accept="image/*" multiple onChange={onFiles} className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-sm file:text-white hover:file:bg-white/[0.1]" />
-          {files.length > 0 && <p className="text-xs font-mono text-neutral-500 mt-2">Selected {files.length} images, {(files.reduce((a, f) => a + f.size, 0) / 1024).toFixed(0)} KB</p>}
+          <input type="file" accept="image/*" multiple onChange={onFiles} className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-sm file:text-ink hover:file:bg-surface2" />
+          {files.length > 0 && <p className="text-xs font-mono text-ink3 mt-2">Selected {files.length} images, {(files.reduce((a, f) => a + f.size, 0) / 1024).toFixed(0)} KB</p>}
           <div className="flex flex-wrap gap-4 mt-4">
             <Segmented value={format} onChange={setFormat} options={[{ value: "jpeg", label: "JPEG" }, { value: "png", label: "PNG" }, { value: "webp", label: "WebP" }]} ariaLabel="OutputFormat" />
-            <label className="flex items-center gap-2 text-xs font-mono text-neutral-400">Quality <input type="range" min={0.1} max={1} step={0.05} value={quality} onChange={(e) => setQuality(parseFloat(e.target.value))} /> {Math.round(quality * 100)}%</label>
-            <label className="flex items-center gap-2 text-xs font-mono text-neutral-400">Max width <input type="number" value={maxWidth} onChange={(e) => setMaxWidth(parseInt(e.target.value) || 1920)} className="w-20 px-2 py-1 rounded bg-white/[0.06] border border-white/[0.06]" />px</label>
+            <label className="flex items-center gap-2 text-xs font-mono text-ink2">Quality <input type="range" min={0.1} max={1} step={0.05} value={quality} onChange={(e) => setQuality(parseFloat(e.target.value))} /> {Math.round(quality * 100)}%</label>
+            <label className="flex items-center gap-2 text-xs font-mono text-ink2">Max width <input type="number" value={maxWidth} onChange={(e) => setMaxWidth(parseInt(e.target.value) || 1920)} className="w-20 px-2 py-1 rounded bg-surface border border-line" />px</label>
           </div>
-          <button onClick={process} disabled={!files.length || processing} className="mt-4 px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40 hover:bg-neutral-200">{processing ? "Processing…" : "Compress & Convert"}</button>
+          <button onClick={process} disabled={!files.length || processing} className="mt-4 px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40 hover:bg-ground2">{processing ? "Processing…" : "Compress & Convert"}</button>
           <Hint>All done in browser Canvas, for e-commerce/blog images, batch dozens.</Hint>
         </SectionCard>
         {results.length > 0 && (
           <SectionCard title="Result" subtitle={`${results.length} images generated — click to download`} count={results.length}>
             <div className="space-y-2">
               {results.map((r) => (
-                <div key={r.name} className="flex items-center justify-between gap-3 rounded-xl border border-white/[0.06] bg-white/[0.03] p-3">
+                <div key={r.name} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface p-3">
                   <div className="min-w-0">
-                    <div className="text-sm text-white truncate">{r.name}</div>
-                    <div className="text-xs font-mono text-neutral-500">{(r.origSize / 1024).toFixed(0)}KB → {(r.size / 1024).toFixed(0)}KB {r.size < r.origSize ? `saved ${(((r.origSize - r.size) / r.origSize) * 100).toFixed(0)}%` : ""}</div>
+                    <div className="text-sm text-ink truncate">{r.name}</div>
+                    <div className="text-xs font-mono text-ink3">{(r.origSize / 1024).toFixed(0)}KB → {(r.size / 1024).toFixed(0)}KB {r.size < r.origSize ? `saved ${(((r.origSize - r.size) / r.origSize) * 100).toFixed(0)}%` : ""}</div>
                   </div>
-                  <a href={r.url} download={r.name} className="shrink-0 px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-xs">Download</a>
+                  <a href={r.url} download={r.name} className="shrink-0 px-3 py-1.5 rounded-lg bg-acc text-white text-xs">Download</a>
                 </div>
               ))}
             </div>

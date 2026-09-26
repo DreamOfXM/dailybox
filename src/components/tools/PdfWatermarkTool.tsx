@@ -182,10 +182,10 @@ export default function PdfWatermarkTool() {
             type="file"
             accept="application/pdf"
             onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
           />
           {file && pageCount > 0 && (
-            <p className="mt-2 text-xs font-mono text-neutral-500">
+            <p className="mt-2 text-xs font-mono text-ink3">
               {file.name} · {(file.size / 1024).toFixed(0)} KB · 共 {pageCount} 页
             </p>
           )}
@@ -241,8 +241,8 @@ export default function PdfWatermarkTool() {
                             onClick={() => setAngle(String(a))}
                             className={`px-3 py-1 rounded-lg text-xs font-mono border transition-colors ${
                               Number(angle) === a
-                                ? "border-white/20 bg-white/10 text-white"
-                                : "border-white/[0.06] text-neutral-500 hover:text-white"
+                                ? "border-line2 bg-surface2 text-ink"
+                                : "border-line text-ink3 hover:text-ink"
                             }`}
                           >
                             {a}°
@@ -272,7 +272,7 @@ export default function PdfWatermarkTool() {
                           step={0.01}
                           value={opacity}
                           onChange={(e) => setOpacity(Number(e.target.value))}
-                          className="w-full accent-blue-500"
+                          className="w-full accent-info"
                         />
                       </Field>
                       <Toggle checked={bold} onChange={setBold} label="粗体" />
@@ -305,13 +305,13 @@ export default function PdfWatermarkTool() {
                           type="file"
                           accept="image/png,image/jpeg"
                           onChange={onImage}
-                          className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+                          className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
                         />
                       </Field>
                       {imgPreview && (
                         <div className="flex items-center gap-3">
-                          <img src={imgPreview} alt="预览" className="h-16 w-auto rounded-lg border border-white/[0.06]" />
-                          <span className="text-xs font-mono text-neutral-500">{imgFile?.name}</span>
+                          <img src={imgPreview} alt="预览" className="h-16 w-auto rounded-lg border border-line" />
+                          <span className="text-xs font-mono text-ink3">{imgFile?.name}</span>
                         </div>
                       )}
                       <div className="grid grid-cols-2 gap-4">
@@ -330,7 +330,7 @@ export default function PdfWatermarkTool() {
                           step={0.01}
                           value={imgOpacity}
                           onChange={(e) => setImgOpacity(Number(e.target.value))}
-                          className="w-full accent-blue-500"
+                          className="w-full accent-info"
                         />
                       </Field>
                       <Field label="位置">
@@ -366,9 +366,9 @@ export default function PdfWatermarkTool() {
 
                 {/* Live CSS Preview column */}
                 <div className="flex flex-col items-center justify-start">
-                  <p className="text-[10px] font-mono text-neutral-600 uppercase tracking-wider mb-2">实时预览</p>
+                  <p className="text-[10px] font-mono text-ink3 uppercase tracking-wider mb-2">实时预览</p>
                   <div
-                    className="relative border border-white/[0.08] bg-white/[0.02] rounded-lg overflow-hidden"
+                    className="relative border border-line bg-surface rounded-lg overflow-hidden"
                     style={{ width: 200, height: 283 }}
                   >
                     {mode === "text" && text.trim() ? (
@@ -457,7 +457,7 @@ export default function PdfWatermarkTool() {
                         />
                       )
                     ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-neutral-700">
+                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-mono text-ink3">
                         {mode === "text" ? "输入文字预览" : "上传图片预览"}
                       </div>
                     )}
@@ -490,7 +490,7 @@ export default function PdfWatermarkTool() {
                   </Field>
                 )}
                 {pageScope === "custom" && !parsedPages.error && parsedPages.indices && (
-                  <p className="text-xs font-mono text-emerald-400">
+                  <p className="text-xs font-mono text-acc">
                     将处理 {parsedPages.indices.length} 页：{parsedPages.indices.map((i) => i + 1).join(", ")}
                   </p>
                 )}
@@ -502,12 +502,12 @@ export default function PdfWatermarkTool() {
               <button
                 onClick={run}
                 disabled={!canDownload}
-                className="px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                className="px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
               >
                 {busy ? "处理中…" : "添加水印并下载"}
               </button>
-              {msg && <p className="text-xs font-mono text-emerald-400 mt-3">{msg}</p>}
-              {err && <p className="text-xs font-mono text-red-400 mt-3">{err}</p>}
+              {msg && <p className="text-xs font-mono text-acc mt-3">{msg}</p>}
+              {err && <p className="text-xs font-mono text-errink mt-3">{err}</p>}
             </SectionCard>
           </>
         )}

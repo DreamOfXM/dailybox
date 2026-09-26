@@ -1,0 +1,156 @@
+/* L10 首屏层：规则从 dailybox-redesign/spectacle/L10.html 原样搬来，颜色一律走 globals.css 的语义 token */
+.wrap {max-width:1180px;margin:0 auto;padding:0 32px}
+.hero {position:relative;padding:16px 0 0}
+.hero-in {display:grid;grid-template-columns:minmax(0,1fr) 152px;gap:34px;align-items:start}
+h1.disp {font-family:var(--font-sans);font-weight:800;margin:0 0 12px;
+  font-size:clamp(38px,4.6vw,58px);line-height:1.03;letter-spacing:-.035em;max-width:13.5em}
+h1.disp em {font-style:normal;color:var(--color-acc);display:block}
+.pill b {width:7px;height:7px;border-radius:50%;background:var(--color-acc);display:inline-block}
+.pill {display:inline-flex;align-items:center;gap:10px;margin:0 0 12px;
+  font-size:16px;font-weight:600;color:#2c333f;
+  border:1px solid var(--color-line2);border-radius:100px;padding:4px 14px;background:#f9fafb;}
+.lede {max-width:53em;color:var(--color-ink2);font-size:17.5px;line-height:1.6;margin:0 0 12px}
+.lede br {display:none}
+.cta {display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin:0}
+.btn {display:inline-block;background:var(--color-acc);color:#f9fafb!important;padding:12px 24px;border-radius:4px;
+  font-size:16.5px;font-weight:700;border:1px solid var(--color-accd);}
+.lnk {font-size:16.5px;border-bottom:1.5px solid var(--color-line2);padding-bottom:1px;color:var(--color-ink);font-weight:600}
+.hero-num {position:relative;height:100%;min-height:230px}
+.hero-num > span {position:absolute;right:0;top:8px;font-family:var(--font-sans);font-weight:800;
+  font-size:124px;line-height:.8;color:var(--color-line2);letter-spacing:-.045em}
+.hero-num small {position:absolute;right:2px;top:108px;font-family:var(--font-mono);font-size:15.5px;color:var(--color-ink4)}
+
+
+#dbx{
+  --d-surf:var(--color-card);
+  --d-well:var(--color-ground);
+  --d-edge:var(--color-line2);
+  --d-hair:var(--color-rule);
+  --d-line:var(--color-line);
+  --d-ink:var(--color-ink);
+  --d-body:var(--color-ink2);
+  --d-mut:var(--color-ink3);
+  --d-acc:var(--color-acc);
+  --d-accT:var(--color-accd);
+  --d-ico:var(--color-ink4);
+  --d-mono:var(--font-mono);
+  --d-sans:var(--font-sans);
+  --d-accSoft:color-mix(in srgb, var(--d-acc) 10%, var(--d-surf));
+  --d-accLine:color-mix(in srgb, var(--d-acc) 34%, var(--d-surf));
+  --d-selBg:color-mix(in srgb, var(--d-acc) 13%, var(--d-surf));
+  --d-shadow:color-mix(in srgb, var(--d-ink) 34%, transparent);
+  display:block;width:min(1180px,calc(100% - 52px));margin:18px auto 0;text-align:left}
+#dbx .dbx-cap{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+#dbx .dbx-cap h2{margin:0;font:800 clamp(20px,2vw,25px)/1.2 var(--d-sans);
+  letter-spacing:-.022em;color:var(--d-ink)}
+#dbx .dbx-cap .who{margin:0;font-size:15px;color:var(--d-mut)}
+#dbx .dbx-cap .live{margin-inline-start:auto;font-size:15px;font-weight:700;
+  color:var(--d-accT);text-decoration:none;border-bottom:1px solid var(--d-accLine)}
+#dbx .dbx-app{display:grid;grid-template-columns:216px minmax(0,1fr);background:var(--d-surf);
+  border:1px solid var(--d-edge);border-radius:14px;overflow:hidden;
+  box-shadow:0 30px 56px -34px var(--d-shadow)}
+#dbx .dbx-rail{border-inline-end:1px solid var(--d-hair);background:var(--d-well);
+  padding:11px 11px 12px;display:flex;flex-direction:column}
+#dbx .dbx-lab{font-family:var(--d-mono);font-size:14px;color:var(--d-mut);padding:0 7px 6px}
+#dbx .dbx-rc{display:flex;align-items:center;gap:9px;padding:5px 8px;border-radius:8px;
+  font-size:15px;color:var(--d-body);border-inline-start:2px solid transparent;white-space:nowrap}
+#dbx .dbx-rc svg{width:16px;height:16px;flex:0 0 auto;color:var(--d-ico);stroke:currentColor;
+  fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+#dbx .dbx-rc .n{margin-inline-start:auto;font-family:var(--d-mono);font-size:14px;
+  color:var(--d-mut);font-style:normal}
+#dbx .dbx-rc.on{background:var(--d-selBg);border-inline-start-color:var(--d-acc);
+  color:var(--d-ink);font-weight:700}
+#dbx .dbx-rc.on svg{color:var(--d-acc)}
+#dbx .dbx-railfoot{margin-top:auto;padding:9px 8px 0;border-top:1px solid var(--d-hair);
+  font-family:var(--d-mono);font-size:14px;color:var(--d-mut);line-height:1.45}
+#dbx .dbx-pane{display:flex;flex-direction:column;min-width:0}
+#dbx .dbx-tbar{display:flex;align-items:center;gap:11px;padding:10px 16px;
+  border-bottom:1px solid var(--d-hair)}
+#dbx .dbx-lights{display:flex;gap:5px;flex:0 0 auto}
+#dbx .dbx-lights i{width:8px;height:8px;border-radius:50%;background:var(--d-line)}
+#dbx .dbx-lights i:first-child{background:var(--d-accLine)}
+#dbx .dbx-ttl{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;
+  color:var(--d-ink)}
+#dbx .dbx-ttl svg{width:18px;height:18px;stroke:var(--d-acc);fill:none;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+#dbx .dbx-crumbs{font-family:var(--d-mono);font-size:14.5px;color:var(--d-mut)}
+#dbx .dbx-req{margin-inline-start:auto;font-family:var(--d-mono);font-size:14px;
+  color:var(--d-mut);border:1px solid var(--d-line);border-radius:99px;padding:4px 9px}
+#dbx .dbx-chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:8px 16px;
+  border-bottom:1px solid var(--d-hair)}
+#dbx .dbx-ch{display:inline-flex;align-items:center;gap:6px;font-size:15px;color:var(--d-body);
+  border:1px solid var(--d-line);border-radius:9px;padding:5px 9px;white-space:nowrap}
+#dbx .dbx-ch svg{width:15px;height:15px;stroke:var(--d-ico);fill:none;stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round}
+#dbx .dbx-ch.on{background:var(--d-selBg);border-color:var(--d-accLine);
+  color:var(--d-ink);font-weight:700}
+#dbx .dbx-ch.on svg{stroke:var(--d-acc)}
+#dbx .dbx-pbody{display:grid;grid-template-columns:minmax(0,1fr) 302px}
+#dbx .dbx-pcol{padding:11px 16px 12px;min-width:0;display:flex;flex-direction:column}
+#dbx .dbx-pcol + .dbx-pcol{border-inline-start:1px solid var(--d-hair);background:var(--d-well)}
+#dbx .dbx-flab{display:block;font-family:var(--d-mono);font-size:14px;color:var(--d-mut);
+  margin-bottom:5px}
+#dbx .dbx-box{border:1px solid var(--d-line);border-radius:10px;background:var(--d-surf)}
+#dbx .dbx-inpat{display:flex;align-items:center;gap:8px;padding:10px 12px;
+  font-family:var(--d-mono);font-size:15px;color:var(--d-ink)}
+#dbx .dbx-inpat code{flex:1;min-width:0;overflow:hidden;white-space:nowrap;
+  text-overflow:ellipsis;font-family:inherit}
+#dbx .dbx-sl{color:var(--d-mut)}
+#dbx .dbx-flags{display:flex;align-items:center;gap:6px;margin-top:8px}
+#dbx .dbx-fg{font-family:var(--d-mono);font-size:13px;color:var(--d-body);
+  border:1px solid var(--d-line);border-radius:7px;padding:3px 8px}
+#dbx .dbx-fg[aria-pressed="true"]{background:var(--d-selBg);color:var(--d-ink);
+  border-color:var(--d-accLine);font-weight:700}
+#dbx .dbx-fnote{margin-inline-start:auto;font-family:var(--d-mono);font-size:14px;
+  color:var(--d-mut)}
+#dbx .dbx-ta{margin-top:5px;padding:11px 12px;font-family:var(--d-mono);font-size:15px;
+  line-height:1.66;color:var(--d-body);white-space:pre-wrap;word-break:break-word}
+#dbx .dbx-ta mark{background:var(--d-accSoft);color:var(--d-accT);
+  border-bottom:1px solid var(--d-accLine);border-radius:3px;padding:1px 2px;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+#dbx .dbx-big{display:flex;align-items:baseline;gap:9px}
+#dbx .dbx-big b{font-size:clamp(28px,2.8vw,34px);font-weight:800;letter-spacing:-.045em;
+  color:var(--d-ink);line-height:1;font-family:var(--d-mono)}
+#dbx .dbx-big span{font-size:15.5px;color:var(--d-body)}
+#dbx .dbx-big .sub{margin-inline-start:auto;font-family:var(--d-mono);font-size:14px;
+  color:var(--d-mut);white-space:nowrap}
+#dbx .dbx-mlist{margin-top:11px;display:flex;flex-direction:column;gap:5px}
+#dbx .dbx-mi{display:flex;align-items:center;gap:9px;background:var(--d-surf);
+  border:1px solid var(--d-line);border-radius:9px;padding:4px 9px;
+  font-family:var(--d-mono);font-size:15px;color:var(--d-body)}
+#dbx .dbx-mi .ix{color:var(--d-mut);flex:0 0 auto;font-size:14px}
+#dbx .dbx-mi .mt{color:var(--d-ink);min-width:0;overflow:hidden;white-space:nowrap;
+  text-overflow:ellipsis}
+#dbx .dbx-copy{display:flex;gap:8px;margin-top:11px}
+#dbx .dbx-btn{font:700 15px/1 var(--d-sans);color:var(--d-body);background:var(--d-surf);
+  border:1px solid var(--d-line);border-radius:9px;padding:9px 12px;cursor:pointer}
+#dbx .dbx-note{margin:8px 2px 0;font-size:14px;line-height:1.6;color:var(--d-mut)}
+#dbx .dbx-note code{font-family:var(--d-mono);font-size:13.5px;color:var(--d-body)}
+#dbx.is-c{width:auto;margin-inline:0}
+#dbx.is-c .dbx-app{grid-template-columns:1fr}
+#dbx.is-c .dbx-rail{border-inline-end:0;border-bottom:1px solid var(--d-hair);
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 8px;padding:9px 10px 10px}
+#dbx.is-c .dbx-rail .dbx-lab{grid-column:1/-1;padding-bottom:4px}
+#dbx.is-c .dbx-railfoot{grid-column:1/-1;margin-top:6px}
+#dbx.is-c .dbx-pbody{grid-template-columns:1fr}
+#dbx.is-c .dbx-pcol + .dbx-pcol{border-inline-start:0;border-top:1px solid var(--d-hair)}
+#dbx.is-c .dbx-big .sub{margin-inline-start:0}
+@media (max-width:960px){
+  /* hero-in 的第二列（152px 装饰栏）在这个档必须撤掉，否则标题被挤进 108px 宽 */
+  .hero-in {grid-template-columns:1fr}
+  .hero-num {display:none}
+}
+@media (max-width:600px){
+  h1.disp {font-size:36px}
+}
+@media (max-width:880px){
+  #dbx{width:calc(100% - 32px)}
+  #dbx .dbx-app,#dbx .dbx-pbody{grid-template-columns:1fr}
+  #dbx .dbx-rail{border-inline-end:0;border-bottom:1px solid var(--d-hair);
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  #dbx .dbx-rail .dbx-lab,#dbx .dbx-railfoot{grid-column:1/-1}
+  #dbx .dbx-pcol + .dbx-pcol{border-inline-start:0;border-top:1px solid var(--d-hair)}
+  #dbx .dbx-tbar{flex-wrap:wrap;gap:8px 11px}
+  #dbx .dbx-req{margin-inline-start:0}
+  #dbx .dbx-ttl,#dbx .dbx-crumbs,#dbx .dbx-req{white-space:nowrap}
+}

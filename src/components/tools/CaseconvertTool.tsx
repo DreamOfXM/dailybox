@@ -43,7 +43,7 @@ export default function CaseconvertTool() {
             <button
               type="button"
               onClick={() => setInput(EXAMPLE)}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-emerald-400 hover:text-emerald-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-acc hover:text-accd hover:bg-surface transition-colors"
             >
               填入示例
             </button>
@@ -71,7 +71,7 @@ export default function CaseconvertTool() {
                 type="button"
                 onClick={feedBack}
                 disabled={!result}
-                className="text-xs font-mono px-2.5 py-1 rounded-md text-emerald-400 hover:text-emerald-300 hover:bg-white/[0.05] disabled:opacity-40 transition-colors"
+                className="text-xs font-mono px-2.5 py-1 rounded-md text-acc hover:text-accd hover:bg-surface disabled:opacity-40 transition-colors"
               >
                 ↙ 结果填回输入
               </button>

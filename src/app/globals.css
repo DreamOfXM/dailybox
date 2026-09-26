@@ -1,26 +1,77 @@
 @import "tailwindcss";
 
-:root {
-  --bg: #0a0a0b;
-  --surface: rgba(255, 255, 255, 0.03);
-  --surface-2: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.06);
-  --border-strong: rgba(255, 255, 255, 0.12);
-  --text: #e5e5e5;
-  --text-dim: #737373;
-  --accent: #3b82f6;
-  --accent-glow: rgba(59, 130, 246, 0.15);
+/* L10 亮场 token（源自 dailybox-redesign/spectacle/L10.html 的 :root）
+   对 #F7F9FA / #FFFFFF 两档实测对比度：ink 18.3/19.3 · ink2 7.96/8.41 · ink3 5.26/5.56
+   ink4 3.58/3.78（仅装饰性微字）· acc 5.08/5.36 · info 6.71/7.09 · warn 5.61/5.93
+   viol 7.88/8.32 · errink 9.5/10.04 */
+@theme {
+  --color-ground: #f7f9fa;
+  --color-ground2: #eef1f4;
+  --color-card: #ffffff;
 
-  /* 圆角层级 */
+  --color-ink: #0b0e13;
+  --color-ink2: #454e5c;
+  --color-ink3: #5f6978;
+  --color-ink4: #7a8493;
+
+  --color-line: #e3e7ec;
+  --color-line2: #d3d8e0;
+  --color-rule: #eef1f4;
+  --color-surface: rgba(11, 14, 19, 0.028);
+  --color-surface2: rgba(11, 14, 19, 0.055);
+
+  --color-acc: #157a4b;
+  --color-accd: #0e5b38;
+  --color-acct: #b9e0cb;
+  --color-accp: #e7f3ec;
+
+  --color-info: #1f5c8b;
+  --color-infd: #174a70;   /* info 的悬停档：白字对它是 9.33:1 */
+  --color-infop: #e8f0f7;
+  --color-warn: #8a5a00;
+  --color-warnp: #fef6e7;
+  --color-viol: #5b3a9b;
+  --color-violp: #f1ecfa;
+  --color-rose: #9b2c4e;
+  --color-errink: #7a2323;
+  --color-errline: #e7c2c2;
+  --color-errbg: #fbe9e9;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  --shadow-1: 0 1px 2px rgba(11, 14, 19, 0.06);
+  --shadow-2: 0 4px 16px rgba(11, 14, 19, 0.07);
+  --shadow-lift: 0 12px 32px -8px rgba(11, 14, 19, 0.14), 0 2px 8px rgba(11, 14, 19, 0.06);
+
+  /* 拉丁走 Inter，中文交给系统苹方/思源——Inter 没有汉字，缺这层回退会让 CJK 掉进 Times */
+  --font-sans: var(--font-latin), -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: var(--font-jbmono), ui-monospace, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+:root {
+  --bg: #f7f9fa;
+  --surface: rgba(11, 14, 19, 0.028);
+  --surface-2: rgba(11, 14, 19, 0.055);
+  --border: #e3e7ec;
+  --border-strong: #d3d8e0;
+  --text: #0b0e13;
+  --text-dim: #5f6978;
+  --accent: #157a4b;
+  --accent-glow: rgba(21, 122, 75, 0.16);
+
   --r-sm: 8px;
   --r-md: 12px;
   --r-lg: 16px;
   --r-xl: 20px;
 
-  /* 阴影层级 */
-  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-2: 0 4px 16px rgba(0, 0, 0, 0.35);
-  --shadow-lift: 0 12px 32px -8px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-1: 0 1px 2px rgba(11, 14, 19, 0.06);
+  --shadow-2: 0 4px 16px rgba(11, 14, 19, 0.07);
+  --shadow-lift: 0 12px 32px -8px rgba(11, 14, 19, 0.14), 0 2px 8px rgba(11, 14, 19, 0.06);
 }
 
 * {
@@ -30,7 +81,7 @@
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+  scrollbar-color: #d3d8e0 transparent;
 }
 
 body {
@@ -40,30 +91,14 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-
-
-/* 光晕 */
-body::after {
-  content: "";
-  position: fixed;
-  top: -200px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 600px;
-  height: 400px;
-  background: radial-gradient(ellipse, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 ::selection {
-  background: rgba(59, 130, 246, 0.35);
-  color: #fff;
+  background: rgba(21, 122, 75, 0.2);
+  color: #0b0e13;
 }
 
 /* 输入框 */
 input, textarea, select {
-  background: rgba(255, 255, 255, 0.03) !important;
+  background: #ffffff !important;
   border: 1px solid var(--border) !important;
   color: var(--text) !important;
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
@@ -79,14 +114,6 @@ input::placeholder, textarea::placeholder {
   color: var(--text-dim) !important;
 }
 
-/* 日期控件日历图标适配暗色 */
-input[type="date"]::-webkit-calendar-picker-indicator,
-input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.7);
-  cursor: pointer;
-}
-
-/* 隐藏 number input 的上下箭头（带 suffix 场景更整洁） */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -167,12 +194,12 @@ button:focus-visible,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: #d3d8e0;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: #b4bcc7;
 }
 
 /* 打字机光标 */

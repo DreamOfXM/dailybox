@@ -88,8 +88,8 @@ export default function CronTool() {
                 onClick={() => applyPreset(p)}
                 className={`px-2.5 py-1 rounded-md text-xs font-mono border transition-all ${
                   normalized === p.expr && !seconds
-                    ? "text-blue-300 border-blue-500/40 bg-blue-500/10"
-                    : "text-neutral-400 border-white/[0.06] hover:border-white/20 hover:text-white"
+                    ? "text-info border-info/45 bg-infop"
+                    : "text-ink2 border-line hover:border-line2 hover:text-ink"
                 }`}
                 title={p.expr}
               >
@@ -109,10 +109,10 @@ export default function CronTool() {
           <>
             {/* Human-readable description */}
             <SectionCard title="Human readable" subtitle="plain English" aside={<CopyButton text={normalized} label="Copy expression" />}>
-              <p className="text-2xl sm:text-3xl font-semibold text-white leading-snug">
+              <p className="text-2xl sm:text-3xl font-semibold text-ink leading-snug">
                 {description}
               </p>
-              <code className="inline-block mt-3 px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.06] font-mono text-xs text-neutral-400 break-all">
+              <code className="inline-block mt-3 px-2.5 py-1 rounded-md bg-surface border border-line font-mono text-xs text-ink2 break-all">
                 {normalized}
               </code>
             </SectionCard>
@@ -126,20 +126,20 @@ export default function CronTool() {
                   {runs.map((d, i) => (
                     <li
                       key={d.getTime()}
-                      className="flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] px-4 py-3"
+                      className="flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3"
                     >
                       <span
                         className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-mono flex-shrink-0 ${
-                          i === 0 ? "bg-blue-500/20 text-blue-300" : "bg-white/[0.05] text-neutral-500"
+                          i === 0 ? "bg-infop text-info" : "bg-surface text-ink3"
                         }`}
                       >
                         {i + 1}
                       </span>
-                      <span className="font-mono text-sm text-neutral-200 tabular-nums">
+                      <span className="font-mono text-sm text-ink tabular-nums">
                         {formatRun(d, seconds)}
                       </span>
                       {i === 0 && (
-                        <span className="ml-auto text-[10px] font-mono text-blue-400 whitespace-nowrap">Nearest</span>
+                        <span className="ml-auto text-[10px] font-mono text-info whitespace-nowrap">Nearest</span>
                       )}
                     </li>
                   ))}

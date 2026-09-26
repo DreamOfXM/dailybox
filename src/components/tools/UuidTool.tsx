@@ -82,7 +82,7 @@ export default function UuidTool() {
               <div className="flex flex-col gap-5">
                 <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
                   <div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-neutral-600 mb-2">版本</div>
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-ink3 mb-2">版本</div>
                     <Segmented<"4" | "7">
                       ariaLabel="UUID 版本"
                       value={version}
@@ -106,7 +106,7 @@ export default function UuidTool() {
                   <button
                     type="button"
                     onClick={genUuids}
-                    className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white text-sm font-medium shadow-[var(--shadow-1)]"
+                    className="px-6 py-3 rounded-xl bg-info hover:bg-infd text-ink text-sm font-medium shadow-[var(--shadow-1)]"
                   >
                     生成
                   </button>
@@ -124,17 +124,17 @@ export default function UuidTool() {
                     <button
                       type="button"
                       onClick={() => downloadFile("uuids.txt", uuids.join("\n"), "text/plain")}
-                      className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+                      className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
                     >
                       下载 .txt
                     </button>
                   </>
                 }
               >
-                <div className="max-h-96 overflow-y-auto rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 space-y-1">
+                <div className="max-h-96 overflow-y-auto rounded-xl border border-line bg-surface p-3 space-y-1">
                   {uuids.map((u, i) => (
-                    <div key={i} className="font-mono text-xs text-neutral-300 tabular-nums break-all leading-relaxed">
-                      <span className="text-neutral-700 mr-2 select-none">{String(i + 1).padStart(3, " ")}.</span>
+                    <div key={i} className="font-mono text-xs text-ink tabular-nums break-all leading-relaxed">
+                      <span className="text-ink3 mr-2 select-none">{String(i + 1).padStart(3, " ")}.</span>
                       {u}
                     </div>
                   ))}
@@ -168,7 +168,7 @@ export default function UuidTool() {
                 <button
                   type="button"
                   onClick={genNumbers}
-                  className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-400 text-white text-sm font-medium shadow-[var(--shadow-1)]"
+                  className="px-6 py-3 rounded-xl bg-info hover:bg-infd text-ink text-sm font-medium shadow-[var(--shadow-1)]"
                 >
                   生成
                 </button>
@@ -177,10 +177,10 @@ export default function UuidTool() {
 
             {numbers.length > 0 && (
               <SectionCard title="结果" count={numbers.length} aside={<CopyButton text={numbers.join("\n")} label="复制全部" />}>
-                <div className="max-h-96 overflow-y-auto rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 space-y-1">
+                <div className="max-h-96 overflow-y-auto rounded-xl border border-line bg-surface p-3 space-y-1">
                   {numbers.map((v, i) => (
-                    <div key={i} className="font-mono text-sm text-neutral-300 tabular-nums leading-relaxed">
-                      <span className="text-neutral-700 mr-2 select-none">{String(i + 1).padStart(3, " ")}.</span>
+                    <div key={i} className="font-mono text-sm text-ink tabular-nums leading-relaxed">
+                      <span className="text-ink3 mr-2 select-none">{String(i + 1).padStart(3, " ")}.</span>
                       {v}
                     </div>
                   ))}

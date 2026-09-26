@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { copyText } from "@/lib/format";
 import type { ToolSeo } from "@/lib/seo";
-import { ALL_TOOLS_EN } from "@/lib/seo-en";
+import { ALL_TOOLS, TOOL_GROUPS } from "@/lib/seo";
+import { ALL_TOOLS_EN, TOOL_GROUPS_EN } from "@/lib/seo-en";
+import { ToolIcon } from "@/components/Icon";
 
 /* ---------- 结构化数据 ---------- */
 export function JsonLd({ data }: { data: object }) {
@@ -16,31 +18,6 @@ export function JsonLd({ data }: { data: object }) {
     />
   );
 }
-
-/* ---------- 工具图标 / 渐变色（首页卡片与最近使用共用） ---------- */
-export const TOOL_ICON: Record<string, string> = {
-  url: "%", qrcode: "▦", wordcount: "字", caseconvert: "Aa", textcompare: "⇆", dedupe: "≠", fanjian: "繁", textbinary: "01",
-  hash: "#", regex: ".*", uuid: "ID", radix: "0b", jwt: "JWT", sql: "SQL",
-  cron: "⏰", pdf: "PDF", pdftojpg: "JPG", jpgtopdf: "→PDF", pdfrotate: "⟳", pdforganize: "☰", pdfwatermark: "💧", pdfpagenum: "№", image: "图", video: "▶", colorconvert: "◧",
-  rmb: "¥", idcard: "证", unit: "⇌",
-  mortgage: "房", deposit: "息", irr: "‰", phone: "☎", lunar: "历",
-};
-
-export const TOOL_TILE_GRADIENT: Record<string, string> = {
-  url: "from-cyan-500 to-blue-400", qrcode: "from-blue-500 to-cyan-400", wordcount: "from-teal-500 to-emerald-400",
-  caseconvert: "from-sky-500 to-blue-400", textcompare: "from-cyan-500 to-teal-400", dedupe: "from-emerald-500 to-green-400",
-  fanjian: "from-rose-400 to-orange-400", textbinary: "from-slate-500 to-cyan-500",
-  hash: "from-slate-500 to-neutral-400", regex: "from-purple-500 to-fuchsia-400",
-  uuid: "from-violet-500 to-indigo-400", radix: "from-amber-500 to-yellow-400", jwt: "from-rose-500 to-pink-400",
-  sql: "from-blue-500 to-indigo-400", cron: "from-orange-500 to-red-400",
-  pdf: "from-red-500 to-rose-400", image: "from-fuchsia-500 to-purple-400", video: "from-indigo-500 to-violet-400",
-  pdftojpg: "from-rose-500 to-orange-400", jpgtopdf: "from-orange-500 to-amber-400", pdfrotate: "from-cyan-500 to-sky-400",
-  pdforganize: "from-blue-500 to-indigo-400", pdfwatermark: "from-teal-500 to-emerald-400", pdfpagenum: "from-violet-500 to-purple-400",
-  colorconvert: "from-pink-500 to-fuchsia-400",
-  rmb: "from-red-500 to-rose-400", idcard: "from-green-500 to-emerald-400", unit: "from-teal-500 to-cyan-400",
-  mortgage: "from-sky-500 to-blue-500", deposit: "from-lime-500 to-green-400", irr: "from-fuchsia-500 to-purple-400",
-  phone: "from-indigo-500 to-violet-400", lunar: "from-amber-500 to-red-400",
-};
 
 /* ---------- 页面骨架 ---------- */
 export function PageHeader({
@@ -59,17 +36,19 @@ export function PageHeader({
 }) {
   const pathname = usePathname() || "";
   const isEn = pathname.startsWith("/en");
+  // 工具图标按路由段取：/regex 与 /en/regex 都是 slug「regex」
+  const slug = pathname.replace(/^\/en(?=\/|$)/, "").split("/").filter(Boolean)[0] ?? "";
   const tones: Record<string, string> = {
-    blue: "text-blue-400 border-blue-500/20 bg-blue-500/10",
-    emerald: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
-    violet: "text-violet-400 border-violet-500/20 bg-violet-500/10",
-    amber: "text-amber-400 border-amber-500/20 bg-amber-500/10",
+    blue: "text-info border-line2 bg-infop",
+    emerald: "text-acc border-acct bg-accp",
+    violet: "text-viol border-violp bg-violp",
+    amber: "text-warn border-warnp bg-warnp",
   };
   return (
     <header className="mb-10">
       <Link
         href={isEn ? "/en" : "/"}
-        className="inline-flex items-center gap-1.5 text-xs font-mono text-neutral-600 hover:text-white mb-8 transition-colors"
+        className="inline-flex items-center gap-1.5 text-[14px] font-mono text-ink3 hover:text-ink mb-8 transition-colors"
       >
         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -77,13 +56,14 @@ export function PageHeader({
         {isEn ? "Back to all tools" : "返回全部工具"}
       </Link>
       <div className="flex items-center gap-3 mb-2 flex-wrap">
-        <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider border ${tones[tone]}`}>
+        <ToolIcon slug={slug} size={26} className="shrink-0 text-acc -mb-1" />
+        <span className={`px-2 py-0.5 rounded-[4px] text-[12.5px] font-mono uppercase tracking-wider border ${tones[tone]}`}>
           {badge}
         </span>
-        <h1 className="text-3xl font-bold text-white tracking-tight">{title}</h1>
+        <h1 className="text-[34px] font-extrabold text-ink tracking-[-0.025em]">{title}</h1>
         {extra}
       </div>
-      <p className="text-sm text-neutral-500 font-mono">{subtitle}</p>
+      <p className="text-[16px] text-ink2">{subtitle}</p>
     </header>
   );
 }
@@ -101,7 +81,7 @@ export function Segmented<T extends string>({
   ariaLabel?: string;
 }) {
   return (
-    <div role="radiogroup" aria-label={ariaLabel} className="inline-flex bg-white/[0.03] rounded-lg p-1 border border-white/[0.06]">
+    <div role="radiogroup" aria-label={ariaLabel} className="inline-flex bg-surface rounded-lg p-1 border border-line">
       {options.map((o) => (
         <button
           key={o.value}
@@ -110,8 +90,8 @@ export function Segmented<T extends string>({
           onClick={() => onChange(o.value)}
           className={`px-4 py-1.5 rounded-md text-xs font-mono transition-all ${
             value === o.value
-              ? "bg-white text-black shadow-[var(--shadow-1)]"
-              : "text-neutral-500 hover:text-white"
+              ? "bg-acc text-white shadow-[var(--shadow-1)]"
+              : "text-ink3 hover:text-ink"
           }`}
         >
           {o.label}
@@ -125,12 +105,12 @@ export function Segmented<T extends string>({
 export type BadgeTone = "neutral" | "blue" | "emerald" | "violet" | "amber" | "rose";
 export function Badge({ tone = "neutral", children }: { tone?: BadgeTone; children: ReactNode }) {
   const tones: Record<BadgeTone, string> = {
-    neutral: "text-neutral-400 border-white/[0.08] bg-white/[0.04]",
-    blue: "text-blue-400 border-blue-500/20 bg-blue-500/10",
-    emerald: "text-emerald-400 border-emerald-500/20 bg-emerald-500/10",
-    violet: "text-violet-400 border-violet-500/20 bg-violet-500/10",
-    amber: "text-amber-400 border-amber-500/20 bg-amber-500/10",
-    rose: "text-rose-400 border-rose-500/20 bg-rose-500/10",
+    neutral: "text-ink2 border-line bg-surface",
+    blue: "text-info border-line2 bg-infop",
+    emerald: "text-acc border-acct bg-accp",
+    violet: "text-viol border-violp bg-violp",
+    amber: "text-warn border-warnp bg-warnp",
+    rose: "text-rose border-errline bg-errbg",
   };
   return (
     <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono leading-none border ${tones[tone]}`}>
@@ -154,13 +134,13 @@ export function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 sm:p-6">
+    <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
         <div className="flex items-baseline gap-2 min-w-0">
-          <h2 className="text-sm font-semibold text-neutral-200 tracking-wide truncate">{title}</h2>
-          {subtitle && <span className="text-[11px] font-mono text-neutral-600 truncate">{subtitle}</span>}
+          <h2 className="text-sm font-semibold text-ink tracking-wide truncate">{title}</h2>
+          {subtitle && <span className="text-[11px] font-mono text-ink3 truncate">{subtitle}</span>}
           {typeof count === "number" && (
-            <span className="text-[10px] font-mono text-neutral-600 tabular-nums">× {count}</span>
+            <span className="text-[10px] font-mono text-ink3 tabular-nums">× {count}</span>
           )}
         </div>
         {aside && <div className="flex items-center gap-2">{aside}</div>}
@@ -190,18 +170,18 @@ export function Toggle({
         aria-checked={checked}
         onClick={() => onChange(!checked)}
         className={`relative w-10 h-5 rounded-full transition-colors ${
-          checked ? "bg-blue-500" : "bg-white/10"
+          checked ? "bg-info" : "bg-surface2"
         }`}
       >
         <span
-          className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${
+          className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-card transition-transform ${
             checked ? "translate-x-5" : ""
           }`}
         />
       </button>
-      <span className="text-sm text-neutral-300">
+      <span className="text-sm text-ink">
         {label}
-        {hint && <span className="ml-1.5 text-xs text-neutral-600 font-mono">{hint}</span>}
+        {hint && <span className="ml-1.5 text-xs text-ink3 font-mono">{hint}</span>}
       </span>
     </label>
   );
@@ -222,13 +202,13 @@ export function Field({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <label className="text-xs font-mono text-neutral-500 uppercase tracking-wider">{label}</label>
-        {hint && <span className="text-[10px] font-mono text-neutral-600">{hint}</span>}
+        <label className="text-xs font-mono text-ink3 uppercase tracking-wider">{label}</label>
+        {hint && <span className="text-[10px] font-mono text-ink3">{hint}</span>}
       </div>
       {children}
       {error && (
-        <p className="mt-1.5 text-xs text-red-400 font-mono flex items-center gap-1.5">
-          <span className="w-1 h-1 rounded-full bg-red-500" />
+        <p className="mt-1.5 text-xs text-errink font-mono flex items-center gap-1.5">
+          <span className="w-1 h-1 rounded-full bg-errink" />
           {error}
         </p>
       )}
@@ -280,10 +260,10 @@ export function NumberInput({
         onChange={(e) => handleChange(e.target.value)}
         onBlur={handleBlur}
         className={`w-full px-4 py-3 rounded-xl font-mono text-[15px] pr-14 ${
-          invalid ? "border-red-500/50" : ""
+          invalid ? "border-errline" : ""
         }`}
       />
-      {suffix && <span className="absolute right-4 text-xs font-mono text-neutral-600 pointer-events-none">{suffix}</span>}
+      {suffix && <span className="absolute right-4 text-xs font-mono text-ink3 pointer-events-none">{suffix}</span>}
     </div>
   );
 }
@@ -303,24 +283,24 @@ export function Stat({
   emphasis?: boolean;
 }) {
   const tones: Record<string, string> = {
-    default: "text-neutral-200",
-    good: "text-emerald-400",
-    bad: "text-red-400",
-    warn: "text-amber-400",
-    accent: "text-blue-400",
+    default: "text-ink",
+    good: "text-acc",
+    bad: "text-errink",
+    warn: "text-warn",
+    accent: "text-info",
   };
   return (
     <div
       className={`card-hover rounded-xl border p-4 ${
         emphasis
-          ? "border-blue-500/30 bg-blue-500/[0.06]"
-          : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.035]"
+          ? "border-line2 bg-info/[0.06]"
+          : "border-line bg-surface hover:bg-surface2"
       }`}
     >
-      <div className="text-[11px] font-mono text-neutral-500 mb-1.5">{label}</div>
+      <div className="text-[11px] font-mono text-ink3 mb-1.5">{label}</div>
       <div className={`font-mono tabular-nums ${emphasis ? "text-2xl" : "text-xl"} font-semibold ${tones[tone]}`}>
         {value}
-        {unit && <span className="text-xs text-neutral-500 ml-1 font-normal">{unit}</span>}
+        {unit && <span className="text-xs text-ink3 ml-1 font-normal">{unit}</span>}
       </div>
     </div>
   );
@@ -329,10 +309,10 @@ export function Stat({
 /* ---------- 空/错误态 ---------- */
 export function Hint({ kind = "info", children }: { kind?: "info" | "error" | "success" | "warn"; children: ReactNode }) {
   const map = {
-    info: { c: "border-white/[0.06] bg-white/[0.02] text-neutral-400", d: "•" },
-    error: { c: "border-red-500/20 bg-red-500/5 text-red-300", d: "!" },
-    success: { c: "border-emerald-500/20 bg-emerald-500/5 text-emerald-300", d: "✓" },
-    warn: { c: "border-amber-500/20 bg-amber-500/5 text-amber-300", d: "⚠" },
+    info: { c: "border-line bg-surface text-ink2", d: "•" },
+    error: { c: "border-errline bg-errbg text-errink", d: "!" },
+    success: { c: "border-acct bg-acc/5 text-accd", d: "✓" },
+    warn: { c: "border-warnp bg-warnp text-warn", d: "⚠" },
   }[kind];
   return (
     <div className={`flex items-start gap-2.5 p-3 rounded-xl border text-sm font-mono ${map.c}`}>
@@ -347,16 +327,16 @@ export function Hint({ kind = "info", children }: { kind?: "info" | "error" | "s
 /* ---------- 显式假设说明 ---------- */
 export function AssumptionNote({ items }: { items: Array<{ k: string; v: string }> }) {
   return (
-    <div className="rounded-xl border border-violet-500/20 bg-violet-500/[0.05] p-4">
+    <div className="rounded-xl border border-violp bg-violp p-4">
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-violet-400 text-sm">ⓘ</span>
-        <span className="text-xs font-mono uppercase tracking-wider text-violet-400">计算假设 · 可展开核对</span>
+        <span className="text-viol text-sm">ⓘ</span>
+        <span className="text-xs font-mono uppercase tracking-wider text-viol">计算假设 · 可展开核对</span>
       </div>
       <dl className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-1.5">
         {items.map((it) => (
           <div key={it.k} className="text-xs font-mono">
-            <dt className="text-neutral-500">{it.k}</dt>
-            <dd className="text-neutral-300">{it.v}</dd>
+            <dt className="text-ink3">{it.k}</dt>
+            <dd className="text-ink">{it.v}</dd>
           </div>
         ))}
       </dl>
@@ -392,10 +372,10 @@ export function CopyButton({ text, label }: { text: string; label?: string }) {
       onClick={onCopy}
       className={`text-xs font-mono px-2.5 py-1 rounded-md transition-colors ${
         state === "ok"
-          ? "text-emerald-400 bg-emerald-500/10"
+          ? "text-acc bg-accp"
           : state === "fail"
-          ? "text-red-400 bg-red-500/10"
-          : "text-blue-400 hover:text-blue-300 hover:bg-white/[0.05]"
+          ? "text-errink bg-errbg"
+          : "text-info hover:text-info hover:bg-surface"
       }`}
       aria-live="polite"
     >
@@ -456,6 +436,8 @@ export function recordToolVisit(slug: string) {
 /** 最近使用区：挂在首页，空态不渲染（避免 SSR/首屏闪烁） */
 export function RecentTools({ tools }: { tools: ToolSeo[] }) {
   const [recent, setRecent] = useState<ToolSeo[]>([]);
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
 
   useEffect(() => {
     const entries = readRecentEntries();
@@ -466,25 +448,25 @@ export function RecentTools({ tools }: { tools: ToolSeo[] }) {
   if (recent.length === 0) return null;
 
   return (
-    <section className="mb-12" aria-label="最近使用">
-      <h2 className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-neutral-600 mb-4">
-        <span className="w-1 h-1 rounded-full bg-emerald-500" />
-        最近使用
-        <span className="text-neutral-800 tabular-nums">· {recent.length}</span>
+    <section className="mb-12" aria-label={isEn ? "Recently used" : "最近使用"}>
+      <h2 className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-ink3 mb-4">
+        <span className="w-1 h-1 rounded-full bg-acc" />
+        {isEn ? "Recently used" : "最近使用"}
+        <span className="text-ink3 tabular-nums">· {recent.length}</span>
       </h2>
       <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1">
         {recent.map((t) => (
           <Link
             key={t.slug}
-            href={`/${t.slug}`}
+            href={isEn ? `/en/${t.slug}` : `/${t.slug}`}
             onClick={() => recordToolVisit(t.slug)}
-            className="card-hover shrink-0 flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 rounded-full border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]"
+            className="card-hover shrink-0 flex items-center gap-2.5 pl-2 pr-4 py-1.5 rounded-full border border-line bg-surface hover:bg-surface2"
             title={t.subtitle}
           >
-            <span className={`w-7 h-7 rounded-full bg-gradient-to-br ${TOOL_TILE_GRADIENT[t.slug] ?? "from-neutral-500 to-neutral-600"} flex items-center justify-center text-[11px] font-bold text-white`}>
-              {TOOL_ICON[t.slug] ?? "·"}
+            <span className="w-6 h-6 shrink-0 flex items-center justify-center text-ink2">
+              <ToolIcon slug={t.slug} size={20} />
             </span>
-            <span className="text-sm text-neutral-200 whitespace-nowrap">{t.title}</span>
+            <span className="text-sm text-ink whitespace-nowrap">{t.title}</span>
           </Link>
         ))}
       </div>
@@ -493,39 +475,38 @@ export function RecentTools({ tools }: { tools: ToolSeo[] }) {
 }
 
 /* ============================================================
-   顶栏导航（客户端：点击埋点记录最近使用 + 当前路径高亮）
+   全局壳：顶栏分类导航 + 页脚站点地图（L10 版式）
    ============================================================ */
 export interface NavItem {
   slug: string;
+  href: string;
   label: string;
   title?: string;
 }
 
-/** 页脚文案随语言切换，避免 EN 页混入中文 / CN 页混入英文 */
-export function SiteFooter() {
-  const pathname = usePathname() || "";
-  const isEn = pathname.startsWith("/en");
-  return (
-    <>
-      <span>© 2026 dailybox · {isEn ? "All local — nothing ever uploads" : "全部本地运算，数据不上传"}</span>
-      <span className="flex items-center gap-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        {isEn ? "all systems operational" : "服务运行正常"}
-      </span>
-    </>
-  );
+/** 中文分类 → ASCII 锚点段 */
+export const CAT_SLUG: Record<string, string> = {
+  编码: "encode", 文本: "text", 加密: "crypto", 开发: "dev",
+  时间: "time", 文件: "files", 设计: "design", 生活: "life",
+};
+
+/** 分类 → 首页锚点 id（顶栏、首页分组区块、面板侧栏共用同一套） */
+export const catAnchor = (group: string, isEn = false) =>
+  isEn ? group.toLowerCase().replace(/[^a-z0-9]+/g, "-") : CAT_SLUG[group] ?? "tools";
+
+function useActiveSlug() {
+  const pathname = usePathname();
+  const seg = pathname?.replace(/^\/en(?=\/|$)/, "").split("/").filter(Boolean)[0];
+  return seg ?? "";
 }
 
-/** 顶栏 logo：EN 页点回 EN 首页，CN 页点回 CN 首页 */
+/** 顶栏 logo：字标 + 一枚墨绿方点。EN 页点回 EN 首页，CN 页点回 CN 首页 */
 export function SiteBrand() {
   const pathname = usePathname() || "";
   const isEn = pathname.startsWith("/en");
   return (
-    <Link href={isEn ? "/en" : "/"} className="flex items-center gap-2 group shrink-0">
-      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white text-xs font-bold group-hover:shadow-lg group-hover:shadow-emerald-500/25 transition-shadow">
-        D
-      </div>
-      <span className="font-semibold text-white tracking-tight">dailybox</span>
+    <Link href={isEn ? "/en" : "/"} className="shrink-0 whitespace-nowrap text-[24px] font-extrabold tracking-[-0.025em] leading-[1.3] text-ink">
+      dailybox<i className="inline-block w-[9px] h-[9px] bg-acc rounded-[2px] ml-[3px] -translate-y-[1px]" aria-hidden="true" />
     </Link>
   );
 }
@@ -545,93 +526,152 @@ export function SiteLangToggle() {
   return (
     <Link
       href={href}
-      className="shrink-0 text-xs font-mono text-neutral-500 hover:text-white px-2 py-1 rounded-md border border-white/[0.08] hover:border-white/25 transition-colors"
+      title={isEn ? "切换到中文站" : "Switch to the English site"}
+      className="order-3 shrink-0 whitespace-nowrap font-mono text-[15.5px] leading-[2.05] text-ink3 hover:text-ink border-b border-line2 hover:border-ink transition-colors"
     >
       {isEn ? "中文" : "EN"}
     </Link>
   );
 }
 
-function useActiveSlug() {
-  const pathname = usePathname();
-  const seg = pathname?.split("/").filter(Boolean)[0];
-  return seg ?? "";
-}
-
-/** 桌面端横滚链接（<768px 由 MobileNav 接管） */
-export function DesktopNavLinks({ items }: { items: NavItem[] }) {
-  const active = useActiveSlug();
+/** 顶栏主操作：黑底白字方角按钮（L10 的 .nav-cta 配方） */
+export function NavCta() {
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
   return (
-    <div className="hidden md:flex items-center gap-1 overflow-x-auto no-scrollbar min-w-0">
-      {items.map((it) => (
-        <Link
-          key={it.slug}
-          href={`/${it.slug}`}
-          title={it.title}
-          aria-current={active === it.slug ? "page" : undefined}
-          onClick={() => recordToolVisit(it.slug)}
-          className={`shrink-0 whitespace-nowrap px-2.5 py-1.5 text-xs font-mono rounded-md transition-colors ${
-            active === it.slug
-              ? "text-white bg-white/[0.08]"
-              : "text-neutral-400 hover:text-white hover:bg-white/[0.06]"
-          }`}
-        >
-          {it.label}
-        </Link>
-      ))}
-    </div>
+    <Link
+      href={isEn ? "/en#tools" : "/#tools"}
+      className="order-4 shrink-0 whitespace-nowrap bg-ink text-ground px-[17px] py-[10px] rounded-[4px] text-[15.5px] font-semibold hover:bg-ink2 transition-colors"
+    >
+      {isEn ? "All tools" : "全部工具"}
+    </Link>
   );
 }
 
-/** 移动端抽屉导航（<768px 显示汉堡按钮 + 展开面板） */
+/** 桌面端分类锚点（<768px 由 MobileNav 抽屉接管）。锚点与首页各分类区块的 id 一致 */
+export function CategoryLinks() {
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
+  const groups = isEn ? TOOL_GROUPS_EN : TOOL_GROUPS;
+  return (
+    <nav
+      aria-label={isEn ? "Tool categories" : "工具分类"}
+      className="hidden md:flex min-w-0 flex-1 items-center gap-6 overflow-x-auto no-scrollbar text-[15.5px]"
+    >
+      {groups.map((g) => (
+        <Link
+          key={g.group}
+          href={`${isEn ? "/en" : "/"}#${catAnchor(g.group, isEn)}`}
+          className="shrink-0 whitespace-nowrap text-ink2 hover:text-ink transition-colors"
+        >
+          {g.group}
+        </Link>
+      ))}
+    </nav>
+  );
+}
+
+/** 移动端抽屉导航（<768px 显示汉堡按钮 + 展开面板，33 个工具全在里面） */
 export function MobileNav({ items }: { items: NavItem[] }) {
   const [open, setOpen] = useState(false);
   const active = useActiveSlug();
-
-  // 路由变化时收起（点击链接跳转后）
+  const isEn = (usePathname() || "").startsWith("/en");
   const close = useCallback(() => setOpen(false), []);
 
   return (
-    <div className="md:hidden relative">
+    <div className="md:hidden relative order-3 md:order-none">
       <button
         type="button"
-        aria-label={open ? "关闭导航" : "打开导航"}
+        aria-label={open ? (isEn ? "Close menu" : "关闭导航") : isEn ? "Open menu" : "打开导航"}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="w-9 h-9 flex flex-col items-center justify-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]"
+        className="w-9 h-9 flex flex-col items-center justify-center gap-1.5 rounded-md border border-line bg-card hover:bg-ground"
       >
-        <span className={`block w-4 h-px bg-neutral-300 transition-transform ${open ? "translate-y-[2.5px] rotate-45" : ""}`} />
-        <span className={`block w-4 h-px bg-neutral-300 transition-transform ${open ? "-translate-y-[2.5px] -rotate-45" : ""}`} />
+        <span className={`block w-4 h-px bg-ink2 transition-transform ${open ? "translate-y-[3px] rotate-45" : ""}`} />
+        <span className={`block w-4 h-px bg-ink2 transition-transform ${open ? "-translate-y-[3px] -rotate-45" : ""}`} />
       </button>
       {open && (
         <>
-          {/* 点击遮罩关闭 */}
-          <div className="fixed inset-0 top-14 z-40 bg-black/50" onClick={close} aria-hidden="true" />
+          <div className="fixed inset-0 top-[66px] z-40 bg-ink/20" onClick={close} aria-hidden="true" />
           <nav
-            aria-label="全部工具"
-            className="absolute right-0 top-11 z-50 w-56 rounded-xl border border-white/[0.08] bg-[#101013]/95 backdrop-blur-xl shadow-[var(--shadow-lift)] p-2 max-h-[70vh] overflow-y-auto"
+            aria-label={isEn ? "All tools" : "全部工具"}
+            className="fixed right-3 top-[74px] z-50 w-60 rounded-xl border border-line bg-card/95 backdrop-blur-md shadow-[var(--shadow-lift)] p-2 max-h-[70vh] overflow-y-auto"
           >
             {items.map((it) => (
               <Link
                 key={it.slug}
-                href={`/${it.slug}`}
+                href={it.href}
                 onClick={() => {
                   recordToolVisit(it.slug);
                   close();
                 }}
                 aria-current={active === it.slug ? "page" : undefined}
-                className={`block whitespace-nowrap px-3 py-2 text-sm font-mono rounded-md transition-colors ${
+                className={`block px-3 py-2 text-sm rounded-md transition-colors ${
                   active === it.slug
-                    ? "text-white bg-white/[0.08]"
-                    : "text-neutral-400 hover:text-white hover:bg-white/[0.06]"
+                    ? "text-ink bg-accp font-semibold"
+                    : "text-ink2 hover:text-ink hover:bg-ground"
                 }`}
               >
-                {it.label}
+                {it.title || it.label}
               </Link>
             ))}
           </nav>
         </>
       )}
     </div>
+  );
+}
+
+/* ---------- 页脚：大字字标 + 口径行 + 8 分类站点地图 + 落款 ---------- */
+export function SiteFooter() {
+  const pathname = usePathname() || "";
+  const isEn = pathname.startsWith("/en");
+  const groups = isEn ? TOOL_GROUPS_EN : TOOL_GROUPS;
+  const total = isEn ? ALL_TOOLS_EN.length : ALL_TOOLS.length;
+  return (
+    <footer className="border-t border-line2 bg-ground2">
+      <div className="mx-auto max-w-[1180px] px-4 sm:px-8 pt-16 pb-10">
+        <p
+          aria-hidden="true"
+          className="text-[clamp(56px,15vw,180px)] leading-[0.86] tracking-[-0.05em] font-extrabold text-line2 mb-7"
+        >
+          dailybox
+        </p>
+        <div className="flex flex-wrap gap-x-[34px] gap-y-2 border-t border-line pt-6 text-[15.5px] text-ink2">
+          <span>{isEn ? `${total} everyday tools, computed in your browser` : `${total} 个日常工具，全部在浏览器里算完`}</span>
+          <span>{isEn ? `${groups.length} categories` : `${groups.length} 个分类`}</span>
+          <span>{isEn ? "No account, no upload" : "无需注册，输入不上传"}</span>
+          <Link href={isEn ? "/en" : "/"} className="font-semibold text-ink hover:text-acc transition-colors">
+            {isEn ? "All tools" : "回到全部工具"}
+          </Link>
+        </div>
+        <div className={`mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 ${isEn ? "lg:grid-cols-5" : "lg:grid-cols-4 xl:grid-cols-8"}`}>
+          {groups.map((g) => (
+            <div key={g.group}>
+              <h3 className="mb-2.5 font-mono text-[12.5px] uppercase tracking-wider text-ink3">{g.group}</h3>
+              <ul className="space-y-1.5">
+                {g.items.map((t) => (
+                  <li key={t.slug}>
+                    <Link
+                      href={isEn ? `/en/${t.slug}` : `/${t.slug}`}
+                      onClick={() => recordToolVisit(t.slug)}
+                      className="text-[14.5px] text-ink2 hover:text-acc transition-colors"
+                    >
+                      {t.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p className="mt-10 font-mono text-[15.5px] leading-[1.8] text-ink3">
+          <b className="text-ink2">dailybox</b> ·{" "}
+          {isEn
+            ? `one person's toolbox — ${total} tools, © 2026`
+            : `一个人写的一只纸盒：${total} 件工具 · 2026`}
+        </p>
+      </div>
+    </footer>
   );
 }

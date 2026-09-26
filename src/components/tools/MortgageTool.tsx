@@ -30,10 +30,10 @@ const METHOD_NAME: Record<Method, string> = {
 const money = (n: number): string => fmt(n, 2);
 
 /** 对比卡单行 */
-function Row({ label, value, tone = "text-neutral-200" }: { label: string; value: string; tone?: string }) {
+function Row({ label, value, tone = "text-ink" }: { label: string; value: string; tone?: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 py-1.5 border-b border-white/[0.04] last:border-0">
-      <span className="text-[11px] font-mono text-neutral-500 shrink-0">{label}</span>
+    <div className="flex items-baseline justify-between gap-3 py-1.5 border-b border-line last:border-0">
+      <span className="text-[11px] font-mono text-ink3 shrink-0">{label}</span>
       <span className={`font-mono tabular-nums text-sm ${tone}`}>{value}</span>
     </div>
   );
@@ -150,7 +150,7 @@ export default function MortgageTool() {
                   aria-label="年利率（%）"
                   className="w-full px-4 py-3 rounded-xl font-mono text-[15px] pr-10"
                 />
-                <span className="absolute right-4 text-xs font-mono text-neutral-600 pointer-events-none">%</span>
+                <span className="absolute right-4 text-xs font-mono text-ink3 pointer-events-none">%</span>
               </div>
             </Field>
           </div>
@@ -181,22 +181,22 @@ export default function MortgageTool() {
                   <div
                     key={m}
                     className={`rounded-xl border p-4 ${
-                      isPrincipal ? "border-emerald-500/30 bg-emerald-500/[0.05]" : "border-white/[0.06] bg-white/[0.02]"
+                      isPrincipal ? "border-acct bg-acc/[0.05]" : "border-line bg-surface"
                     }`}
                   >
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-mono text-neutral-400">{METHOD_NAME[m]}</span>
+                      <span className="text-xs font-mono text-ink2">{METHOD_NAME[m]}</span>
                       {isPrincipal && <Badge tone="emerald">总利息更低</Badge>}
                     </div>
                     <div className="mb-3">
-                      <div className="text-[11px] font-mono text-neutral-500 mb-1">首月月供</div>
-                      <div className={`font-mono tabular-nums text-2xl font-semibold ${isPrincipal ? "text-emerald-300" : "text-blue-300"}`}>
+                      <div className="text-[11px] font-mono text-ink3 mb-1">首月月供</div>
+                      <div className={`font-mono tabular-nums text-2xl font-semibold ${isPrincipal ? "text-accd" : "text-info"}`}>
                         {money(s.monthlyFirst)}
-                        <span className="text-xs text-neutral-500 ml-1 font-normal">元</span>
+                        <span className="text-xs text-ink3 ml-1 font-normal">元</span>
                       </div>
                     </div>
                     <Row label="末月月供" value={`${money(s.monthlyLast)} 元`} />
-                    <Row label="总利息" value={`${money(s.totalInterest)} 元`} tone={isPrincipal ? "text-emerald-300" : "text-neutral-200"} />
+                    <Row label="总利息" value={`${money(s.totalInterest)} 元`} tone={isPrincipal ? "text-accd" : "text-ink"} />
                     <Row label="总还款" value={`${money(s.totalPayment)} 元`} />
                   </div>
                 );
@@ -218,7 +218,7 @@ export default function MortgageTool() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs font-mono tabular-nums min-w-[520px]">
                 <thead>
-                  <tr className="text-neutral-500 border-b border-white/[0.08]">
+                  <tr className="text-ink3 border-b border-line">
                     <th className="py-2 pr-2 text-left font-normal">期数</th>
                     <th className="py-2 px-2 text-right font-normal">月供</th>
                     <th className="py-2 px-2 text-right font-normal">本金</th>
@@ -228,8 +228,8 @@ export default function MortgageTool() {
                 </thead>
                 <tbody>
                   {visibleRows.map((row) => (
-                    <tr key={row.period} className="text-neutral-300 border-b border-white/[0.04] hover:bg-white/[0.03]">
-                      <td className="py-1.5 pr-2 text-neutral-500">{row.period}</td>
+                    <tr key={row.period} className="text-ink border-b border-line hover:bg-surface">
+                      <td className="py-1.5 pr-2 text-ink3">{row.period}</td>
                       <td className="py-1.5 px-2 text-right">{money(row.payment)}</td>
                       <td className="py-1.5 px-2 text-right">{money(row.principal)}</td>
                       <td className="py-1.5 px-2 text-right">{money(row.interest)}</td>
@@ -243,7 +243,7 @@ export default function MortgageTool() {
               <button
                 type="button"
                 onClick={() => setShowAll((v) => !v)}
-                className="px-3 py-1.5 rounded-md text-xs font-mono border text-neutral-400 border-white/[0.06] hover:border-white/20 hover:text-white transition-all"
+                className="px-3 py-1.5 rounded-md text-xs font-mono border text-ink2 border-line hover:border-line2 hover:text-ink transition-all"
               >
                 {showAll ? "收起" : `展开全部 ${rows.length} 期`}
               </button>
@@ -295,7 +295,7 @@ export default function MortgageTool() {
                     <Stat label="节省利息" value={money(prepay.savedInterest)} unit="元" tone="good" emphasis />
                     <Stat label="提前还款后剩余本金" value={money(prepay.remainingAfter)} unit="元" />
                   </div>
-                  <p className="mt-3 text-[11px] font-mono text-neutral-600">
+                  <p className="mt-3 text-[11px] font-mono text-ink3">
                     第 {periodStr} 期还完后一次性提前还款，剩余本金按 {METHOD_NAME[tableMethod]}、{prepay.targetMonths} 期重新计算。
                   </p>
                 </>
@@ -317,7 +317,7 @@ export default function MortgageTool() {
           ]}
         />
 
-        <p className="text-[11px] font-mono text-neutral-600">计算结果仅供参考，实际以银行审批为准。</p>
+        <p className="text-[11px] font-mono text-ink3">计算结果仅供参考，实际以银行审批为准。</p>
       </div>
     </div>
   );

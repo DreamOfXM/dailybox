@@ -31,15 +31,15 @@ function highlightLine(line: string): ReactNode[] {
   while ((m = re.exec(line)) !== null) {
     const t = m[0];
     const ch = t[0];
-    let cls = "text-neutral-400"; // Punctuation default
-    if (ch === "'" || ch === '"' || ch === "`") cls = "text-amber-300";
-    else if (t.startsWith("--") || t.startsWith("/*")) cls = "text-neutral-600 italic";
-    else if (/^\d/.test(t)) cls = "text-orange-300";
+    let cls = "text-ink2"; // Punctuation default
+    if (ch === "'" || ch === '"' || ch === "`") cls = "text-warn";
+    else if (t.startsWith("--") || t.startsWith("/*")) cls = "text-ink3 italic";
+    else if (/^\d/.test(t)) cls = "text-warn";
     else if (/^[A-Za-z_]/.test(t)) {
       const u = t.toUpperCase();
-      if (HL_KEYWORDS.has(u)) cls = "text-sky-400 font-semibold";
-      else if (HL_FUNCS.has(u)) cls = "text-violet-400";
-      else cls = "text-neutral-200";
+      if (HL_KEYWORDS.has(u)) cls = "text-info font-semibold";
+      else if (HL_FUNCS.has(u)) cls = "text-viol";
+      else cls = "text-ink";
     }
     out.push(
       <span key={k++} className={cls}>
@@ -53,19 +53,19 @@ function highlightLine(line: string): ReactNode[] {
 function SqlHighlighted({ code }: { code: string }) {
   const lines = code.split("\n");
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-[#0d0d0f] overflow-hidden">
-      <div className="flex items-center gap-1.5 px-4 py-2 border-b border-white/[0.06] bg-white/[0.02]">
-        <span className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-        <span className="w-2.5 h-2.5 rounded-full bg-amber-500/60" />
-        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/60" />
-        <span className="ml-2 text-[10px] font-mono text-neutral-600 uppercase tracking-wider">formatted.sql</span>
+    <div className="rounded-xl border border-line bg-ground2 overflow-hidden">
+      <div className="flex items-center gap-1.5 px-4 py-2 border-b border-line bg-surface">
+        <span className="w-2.5 h-2.5 rounded-full bg-errink" />
+        <span className="w-2.5 h-2.5 rounded-full bg-warn" />
+        <span className="w-2.5 h-2.5 rounded-full bg-acc/60" />
+        <span className="ml-2 text-[10px] font-mono text-ink3 uppercase tracking-wider">formatted.sql</span>
       </div>
       <div className="overflow-x-auto">
         <table className="font-mono text-xs leading-6 border-collapse">
           <tbody>
             {lines.map((line, i) => (
-              <tr key={i} className="hover:bg-white/[0.03]">
-                <td className="select-none text-right pr-4 pl-4 text-neutral-700 align-top w-10 border-r border-white/[0.04]">
+              <tr key={i} className="hover:bg-surface">
+                <td className="select-none text-right pr-4 pl-4 text-ink3 align-top w-10 border-r border-line">
                   {i + 1}
                 </td>
                 <td className="pl-4 pr-4 whitespace-pre">{line === "" ? "\u00A0" : highlightLine(line)}</td>
@@ -118,7 +118,7 @@ export default function SqlTool() {
                 setSql(SAMPLE_SQL);
                 runFormat(SAMPLE_SQL, upper, commaNl);
               }}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               Example
             </button>
@@ -158,7 +158,7 @@ export default function SqlTool() {
             <button
               type="button"
               onClick={() => runFormat(sql, upper, commaNl)}
-              className="px-4 py-1.5 rounded-lg text-xs font-mono bg-white text-black hover:bg-neutral-200 transition-colors"
+              className="px-4 py-1.5 rounded-lg text-xs font-mono bg-acc text-white hover:bg-accd transition-colors"
             >
               Format
             </button>
@@ -176,7 +176,7 @@ export default function SqlTool() {
                 <button
                   type="button"
                   onClick={() => downloadFile("formatted.sql", result.value, "text/plain;charset=utf-8")}
-                  className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+                  className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
                 >
                   Download .sql
                 </button>

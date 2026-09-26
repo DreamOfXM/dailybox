@@ -77,18 +77,18 @@ export default function PhoneTool() {
               type="button"
               onClick={query}
               disabled={loading || !input.trim()}
-              className="px-4 py-1.5 rounded-lg text-xs font-mono bg-white text-black hover:bg-neutral-200 transition-colors disabled:opacity-40"
+              className="px-4 py-1.5 rounded-lg text-xs font-mono bg-acc text-white hover:bg-accd transition-colors disabled:opacity-40"
             >
               {loading ? progress || "查询中…" : "查询"}
             </button>
             <button
               type="button"
               onClick={() => setInput("13800138000")}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               填入示例
             </button>
-            {loading && <span className="text-xs font-mono text-neutral-500 animate-pulse">{progress}</span>}
+            {loading && <span className="text-xs font-mono text-ink3 animate-pulse">{progress}</span>}
           </div>
           {loadError && <div className="mt-3"><Hint kind="error">{loadError}</Hint></div>}
         </SectionCard>
@@ -96,10 +96,10 @@ export default function PhoneTool() {
         {single && !single.invalid && single.info && (
           <SectionCard title="查询结果" aside={<CopyButton text={`${single.phone} → ${single.info.province} ${single.info.city} ${single.info.isp}`} label="复制结果" />}>
             <div className="text-center py-4">
-              <div className="text-3xl sm:text-4xl font-bold text-sky-300 mb-2">
+              <div className="text-3xl sm:text-4xl font-bold text-info mb-2">
                 {single.info.province} · {single.info.city}
               </div>
-              <div className="text-sm text-neutral-400">号段 {single.info.segment} · {single.info.isp}</div>
+              <div className="text-sm text-ink2">号段 {single.info.segment} · {single.info.isp}</div>
             </div>
             <div className="grid grid-cols-3 gap-3">
               <Stat label="省份" value={single.info.province} />
@@ -120,8 +120,8 @@ export default function PhoneTool() {
           >
             <div className="overflow-x-auto max-h-96 overflow-y-auto">
               <table className="w-full text-xs font-mono">
-                <thead className="sticky top-0 bg-[#0d0d0f]">
-                  <tr className="text-neutral-500 border-b border-white/[0.06]">
+                <thead className="sticky top-0 bg-ground2">
+                  <tr className="text-ink3 border-b border-line">
                     <th className="text-left py-2 pr-4">号码</th>
                     <th className="text-left py-2 px-4">省份</th>
                     <th className="text-left py-2 px-4">城市</th>
@@ -130,15 +130,15 @@ export default function PhoneTool() {
                 </thead>
                 <tbody>
                   {rows.map((r, i) => (
-                    <tr key={i} className="border-b border-white/[0.04]">
-                      <td className="py-2 pr-4 text-neutral-300">{r.phone}</td>
+                    <tr key={i} className="border-b border-line">
+                      <td className="py-2 pr-4 text-ink">{r.phone}</td>
                       {r.invalid ? (
                         <td colSpan={3} className="py-2 px-4"><Badge tone="rose">格式非法</Badge></td>
                       ) : r.info ? (
                         <>
-                          <td className="py-2 px-4 text-neutral-300">{r.info.province}</td>
-                          <td className="py-2 px-4 text-neutral-300">{r.info.city}</td>
-                          <td className="py-2 pl-4 text-neutral-400">{r.info.isp}</td>
+                          <td className="py-2 px-4 text-ink">{r.info.province}</td>
+                          <td className="py-2 px-4 text-ink">{r.info.city}</td>
+                          <td className="py-2 pl-4 text-ink2">{r.info.isp}</td>
                         </>
                       ) : (
                         <td colSpan={3} className="py-2 px-4"><Badge tone="amber">号段未收录</Badge></td>

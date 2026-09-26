@@ -52,7 +52,7 @@ export default function UrlTool() {
             <button
               type="button"
               onClick={() => setInput(EXAMPLE)}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               Example
             </button>
@@ -97,7 +97,7 @@ export default function UrlTool() {
                 type="button"
                 onClick={feedBack}
                 disabled={!result.text}
-                className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] disabled:opacity-40 transition-colors"
+                className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface disabled:opacity-40 transition-colors"
               >
                 ↙ Feed back as input
               </button>

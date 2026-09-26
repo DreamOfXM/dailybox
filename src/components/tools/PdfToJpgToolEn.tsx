@@ -174,12 +174,12 @@ export default function PdfToJpgToolEn() {
               type="file"
               accept="application/pdf"
               onChange={onFileChange}
-              className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+              className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
             />
 
             {totalPages > 0 && (
               <>
-                <p className="text-xs font-mono text-neutral-500">{totalPages} pages</p>
+                <p className="text-xs font-mono text-ink3">{totalPages} pages</p>
 
                 {totalPages > 60 && (
                   <Hint kind="warn">This document has many pages ({totalPages}). Rendering may take a while — please be patient.</Hint>
@@ -208,7 +208,7 @@ export default function PdfToJpgToolEn() {
                   />
                   {format === "jpg" && (
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-neutral-500 uppercase tracking-wider">Quality</span>
+                      <span className="text-[10px] font-mono text-ink3 uppercase tracking-wider">Quality</span>
                       <input
                         type="range"
                         min={0.5}
@@ -216,9 +216,9 @@ export default function PdfToJpgToolEn() {
                         step={0.05}
                         value={quality}
                         onChange={(e) => setQuality(Number(e.target.value))}
-                        className="w-24 accent-white"
+                        className="w-24 accent-acc"
                       />
-                      <span className="text-xs font-mono text-neutral-400 tabular-nums w-8">{quality.toFixed(2)}</span>
+                      <span className="text-xs font-mono text-ink2 tabular-nums w-8">{quality.toFixed(2)}</span>
                     </div>
                   )}
                 </div>
@@ -227,7 +227,7 @@ export default function PdfToJpgToolEn() {
                 <button
                   onClick={runRender}
                   disabled={busy}
-                  className="px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                  className="px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
                 >
                   {busy ? (progress || "Processing...") : "Render All Pages"}
                 </button>
@@ -238,24 +238,24 @@ export default function PdfToJpgToolEn() {
             {pages.length > 0 && (
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between">
-                  <p className="text-xs font-mono text-neutral-500">{pages.length} pages rendered</p>
+                  <p className="text-xs font-mono text-ink3">{pages.length} pages rendered</p>
                   <button
                     onClick={downloadZip}
                     disabled={busy}
-                    className="px-4 py-1.5 rounded-xl bg-white text-black text-xs font-medium disabled:opacity-40"
+                    className="px-4 py-1.5 rounded-xl bg-acc text-white text-xs font-medium disabled:opacity-40"
                   >
                     {busy ? "Zipping..." : "Download ZIP"}
                   </button>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                   {pages.map((p) => (
-                    <div key={p.index} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-                      <img src={p.url} alt={`Page ${p.index}`} className="w-full aspect-[3/4] object-contain bg-black/20" />
+                    <div key={p.index} className="rounded-xl border border-line bg-surface overflow-hidden">
+                      <img src={p.url} alt={`Page ${p.index}`} className="w-full aspect-[3/4] object-contain bg-ground2" />
                       <div className="p-2 flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-neutral-500">P{p.index}</span>
+                        <span className="text-[10px] font-mono text-ink3">P{p.index}</span>
                         <button
                           onClick={() => downloadSingle(p)}
-                          className="text-[10px] font-mono text-blue-400 hover:text-blue-300"
+                          className="text-[10px] font-mono text-info hover:text-info"
                         >
                           Download
                         </button>
@@ -267,9 +267,9 @@ export default function PdfToJpgToolEn() {
             )}
           </div>
 
-          {msg && <p className="text-xs font-mono text-emerald-400 mt-3">{msg}</p>}
-          {err && <p className="text-xs font-mono text-red-400 mt-3">{err}</p>}
-          {progress && busy && <p className="text-xs font-mono text-neutral-400 mt-3">{progress}</p>}
+          {msg && <p className="text-xs font-mono text-acc mt-3">{msg}</p>}
+          {err && <p className="text-xs font-mono text-errink mt-3">{err}</p>}
+          {progress && busy && <p className="text-xs font-mono text-ink2 mt-3">{progress}</p>}
         </SectionCard>
 
         <Hint>

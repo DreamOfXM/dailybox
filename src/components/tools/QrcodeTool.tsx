@@ -136,7 +136,7 @@ export default function QrcodeTool() {
                   value={safeHex(fg, "#000000").toLowerCase()}
                   onChange={(e) => setFg(e.target.value.toUpperCase())}
                   aria-label="前景色取色器"
-                  className="w-11 h-11 shrink-0 rounded-lg border border-white/[0.08] bg-transparent cursor-pointer"
+                  className="w-11 h-11 shrink-0 rounded-lg border border-line bg-transparent cursor-pointer"
                 />
                 <input
                   type="text"
@@ -156,7 +156,7 @@ export default function QrcodeTool() {
                   value={safeHex(bg, "#FFFFFF").toLowerCase()}
                   onChange={(e) => setBg(e.target.value.toUpperCase())}
                   aria-label="背景色取色器"
-                  className="w-11 h-11 shrink-0 rounded-lg border border-white/[0.08] bg-transparent cursor-pointer"
+                  className="w-11 h-11 shrink-0 rounded-lg border border-line bg-transparent cursor-pointer"
                 />
                 <input
                   type="text"
@@ -180,7 +180,7 @@ export default function QrcodeTool() {
               type="button"
               onClick={handleDownload}
               disabled={!dataUrl}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] disabled:opacity-40 transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface disabled:opacity-40 transition-colors"
             >
               ↓ 下载 PNG
             </button>
@@ -191,7 +191,7 @@ export default function QrcodeTool() {
               type="button"
               onClick={() => void generate()}
               disabled={!validation.ok || generating}
-              className="px-5 py-2.5 rounded-lg bg-blue-500 hover:bg-blue-400 text-white text-sm font-mono transition-colors disabled:opacity-40 shrink-0"
+              className="px-5 py-2.5 rounded-lg bg-info hover:bg-infd text-ink text-sm font-mono transition-colors disabled:opacity-40 shrink-0"
             >
               {generating ? "生成中…" : "生成二维码"}
             </button>
@@ -200,11 +200,11 @@ export default function QrcodeTool() {
               <img
                 src={dataUrl}
                 alt="生成的二维码"
-                className="w-64 h-64 sm:w-72 sm:h-72 rounded-lg border border-white/[0.08]"
+                className="w-64 h-64 sm:w-72 sm:h-72 rounded-lg border border-line"
                 style={{ imageRendering: "pixelated" }}
               />
             ) : (
-              <div className="w-64 h-64 sm:w-72 sm:h-72 rounded-lg border border-dashed border-white/10 flex items-center justify-center text-neutral-600 font-mono text-xs">
+              <div className="w-64 h-64 sm:w-72 sm:h-72 rounded-lg border border-dashed border-line2 flex items-center justify-center text-ink3 font-mono text-xs">
                 {validation.ok ? "点击「生成二维码」渲染" : "等待输入内容"}
               </div>
             )}

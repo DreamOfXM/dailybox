@@ -57,7 +57,7 @@ export default function DepositToolEn() {
         <SectionCard title="Deposit Parameters" subtitle="Fixed deposits typically use simple interest; compound applies to bonds and wealth products">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">Principal (CNY)</span>
+              <span className="text-xs text-ink3 mb-1.5 block">Principal (CNY)</span>
               <input
                 value={principal}
                 onChange={(e) => setPrincipal(e.target.value)}
@@ -67,7 +67,7 @@ export default function DepositToolEn() {
               />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">Annual rate (%)</span>
+              <span className="text-xs text-ink3 mb-1.5 block">Annual rate (%)</span>
               <input
                 value={rate}
                 onChange={(e) => setRate(e.target.value)}
@@ -77,7 +77,7 @@ export default function DepositToolEn() {
               />
             </label>
             <label className="block">
-              <span className="text-xs text-neutral-500 mb-1.5 block">Term (years)</span>
+              <span className="text-xs text-ink3 mb-1.5 block">Term (years)</span>
               <input
                 value={years}
                 onChange={(e) => setYears(e.target.value)}
@@ -134,7 +134,7 @@ export default function DepositToolEn() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs font-mono">
                 <thead>
-                  <tr className="text-neutral-500 border-b border-white/[0.06]">
+                  <tr className="text-ink3 border-b border-line">
                     <th className="text-left py-2 pr-4">Term</th>
                     <th className="text-right py-2 px-4">Interest</th>
                     <th className="text-right py-2 px-4">Maturity</th>
@@ -143,10 +143,10 @@ export default function DepositToolEn() {
                 </thead>
                 <tbody>
                   {plans.map((plan, i) => (
-                    <tr key={plan.name} className="border-b border-white/[0.04]">
-                      <td className="py-2.5 pr-4 text-neutral-300">{plan.name}</td>
-                      <td className="py-2.5 px-4 text-right text-neutral-400">{fmtMoney(plan.interest)}</td>
-                      <td className="py-2.5 px-4 text-right text-neutral-200">{fmtMoney(plan.maturity)}</td>
+                    <tr key={plan.name} className="border-b border-line">
+                      <td className="py-2.5 pr-4 text-ink">{plan.name}</td>
+                      <td className="py-2.5 px-4 text-right text-ink2">{fmtMoney(plan.interest)}</td>
+                      <td className="py-2.5 px-4 text-right text-ink">{fmtMoney(plan.maturity)}</td>
                       <td className="py-2.5 pl-4 text-right">{i === 0 && <Badge tone="emerald">Best</Badge>}</td>
                     </tr>
                   ))}

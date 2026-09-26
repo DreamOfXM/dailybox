@@ -19,10 +19,10 @@ function serializeDiff(lines: DiffLine[]): string {
 function DiffRow({ line }: { line: DiffLine }) {
   const style =
     line.type === "added"
-      ? "bg-emerald-500/10 text-emerald-300"
+      ? "bg-accp text-accd"
       : line.type === "removed"
-        ? "bg-red-500/10 text-red-300 line-through decoration-red-400/60"
-        : "text-neutral-400";
+        ? "bg-errbg text-errink line-through decoration-red-400/60"
+        : "text-ink2";
   const sym = line.type === "added" ? "+" : line.type === "removed" ? "-" : " ";
   return (
     <div className={`px-2 py-0.5 rounded font-mono text-sm leading-relaxed whitespace-pre-wrap break-all ${style}`}>
@@ -56,7 +56,7 @@ export default function TextcompareToolEn() {
                 setLeft(EXAMPLE_A);
                 setRight(EXAMPLE_B);
               }}
-              className="text-xs font-mono px-2.5 py-1 rounded-md text-blue-400 hover:text-blue-300 hover:bg-white/[0.05] transition-colors"
+              className="text-xs font-mono px-2.5 py-1 rounded-md text-info hover:text-info hover:bg-surface transition-colors"
             >
               Load example
             </button>
@@ -64,7 +64,7 @@ export default function TextcompareToolEn() {
         >
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <div className="text-xs font-mono text-neutral-500 uppercase tracking-wider mb-1.5">Left text</div>
+              <div className="text-xs font-mono text-ink3 uppercase tracking-wider mb-1.5">Left text</div>
               <textarea
                 value={left}
                 onChange={(e) => setLeft(e.target.value)}
@@ -75,7 +75,7 @@ export default function TextcompareToolEn() {
               />
             </div>
             <div>
-              <div className="text-xs font-mono text-neutral-500 uppercase tracking-wider mb-1.5">Right text</div>
+              <div className="text-xs font-mono text-ink3 uppercase tracking-wider mb-1.5">Right text</div>
               <textarea
                 value={right}
                 onChange={(e) => setRight(e.target.value)}
@@ -112,7 +112,7 @@ export default function TextcompareToolEn() {
                 </div>
               )}
               {hasDiff ? (
-                <div className="space-y-0.5 max-h-[420px] overflow-y-auto rounded-xl border border-white/[0.06] bg-black/20 p-2" aria-live="polite">
+                <div className="space-y-0.5 max-h-[420px] overflow-y-auto rounded-xl border border-line bg-ground2 p-2" aria-live="polite">
                   {result.lines.map((l, i) => (
                     <DiffRow key={i} line={l} />
                   ))}

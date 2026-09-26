@@ -115,10 +115,10 @@ export default function PdfPagenumTool() {
             type="file"
             accept="application/pdf"
             onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-white/[0.06] file:text-white hover:file:bg-white/[0.1]"
+            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
           />
           {file && pageCount > 0 && (
-            <p className="mt-2 text-xs font-mono text-neutral-500">
+            <p className="mt-2 text-xs font-mono text-ink3">
               {file.name} · {(file.size / 1024).toFixed(0)} KB · 共 {pageCount} 页
             </p>
           )}
@@ -150,8 +150,8 @@ export default function PdfPagenumTool() {
                         onClick={() => { setFormat(p); reset(); }}
                         className={`px-3 py-1 rounded-lg text-xs font-mono border transition-colors ${
                           format === p
-                            ? "border-white/20 bg-white/10 text-white"
-                            : "border-white/[0.06] text-neutral-500 hover:text-white"
+                            ? "border-line2 bg-surface2 text-ink"
+                            : "border-line text-ink3 hover:text-ink"
                         }`}
                       >
                         {p}
@@ -189,7 +189,7 @@ export default function PdfPagenumTool() {
                       step={0.01}
                       value={opacity}
                       onChange={(e) => setOpacity(Number(e.target.value))}
-                      className="w-full accent-blue-500"
+                      className="w-full accent-info"
                     />
                   </Field>
                   <Toggle checked={bold} onChange={setBold} label="粗体" />
@@ -209,8 +209,8 @@ export default function PdfPagenumTool() {
                           onClick={() => setPosition(p.value)}
                           className={`w-12 h-10 rounded-lg text-sm font-mono border transition-colors ${
                             position === p.value
-                              ? "border-white/20 bg-white/10 text-white"
-                              : "border-white/[0.06] text-neutral-500 hover:text-white hover:bg-white/[0.04]"
+                              ? "border-line2 bg-surface2 text-ink"
+                              : "border-line text-ink3 hover:text-ink hover:bg-surface"
                           }`}
                           title={p.value}
                         >
@@ -222,9 +222,9 @@ export default function PdfPagenumTool() {
 
                   {/* Live CSS Preview */}
                   <div className="flex flex-col items-center">
-                    <p className="text-[10px] font-mono text-neutral-600 uppercase tracking-wider mb-2">实时预览</p>
+                    <p className="text-[10px] font-mono text-ink3 uppercase tracking-wider mb-2">实时预览</p>
                     <div
-                      className="relative border border-white/[0.08] bg-white/[0.02] rounded-lg overflow-hidden"
+                      className="relative border border-line bg-surface rounded-lg overflow-hidden"
                       style={{ width: 200, height: 283 }}
                     >
                       <span
@@ -251,12 +251,12 @@ export default function PdfPagenumTool() {
               <button
                 onClick={run}
                 disabled={!canDownload}
-                className="px-5 py-2 rounded-xl bg-white text-black text-sm font-medium disabled:opacity-40"
+                className="px-5 py-2 rounded-xl bg-acc text-white text-sm font-medium disabled:opacity-40"
               >
                 {busy ? "处理中…" : "添加页码并下载"}
               </button>
-              {msg && <p className="text-xs font-mono text-emerald-400 mt-3">{msg}</p>}
-              {err && <p className="text-xs font-mono text-red-400 mt-3">{err}</p>}
+              {msg && <p className="text-xs font-mono text-acc mt-3">{msg}</p>}
+              {err && <p className="text-xs font-mono text-errink mt-3">{err}</p>}
             </SectionCard>
           </>
         )}
