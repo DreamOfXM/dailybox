@@ -3,10 +3,12 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { ALL_TOOLS, TOOL_GROUPS } from "@/lib/seo";
+import { CARD_COPY } from "@/lib/card-copy";
 import { parseRegex, runMatches } from "@/lib/regex";
 import { RecentTools, catAnchor, recordToolVisit } from "@/components/ui";
 import { CatIcon, ToolIcon } from "@/components/Icon";
 import "./hero.css";
+import "./wall.css";
 
 /** 搜索预设标签：一键填入 */
 const PRESET_TAGS = ["编码", "哈希", "正则", "UUID", "进制", "JWT", "SQL", "Cron", "大写", "身份证", "单位"];
@@ -171,85 +173,131 @@ function HeroPanel() {
     </div>
   );
 }
+/** 卡墙里的一张工具卡 —— 首页的墙与搜索结果共用同一张卡，保证两处形状一致 */
+function WallCard({
+  t,
+  groupIdx,
+  anchorId,
+}: {
+  t: { slug: string; title: string };
+  groupIdx: number;
+  anchorId?: string;
+}) {
+  return (
+    <Link
+      href={`/${t.slug}`}
+      id={anchorId}
+      onClick={() => recordToolVisit(t.slug)}
+      className={`wb-card wg-${groupIdx}`}
+    >
+      <span className="wb-ico" aria-hidden="true">
+        <span className="plate" />
+        <span className="block">
+          <ToolIcon slug={t.slug} size={17} />
+        </span>
+      </span>
+      <h3>{t.title}</h3>
+      <p>{CARD_COPY[t.slug] ?? t.title}</p>
+    </Link>
+  );
+}
 
 export default function Home() {
+  const [cat, setCat] = useState<string | null>(null);
   const [query, setQuery] = useState("");
 
   const q = query.trim().toLowerCase();
 
-  const groups = useMemo(() => {
-    if (!q) return TOOL_GROUPS.map((g) => ({ ...g, items: g.items }));
-    return TOOL_GROUPS.map((g) => ({
-      ...g,
-      items: g.items.filter((t) => {
-        const hay = [t.title, t.subtitle, t.description, t.slug, g.group, ...t.keywords].join(" ").toLowerCase();
-        return q.split(/\s+/).every((word) => hay.includes(word));
-      }),
-    })).filter((g) => g.items.length > 0);
-  }, [q]);
+  /** 组序 → 色阶 class；卡片按分类成组排列（与 TOOL_GROUPS 同序） */
+  const ordered = useMemo(
+    () =>
+      TOOL_GROUPS.flatMap((g, gi) =>
+        (cat && g.group !== cat ? [] : g.items).map((t) => ({
+          t,
+          gi: gi + 1,
+          group: g.group,
+          first: g.items[0].slug === t.slug,
+        }))
+      ),
+    [cat]
+  );
 
-  const total = useMemo(() => groups.reduce((n, g) => n + g.items.length, 0), [groups]);
+  const hits = useMemo(() => {
+    if (!q) return [];
+    return TOOL_GROUPS.flatMap((g, gi) =>
+      g.items
+        .filter((t) =>
+          [t.title, t.subtitle, t.description, t.slug, g.group, ...t.keywords]
+            .join(" ")
+            .toLowerCase()
+            .includes(q)
+        )
+        .map((t) => ({ t, gi: gi + 1 }))
+    );
+  }, [q]);
 
   return (
     <div>
-      {/* ---------- Hero：左文案，下方摊开的真产品界面 ---------- */}
-      <section className="hero">
-        <div className="hero-in">
-          <div>
-            <p className="pill">
-              <b aria-hidden="true" />
-              {TOOL_GROUPS.length} 个分类 · {ALL_TOOLS.length} 个工具 · 输入不出本机
-            </p>
-            <h1 className="disp">
-              {ALL_TOOLS.length} 个日常工具，
-              <em>全部在浏览器里算完</em>
-            </h1>
-            <p className="lede">
-              编码、哈希、正则、PDF、汇率与单位换算。不上传、不注册、不排队；断网也能用，结果可以复制走。
-            </p>
-            <p className="cta">
-              <Link href="#tools" className="btn">
-                浏览全部工具
-              </Link>
-              <Link href="/regex" className="lnk" onClick={() => recordToolVisit("regex")}>
-                先试试正则测试
-              </Link>
-            </p>
-          </div>
-          <div className="hero-num" aria-hidden="true">
-            <span>{ALL_TOOLS.length}</span>
-            <small>TOOLS</small>
-          </div>
-        </div>
-        <HeroPanel />
+      <div className="wb-bg" aria-hidden="true">
+        <i className="r1" />
+        <i className="c1" />
+        <i className="c2" />
+        <i className="e1" />
+        <i className="r2" />
+      </div>
+
+      {/* ---------- 报头：把分类念出来的具名标题 + 一句结果承诺 ---------- */}
+      <section className="wb-break wb-hero">
+        <h1>处理文本、编码、加密、PDF 的 {ALL_TOOLS.length} 个工具</h1>
+        <p>复制粘贴就有结果，输入不出你的浏览器 —— 不上传、不注册、不收费。</p>
       </section>
 
-      {/* ---------- 搜索 + 预设标签 ---------- */}
-      <section className="mt-10 mb-8" aria-label="搜索工具">
-        <div className="relative max-w-2xl">
-          <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-ink3 pointer-events-none"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
+      {/* ---------- 分类胶囊：选中即筛上方卡墙 ---------- */}
+      <div className="wb-break">
+        <div className="wb-pills" role="group" aria-label="按分类筛选工具">
+          {[null, ...TOOL_GROUPS.map((g) => g.group)].map((g) => (
+            <button
+              key={g ?? "all"}
+              type="button"
+              className="wb-pill"
+              aria-pressed={cat === g}
+              onClick={() => setCat(g)}
+            >
+              {g ?? "全部"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ---------- 卡墙：33 张长卡，首屏就摆满工具本身 ---------- */}
+      <section id="tools" className="wb-break scroll-mt-24">
+        <h2 className="sr-only">全部工具</h2>
+        <div className="wb-wall">
+          {ordered.map(({ t, gi, group, first }) => (
+            <WallCard key={t.slug} t={t} groupIdx={gi} anchorId={first ? catAnchor(group) : undefined} />
+          ))}
+        </div>
+      </section>
+
+      {/* ---------- 按名字搜：墙下方的第二找法，结果用同一种卡 ---------- */}
+      <section className="mt-2 mb-10" aria-label="搜索工具">
+        <div className="wb-search">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
           </svg>
           <input
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="搜索工具：名称、关键词，如「正则」「单位」…"
+            placeholder="想不起名字就搜：输入「正则」「二维码」「身份证」…"
             aria-label="搜索工具"
-            className="w-full pl-11 pr-11 py-3 rounded-[10px] text-[15.5px]"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
               aria-label="清空搜索"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface hover:bg-surface2 text-ink2 hover:text-ink text-xs flex items-center justify-center"
+              className="w-6 h-6 shrink-0 rounded-full bg-surface hover:bg-surface2 text-ink2 hover:text-ink text-xs flex items-center justify-center"
             >
               ✕
             </button>
@@ -272,66 +320,31 @@ export default function Home() {
             </button>
           ))}
         </div>
+        {q && (
+          <div className="mt-6">
+            <p className="text-[15px] font-mono text-ink3 mb-4" aria-live="polite">
+              找到 <span className="text-ink tabular-nums">{hits.length}</span> 个匹配「{query.trim()}」的工具
+            </p>
+            {hits.length > 0 ? (
+              <div className="wb-wall" style={{ padding: "0 0 8px" }}>
+                {hits.map(({ t, gi }) => (
+                  <WallCard key={t.slug} t={t} groupIdx={gi} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-[15px] font-mono text-ink3">
+                没有匹配的工具，试试上面的标签，或换个关键词
+              </p>
+            )}
+          </div>
+        )}
       </section>
 
       {/* ---------- 最近使用（localStorage，空态自动隐藏） ---------- */}
-      {!q && <RecentTools tools={ALL_TOOLS} />}
+      <RecentTools tools={ALL_TOOLS} />
 
-      {/* ---------- 工具列表 ---------- */}
-      <section id="tools" className="scroll-mt-24">
-        {q ? (
-          <p className="text-[15px] font-mono text-ink3 mb-5" aria-live="polite">
-            找到 <span className="text-ink tabular-nums">{total}</span> 个匹配「{query.trim()}」的工具
-          </p>
-        ) : (
-          <h2 className="text-[26px] font-extrabold tracking-[-0.025em] text-ink mb-5">全部工具</h2>
-        )}
-
-        {groups.map((group) => (
-          <div key={group.group} id={catAnchor(group.group)} className="scroll-mt-24 mb-9">
-            <h3 className="flex items-center gap-2.5 text-[19px] font-bold text-ink mb-3.5">
-              <CatIcon group={group.group} size={19} className="text-acc" />
-              {group.group}
-              <span className="text-ink3 font-mono text-[15px] tabular-nums">{group.items.length}</span>
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5">
-              {group.items.map((t) => (
-                <Link
-                  key={t.slug}
-                  href={`/${t.slug}`}
-                  onClick={() => recordToolVisit(t.slug)}
-                  className="card-hover group rounded-[6px] border border-line bg-card px-5 pt-5 pb-[18px] flex flex-col"
-                >
-                  <h4 className="flex items-center gap-2.5 text-[17.5px] font-bold text-ink leading-snug mb-2">
-                    <ToolIcon slug={t.slug} size={19} className="text-acc shrink-0" />
-                    <span className="min-w-0">{t.title}</span>
-                  </h4>
-                  <p className="text-[16px] leading-[1.6] text-ink2 flex-1">{t.subtitle}</p>
-                  <span className="mt-3.5 flex items-center gap-1 text-[15px] font-mono text-ink3 group-hover:text-ink transition-colors">
-                    打开
-                    <svg
-                      className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {q && total === 0 && (
-          <div className="text-center py-16">
-            <p className="text-[17px] text-ink2 mb-2">没有找到「{query.trim()}」相关的工具</p>
-            <p className="text-[15px] font-mono text-ink3">试试「哈希」「正则」「单位」等标签，或换个关键词</p>
-          </div>
-        )}
-      </section>
+      {/* ---------- 摊开的真产品界面：正则测试打开后的样子 ---------- */}
+      <HeroPanel />
     </div>
   );
 }

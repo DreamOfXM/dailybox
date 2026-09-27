@@ -89,6 +89,9 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: tabular-nums;
+  /* 首页卡墙用 100vw 破开 1180 容器；带经典滚动条的环境里 100vw 比可视宽多出十几 px，
+     在这里裁掉，不让它变成一条横向滚动 */
+  overflow-x: clip;
 }
 
 ::selection {

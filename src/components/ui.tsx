@@ -500,13 +500,22 @@ function useActiveSlug() {
   return seg ?? "";
 }
 
-/** 顶栏 logo：字标 + 一枚墨绿方点。EN 页点回 EN 首页，CN 页点回 CN 首页 */
+/** 顶栏 logo：字标 + 一枚实心绿方标（W7 顶栏锚点的两半之一，另一半是右侧绿胶囊） */
 export function SiteBrand() {
   const pathname = usePathname() || "";
   const isEn = pathname.startsWith("/en");
   return (
-    <Link href={isEn ? "/en" : "/"} className="shrink-0 whitespace-nowrap text-[24px] font-extrabold tracking-[-0.025em] leading-[1.3] text-ink">
-      dailybox<i className="inline-block w-[9px] h-[9px] bg-acc rounded-[2px] ml-[3px] -translate-y-[1px]" aria-hidden="true" />
+    <Link href={isEn ? "/en" : "/"} className="shrink-0 whitespace-nowrap flex items-center gap-[7px] text-[24px] font-extrabold tracking-[-0.025em] leading-[1.3] text-ink">
+      <i
+        aria-hidden="true"
+        className="inline-flex w-[26px] h-[26px] shrink-0 items-center justify-center rounded-[8px] bg-acc text-ground"
+      >
+        <svg viewBox="0 0 24 24" width={16} height={16} fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="7" width="18" height="13" rx="3" />
+          <path d="M3 11h18M8 7V4.5h8V7" />
+        </svg>
+      </i>
+      dailybox
     </Link>
   );
 }
@@ -534,16 +543,17 @@ export function SiteLangToggle() {
   );
 }
 
-/** 顶栏主操作：黑底白字方角按钮（L10 的 .nav-cta 配方） */
+/** 顶栏主操作：实心绿胶囊（W7 量到的那枚「顶栏实心品牌块」，34px 高、全圆角），真的跳到卡墙 */
 export function NavCta() {
   const pathname = usePathname() || "";
   const isEn = pathname.startsWith("/en");
+  const n = (isEn ? ALL_TOOLS_EN : ALL_TOOLS).length;
   return (
     <Link
       href={isEn ? "/en#tools" : "/#tools"}
-      className="order-4 shrink-0 whitespace-nowrap bg-ink text-ground px-[17px] py-[10px] rounded-[4px] text-[15.5px] font-semibold hover:bg-ink2 transition-colors"
+      className="order-4 shrink-0 whitespace-nowrap inline-flex items-center h-[34px] px-[16px] rounded-full bg-acc text-[#fff] text-[14px] font-medium hover:bg-accd transition-colors"
     >
-      {isEn ? "All tools" : "全部工具"}
+      {isEn ? `All ${n} tools` : `全部 ${n} 个工具`}
     </Link>
   );
 }

@@ -1,0 +1,125 @@
+/* 首页卡墙层 —— 09-27 他指版 W7 的落地（wall/w7.html 实拍 1:1 对应）。
+   数值来源：零件（字号/圆角/描边/间距/图标）= research/idiom.json 对 ilovepdf 的实测；
+   内容层开关 = W7 那四根（长卡 + 结果句 + 顶栏实心锚点 + 具名报头）。
+   图标仍是一块浅底 + 一块实心（不加白字标记），卡片仍按分类成组排列（不打散）——
+   这两根是 W5/W6 的变量，他没选。 */
+
+/* 满幅：main 的 1180 容器在这里破开，内容宽 1376、左右各留 32 */
+.wb-break {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: max(32px, calc(50vw - 688px));
+}
+
+/* —— 背景画：照 ilovepdf 的 background.svg 复现 —— 一整层 fixed、整层 opacity .1、
+      里面 5 个旋转 -45° 的圆角矩形与正圆、每个再 .5、填充「品牌绿→地面」线性渐变。
+      关键是全程零模糊：是硬边几何形，不是光晕（源文件 research/raw/ilovepdf_bg.svg）。 */
+.wb-bg { position: fixed; inset: 0; z-index: -1; opacity: 0.1; overflow: hidden; pointer-events: none; }
+.wb-bg i { position: absolute; display: block; opacity: 0.5; }
+.wb-bg .r1 { width: 387px; height: 387px; border-radius: 24px; left: -120px; top: 274px; transform: rotate(-45deg); }
+.wb-bg .c1 { width: 440px; height: 440px; border-radius: 50%; right: -90px; top: 310px; }
+.wb-bg .c2 { width: 182px; height: 182px; border-radius: 50%; left: 766px; top: 284px; }
+.wb-bg .e1 { width: 320px; height: 321px; border-radius: 50%; left: -160px; top: 847px; }
+.wb-bg .r2 { width: 719px; height: 425px; border-radius: 32px; left: 289px; top: 1179px; transform: rotate(-45deg); }
+.wb-bg .r1, .wb-bg .c1, .wb-bg .c2, .wb-bg .e1, .wb-bg .r2 {
+  background: linear-gradient(135deg, #157a4b, var(--bg) 99%);
+}
+
+/* —— 报头：居中，h1 42/600 行高 52，副标 22/32 */
+.wb-hero { text-align: center; }
+.wb-hero h1 {
+  margin: 0 auto; max-width: 1100px;
+  font-size: 42px; line-height: 52px; font-weight: 600;
+  letter-spacing: -0.4px; color: #33333b;
+}
+.wb-hero p {
+  margin: 4px auto 0; max-width: 980px;
+  font-size: 22px; line-height: 32px; font-weight: 400; color: #47474f;
+}
+
+/* —— 筛选胶囊：高 34 / 全圆角 / 内边距 4·16 / 字 16·500 / 间距 16 */
+.wb-pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 36px; }
+.wb-pill {
+  height: 34px; padding: 4px 16px; border-radius: 9999px;
+  font-size: 16px; font-weight: 500; line-height: 32px; white-space: nowrap;
+  color: #33333b; background: #fff; border: 1px solid #d6d6df; cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.wb-pill:hover { border-color: #b9b9c6; }
+.wb-pill[aria-pressed="true"] { background: #292931; border-color: #292931; color: #fff; }
+
+/* —— 卡墙：5 列，间隙 13×15，卡片 263×232、圆角 16、1px 描边、零阴影 */
+.wb-wall {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 13px 15px;
+  padding: 32px 0 56px;
+}
+.wb-card {
+  position: relative; display: block; min-height: 232px; padding: 24px;
+  background: #fff; border: 1px solid #d6d6df; border-radius: 16px;
+  box-shadow: none; text-decoration: none; color: inherit; scroll-margin-top: 86px;
+}
+.wb-card:hover { border-color: #b9b9c6; }
+.wb-card h3 {
+  margin: 16px 0 8px; font-size: 20px; line-height: 28px; font-weight: 500; color: #33333b;
+}
+.wb-card p {
+  margin: 0; font-size: 13px; line-height: 18px; color: #707078;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden;
+}
+
+/* —— 图标：42×42 画布 = 浅底块（29，左下）+ 实心块（29，右上，内嵌 17px 白色线性图形） */
+.wb-ico { position: relative; display: block; width: 42px; height: 42px; }
+.wb-ico .plate {
+  position: absolute; left: 0; top: 13px; width: 29px; height: 29px;
+  border-radius: 9px; background: var(--t1); border: 1px solid var(--t2);
+}
+.wb-ico .block {
+  position: absolute; right: 0; top: 0; width: 29px; height: 29px;
+  border-radius: 9px; background: var(--t3);
+  display: flex; align-items: center; justify-content: center;
+}
+.wb-ico .block svg {
+  width: 17px; height: 17px; stroke: #fff; fill: none; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* —— 一支色相管一个分类（浅/中/深三阶，取自 ilovepdf 实测三元组）
+      组序同 TOOL_GROUPS：1编码 2文本 3加密 4开发 5时间 6文件 7设计 8生活
+      EN 有 9 个分类（多一支 Convert），第 9 支是补的：参照只有 8 支实测三元组，
+      这里按同样的三阶结构取一支未被占用的黄绿（色相 52°），离最近的橙色 wg-3（33°）19°。 */
+.wg-1 { --t1: #dce5fa; --t2: #5f83c6; --t3: #295795; }
+.wg-2 { --t1: #c2e5c3; --t2: #5ea162; --t3: #2e7237; }
+.wg-3 { --t1: #fbe0c4; --t2: #e2955a; --t3: #a85d17; }
+.wg-4 { --t1: #fad9d6; --t2: #ef7a72; --t3: #a8211d; }
+.wg-5 { --t1: #cdeae8; --t2: #4fa3a0; --t3: #1f6e6c; }
+.wg-6 { --t1: #f3d9cc; --t2: #ff7651; --t3: #d04526; }
+.wg-7 { --t1: #e3cee2; --t2: #ab6993; --t3: #7e3f6b; }
+.wg-8 { --t1: #dcdef7; --t2: #6e74c9; --t3: #3a3f91; }
+.wg-9 { --t1: #f0eecb; --t2: #b8ab47; --t3: #6e5d1c; }
+
+/* —— 搜索带（放在墙下方，不参与首屏）：44px 高、白底 1px 描边、圆角 12、无阴影 */
+.wb-search {
+  display: flex; align-items: center; gap: 10px; width: 100%; max-width: 640px; height: 44px;
+  padding: 0 14px; background: #fff; border: 1px solid #d6d6df; border-radius: 12px;
+}
+.wb-search svg { width: 18px; height: 18px; color: #707078; flex: none; }
+.wb-search input {
+  flex: 1; border: 0; outline: 0; background: none;
+  font-size: 15px; color: #33333b; font-family: inherit;
+}
+.wb-search input::placeholder { color: #9a9aa4; }
+
+@media (max-width: 1240px) { .wb-wall { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 1000px) { .wb-wall { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 760px) {
+  .wb-wall { grid-template-columns: repeat(2, 1fr); gap: 12px; padding-top: 22px; }
+  .wb-hero h1 { font-size: 26px; line-height: 34px; }
+  .wb-hero p { font-size: 15px; line-height: 22px; }
+  .wb-card { padding: 18px; }
+  .wb-card h3 { font-size: 17px; line-height: 24px; }
+  .wb-pills { gap: 10px; margin-top: 24px; }
+  .wb-pill { font-size: 14px; height: 32px; line-height: 30px; padding: 4px 12px; }
+}
+@media (max-width: 520px) {
+  .wb-wall { grid-template-columns: 1fr; }
+  .wb-card { min-height: 0; }
+}
