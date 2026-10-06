@@ -8,7 +8,7 @@ import { SiteFooter, SiteBrand, SiteLangToggle, NavCta } from "@/components/ui";
 const inter = Inter({ subsets: ["latin"], variable: "--font-latin" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jbmono" });
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-G7TXV4XC2B";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-PH76KYPYVX";
 
 const JSON_LD = {
   "@context": "https://schema.org",
@@ -66,7 +66,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${mono.variable} font-sans bg-ground text-ink`}>
         <nav className="sticky top-0 z-50 border-b border-line bg-ground/92 backdrop-blur-md">
-          <div className="mx-auto max-w-[1180px] px-4 sm:px-8 min-h-[66px] flex flex-wrap items-center gap-x-6 gap-y-1 py-2">
+          <div className="mx-auto max-w-[1180px] px-4 sm:px-8 min-h-[66px] flex flex-wrap items-center gap-x-3 sm:gap-x-6 gap-y-1 py-2">
             <SiteBrand />
             <SiteNav />
             <SiteLangToggle />

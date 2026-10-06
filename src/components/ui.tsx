@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { copyText } from "@/lib/format";
 import type { ToolSeo } from "@/lib/seo";
 import { ALL_TOOLS, TOOL_GROUPS } from "@/lib/seo";
@@ -265,6 +265,123 @@ export function NumberInput({
       />
       {suffix && <span className="absolute right-4 text-xs font-mono text-ink3 pointer-events-none">{suffix}</span>}
     </div>
+  );
+}
+
+/* ---------- 文件拖放区（PDF/图片/视频工具共用） ---------- */
+/**
+ * 统一的文件选择入口：原生 file input 的「选择文件」按钮在浅色主题下几乎
+ * 不可见（file:bg-surface 贴近白底），这里用虚线卡片承载，拖入时高亮。
+ * accept 同时约束点选与拖放：MIME 精确匹配、"image/*" 通配、".png" 后缀。
+ */
+export function FileDrop({
+  accept,
+  multiple,
+  onFiles,
+  hint,
+  className = "",
+}: {
+  accept?: string;
+  multiple?: boolean;
+  onFiles: (files: File[]) => void;
+  /** 次行说明文案（支持格式等）；缺省时从 accept 推导 */
+  hint?: string;
+  className?: string;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [over, setOver] = useState(false);
+  const isEn = (usePathname() || "").startsWith("/en");
+
+  const accepts = useMemo(
+    () => (accept ? accept.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean) : []),
+    [accept],
+  );
+
+  const matchAccept = useCallback(
+    (f: File) => {
+      if (!accepts.length) return true;
+      const type = f.type.toLowerCase();
+      const name = f.name.toLowerCase();
+      return accepts.some((tok) =>
+        tok.startsWith(".")
+          ? name.endsWith(tok)
+          : tok.endsWith("/*")
+            ? type.startsWith(tok.slice(0, -1))
+            : type === tok,
+      );
+    },
+    [accepts],
+  );
+
+  const emit = useCallback(
+    (list: FileList | File[] | null) => {
+      const picked = list ? Array.from(list) : [];
+      const ok = accepts.length ? picked.filter(matchAccept) : picked;
+      if (ok.length) onFiles(ok);
+      // 清掉 value，让下次重新选择同一批文件也能再次触发 change
+      if (inputRef.current) inputRef.current.value = "";
+    },
+    [accepts, matchAccept, onFiles],
+  );
+
+  const derived =
+    accepts.length > 0
+      ? accepts
+          .map((t) =>
+            t.startsWith(".")
+              ? t.slice(1).toUpperCase()
+              : t.endsWith("/*")
+                ? t.slice(0, -2).toUpperCase()
+                : t.split("/").pop()!.toUpperCase(),
+          )
+          .join(" / ")
+      : "";
+  const sub = `${hint ?? (isEn ? `Supports ${derived}` : `支持 ${derived} 格式`)}${multiple ? (isEn ? " · multiple" : " · 可多选") : ""}`;
+
+  return (
+    <label
+      className={`block cursor-pointer rounded-2xl border border-dashed transition-colors select-none has-[:focus-visible]:border-acc has-[:focus-visible]:bg-accp ${
+        over ? "border-acc bg-accp" : "border-line2 bg-ground hover:border-acc hover:bg-surface"
+      } ${className}`}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setOver(true);
+      }}
+      onDragLeave={() => setOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setOver(false);
+        emit(e.dataTransfer.files);
+      }}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        multiple={multiple}
+        className="sr-only"
+        onChange={(e) => emit(e.target.files)}
+      />
+      <div className="flex flex-col items-center gap-1.5 py-8 px-4 text-center">
+        <svg
+          viewBox="0 0 24 24"
+          width={22}
+          height={22}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.8}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-ink3"
+          aria-hidden="true"
+        >
+          <path d="M12 16V5m0 0l-4 4m4-4l4 4" />
+          <path d="M4 16.5V19a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-2.5" />
+        </svg>
+        <p className="text-sm text-ink2">{isEn ? "Click to choose or drop file(s) here" : "点击选择，或把文件拖到这里"}</p>
+        {sub.trim() && <p className="text-[11px] font-mono text-ink3">{sub}</p>}
+      </div>
+    </label>
   );
 }
 
@@ -551,7 +668,7 @@ export function NavCta() {
   return (
     <Link
       href={isEn ? "/en#tools" : "/#tools"}
-      className="order-4 shrink-0 whitespace-nowrap inline-flex items-center h-[34px] px-[16px] rounded-full bg-acc text-[#fff] text-[14px] font-medium hover:bg-accd transition-colors"
+      className="order-4 shrink-0 whitespace-nowrap inline-flex items-center h-[34px] px-[13px] sm:px-[16px] rounded-full bg-acc text-[#fff] text-[14px] font-medium hover:bg-accd transition-colors"
     >
       {isEn ? `All ${n} tools` : `全部 ${n} 个工具`}
     </Link>

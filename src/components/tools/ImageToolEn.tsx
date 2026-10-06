@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { findToolEn } from "@/lib/seo-en";
-import { Hint, PageHeader, SectionCard, Segmented } from "@/components/ui";
+import { FileDrop, Hint, PageHeader, SectionCard, Segmented } from "@/components/ui";
 
 const seo = findToolEn("image")!;
 
@@ -16,8 +16,8 @@ export default function ImageTool() {
   const [results, setResults] = useState<{ name: string; url: string; size: number; origSize: number }[]>([]);
   const [processing, setProcessing] = useState(false);
 
-  const onFiles = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const list = e.target.files ? Array.from(e.target.files) : [];
+  const onFiles = useCallback((fs: File[]) => {
+    const list = fs;
     setFiles(list);
     setResults([]);
   }, []);
@@ -63,7 +63,7 @@ export default function ImageTool() {
       <PageHeader badge="Files" title={seo.title} subtitle={seo.subtitle} tone="emerald" />
       <div className="space-y-6">
         <SectionCard title="Upload Images" subtitle="JPG/PNG/WebP batch — local Canvas compression, no server upload">
-          <input type="file" accept="image/*" multiple onChange={onFiles} className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-sm file:text-ink hover:file:bg-surface2" />
+          <FileDrop accept="image/*" multiple onFiles={onFiles} hint="Supports JPG / PNG / WebP and more" />
           {files.length > 0 && <p className="text-xs font-mono text-ink3 mt-2">Selected {files.length} images, {(files.reduce((a, f) => a + f.size, 0) / 1024).toFixed(0)} KB</p>}
           <div className="flex flex-wrap gap-4 mt-4">
             <Segmented value={format} onChange={setFormat} options={[{ value: "jpeg", label: "JPEG" }, { value: "png", label: "PNG" }, { value: "webp", label: "WebP" }]} ariaLabel="OutputFormat" />

@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { findTool } from "@/lib/seo";
-import { Hint, PageHeader, SectionCard, downloadFile } from "@/components/ui";
+import { FileDrop, Hint, PageHeader, SectionCard, downloadFile } from "@/components/ui";
 import { readPdfMeta, rotatePages } from "@/lib/pdf";
 import type { PdfMeta } from "@/lib/pdf";
 
@@ -21,8 +21,8 @@ export default function PdfRotateTool() {
     setErr("");
   };
 
-  const onFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
+  const onFile = useCallback(async (fs: File[]) => {
+    const f = fs[0];
     if (!f) return;
     reset();
     setBusy(true);
@@ -89,12 +89,7 @@ export default function PdfRotateTool() {
       <PageHeader badge="文件" title={seo.title} subtitle={seo.subtitle} tone="blue" />
       <div className="space-y-6">
         <SectionCard title="PDF 旋转" subtitle="纯浏览器本地运算，文件不上传">
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-          />
+          <FileDrop accept="application/pdf" onFiles={onFile} />
 
           {meta && (
             <div className="space-y-4 mt-4">

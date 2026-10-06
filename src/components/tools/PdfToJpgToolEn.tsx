@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BASE_PATH } from "@/lib/seo";
 import { findToolEn } from "@/lib/seo-en";
-import { Hint, PageHeader, SectionCard, Segmented, downloadFile } from "@/components/ui";
+import { FileDrop, Hint, PageHeader, SectionCard, Segmented, downloadFile } from "@/components/ui";
 
 const seo = findToolEn("pdftojpg")!;
 
@@ -24,7 +24,6 @@ export default function PdfToJpgToolEn() {
   const [progress, setProgress] = useState("");
   const [msg, setMsg] = useState("");
   const [err, setErr] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
 
   // Cleanup object URLs on unmount or re-upload
   const cleanupPages = useCallback((list: RenderedPage[]) => {
@@ -53,8 +52,8 @@ export default function PdfToJpgToolEn() {
     setProgress("");
   };
 
-  const onFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0] ?? null;
+  const onFileChange = useCallback(async (fs: File[]) => {
+    const f = fs[0] ?? null;
     // Cleanup previous pages
     cleanupPages(pagesRef.current);
     setPages([]);
@@ -75,8 +74,6 @@ export default function PdfToJpgToolEn() {
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Could not read the PDF file.");
     }
-    // Reset input so same file can be re-selected
-    e.target.value = "";
   }, [cleanupPages]);
 
   const scaleNum = scale === "1x" ? 1 : scale === "2x" ? 2 : 3;
@@ -169,13 +166,7 @@ export default function PdfToJpgToolEn() {
         <SectionCard title="PDF to Image" subtitle="Render every page to JPG/PNG in the browser">
           <div className="space-y-4">
             {/* Upload */}
-            <input
-              ref={inputRef}
-              type="file"
-              accept="application/pdf"
-              onChange={onFileChange}
-              className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-            />
+            <FileDrop accept="application/pdf" onFiles={onFileChange} />
 
             {totalPages > 0 && (
               <>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ALL_TOOLS } from "@/lib/seo";
 
 /**
  * 全局 404 页（静态导出 output: "export" 下输出为 out/404.html，
@@ -21,7 +22,7 @@ export default function NotFound() {
       <p className="text-lg text-ink3 max-w-md mx-auto mb-10">
         你访问的地址不存在或已被移动。
         <br />
-        13 个在线工具都在首页，随时可以从头开始。
+        {ALL_TOOLS.length} 个在线工具都在首页，随时可以从头开始。
       </p>
       <Link
         href="/"

@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { findTool } from "@/lib/seo";
-import { Hint, PageHeader, SectionCard } from "@/components/ui";
+import { FileDrop, Hint, PageHeader, SectionCard } from "@/components/ui";
 
 const seo = findTool("video")!;
 
@@ -13,8 +13,8 @@ export default function VideoTool() {
   const [outUrl, setOutUrl] = useState<string | null>(null);
   const [outName, setOutName] = useState("");
 
-  const onFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(e.target.files?.[0] ?? null);
+  const onFile = useCallback((fs: File[]) => {
+    setFile(fs[0] ?? null);
     setOutUrl(null);
     setMsg("");
   }, []);
@@ -51,7 +51,7 @@ export default function VideoTool() {
       <PageHeader badge="文件" title={seo.title} subtitle={seo.subtitle} tone="amber" />
       <div className="space-y-6">
         <SectionCard title="视频压缩转码" subtitle="MP4↔WebM，ffmpeg.wasm 本地 720p/1M，随用随加载">
-          <input type="file" accept="video/*" onChange={onFile} className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-sm file:text-ink hover:file:bg-surface2" />
+          <FileDrop accept="video/*" onFiles={onFile} hint="支持 MP4 / WebM 等视频格式" />
           {file && <p className="text-xs font-mono text-ink3 mt-2">{file.name} {(file.size / 1024 / 1024).toFixed(2)} MB</p>}
           <div className="flex gap-3 mt-4">
             <button onClick={() => transcode("mp4")} disabled={!file || busy} className="px-4 py-2 rounded-xl bg-acc text-white text-sm disabled:opacity-40">压为 MP4</button>

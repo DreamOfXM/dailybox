@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { findToolEn } from "@/lib/seo-en";
-import { Hint, PageHeader, SectionCard, Segmented, downloadFile } from "@/components/ui";
+import { FileDrop, Hint, PageHeader, SectionCard, Segmented, downloadFile } from "@/components/ui";
 import { mergePdfs, extractPages, readPdfMeta } from "@/lib/pdf";
 
 const seo = findToolEn("pdf")!;
@@ -61,13 +61,13 @@ export default function PdfToolEn() {
     setErr("");
   };
 
-  const onMergeFiles = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles(e.target.files ? Array.from(e.target.files) : []);
+  const onMergeFiles = useCallback((fs: File[]) => {
+    setFiles(fs);
     reset();
   }, []);
 
-  const onSplitFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0] ?? null;
+  const onSplitFile = useCallback(async (fs: File[]) => {
+    const f = fs[0] ?? null;
     setSplitFile(f);
     setSplitTotal(0);
     reset();
@@ -124,13 +124,7 @@ export default function PdfToolEn() {
         >
           {mode === "merge" ? (
             <div className="space-y-4">
-              <input
-                type="file"
-                accept="application/pdf"
-                multiple
-                onChange={onMergeFiles}
-                className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-              />
+                <FileDrop accept="application/pdf" multiple onFiles={onMergeFiles} />
               {files.length > 0 && (
                 <ol className="text-xs font-mono text-ink3 space-y-1">
                   {files.map((f, i) => (
@@ -150,12 +144,7 @@ export default function PdfToolEn() {
             </div>
           ) : (
             <div className="space-y-4">
-              <input
-                type="file"
-                accept="application/pdf"
-                onChange={onSplitFile}
-                className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-              />
+                <FileDrop accept="application/pdf" onFiles={onSplitFile} />
               {splitTotal > 0 && (
                 <div className="space-y-2">
                   <p className="text-xs font-mono text-ink3">{splitTotal} pages · enter the page range to keep / extract</p>

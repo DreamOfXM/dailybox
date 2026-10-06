@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useState } from "react";
 import { findToolEn } from "@/lib/seo-en";
-import { Hint, PageHeader, SectionCard, downloadFile } from "@/components/ui";
+import { FileDrop, Hint, PageHeader, SectionCard, downloadFile } from "@/components/ui";
 import { readPdfMeta, reorderPages } from "@/lib/pdf";
 import type { PdfMeta } from "@/lib/pdf";
 
@@ -33,8 +33,8 @@ export default function PdfOrganizeToolEn() {
     setErr("");
   };
 
-  const onFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
+  const onFile = useCallback(async (fs: File[]) => {
+    const f = fs[0];
     if (!f) return;
     reset();
     setBusy(true);
@@ -110,12 +110,7 @@ export default function PdfOrganizeToolEn() {
       <PageHeader badge="Files" title={seo.title} subtitle={seo.subtitle} tone="blue" />
       <div className="space-y-6">
         <SectionCard title="PDF Page Organizer" subtitle="Runs entirely in your browser — files never upload">
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-          />
+          <FileDrop accept="application/pdf" onFiles={onFile} />
 
           {meta && (
             <div className="space-y-4 mt-4">

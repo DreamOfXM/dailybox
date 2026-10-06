@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { findToolEn } from "@/lib/seo-en";
-import { Hint, NumberInput, PageHeader, SectionCard, Segmented, downloadFile } from "@/components/ui";
+import { FileDrop, Hint, NumberInput, PageHeader, SectionCard, Segmented, downloadFile } from "@/components/ui";
 import { imagesToPdf } from "@/lib/pdf";
 
 const seo = findToolEn("jpgtopdf")!;
@@ -34,7 +34,6 @@ export default function JpgToPdfToolEn() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
   const [err, setErr] = useState("");
-  const inputRef = useRef<HTMLInputElement>(null);
 
   // Revoke all object URLs on unmount
   useEffect(() => {
@@ -49,16 +48,14 @@ export default function JpgToPdfToolEn() {
     setErr("");
   };
 
-  const onFiles = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files?.length) return;
+  const onFiles = useCallback((fs: File[]) => {
+    if (!fs.length) return;
     reset();
-    const newItems: ImageEntry[] = Array.from(e.target.files).map((file) => {
+    const newItems: ImageEntry[] = fs.map((file) => {
       const supported = file.type === "image/jpeg" || file.type === "image/png";
       return { id: ++nextId, file, url: URL.createObjectURL(file), supported };
     });
     setItems((prev) => [...prev, ...newItems]);
-    // Reset input so same file can be re-selected
-    e.target.value = "";
   }, []);
 
   const removeItem = useCallback((id: number) => {
@@ -126,14 +123,7 @@ export default function JpgToPdfToolEn() {
         <SectionCard title="Image to PDF" subtitle="Combine multiple JPG/PNG images into one PDF in order">
           <div className="space-y-4">
             {/* Upload */}
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/jpeg,image/png"
-              multiple
-              onChange={onFiles}
-              className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-            />
+            <FileDrop accept="image/jpeg,image/png" multiple onFiles={onFiles} />
 
             {/* Image list */}
             {items.length > 0 && (

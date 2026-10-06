@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { findToolEn } from "@/lib/seo-en";
-import { Field, Hint, NumberInput, PageHeader, SectionCard, Segmented, Toggle, downloadFile } from "@/components/ui";
+import { FileDrop, Field, Hint, NumberInput, PageHeader, SectionCard, Segmented, Toggle, downloadFile } from "@/components/ui";
 import { addImageWatermark, addTextWatermark, readPdfMeta } from "@/lib/pdf";
 
 const seo = findToolEn("pdfwatermark")!;
@@ -84,8 +84,8 @@ export default function PdfWatermarkToolEn() {
   const reset = () => { setMsg(""); setErr(""); };
 
   /* ---- file upload ---- */
-  const onFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
+  const onFile = useCallback(async (fs: File[]) => {
+    const f = fs[0];
     if (!f) return;
     setFile(f);
     reset();
@@ -98,8 +98,8 @@ export default function PdfWatermarkToolEn() {
   }, []);
 
   /* ---- image upload ---- */
-  const onImage = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
+  const onImage = useCallback(async (fs: File[]) => {
+    const f = fs[0];
     if (!f) return;
     reset();
     if (f.type !== "image/png" && f.type !== "image/jpeg") {
@@ -191,12 +191,7 @@ export default function PdfWatermarkToolEn() {
       <div className="space-y-6">
         {/* Upload */}
         <SectionCard title="Upload PDF" subtitle="Runs entirely in your browser — files never upload">
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-          />
+          <FileDrop accept="application/pdf" onFiles={onFile} />
           {file && pageCount > 0 && (
             <p className="mt-2 text-xs font-mono text-ink3">
               {file.name} · {(file.size / 1024).toFixed(0)} KB · {pageCount} pages
@@ -314,12 +309,7 @@ export default function PdfWatermarkToolEn() {
                   ) : (
                     <>
                       <Field label="Watermark Image">
-                        <input
-                          type="file"
-                          accept="image/png,image/jpeg"
-                          onChange={onImage}
-                          className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-                        />
+                        <FileDrop accept="image/png,image/jpeg" onFiles={onImage} />
                       </Field>
                       {imgPreview && (
                         <div className="flex items-center gap-3">

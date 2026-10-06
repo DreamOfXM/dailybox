@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { findTool } from "@/lib/seo";
-import { Hint, PageHeader, SectionCard, Segmented } from "@/components/ui";
+import { FileDrop, Hint, PageHeader, SectionCard, Segmented } from "@/components/ui";
 
 const seo = findTool("image")!;
 
@@ -16,8 +16,8 @@ export default function ImageTool() {
   const [results, setResults] = useState<{ name: string; url: string; size: number; origSize: number }[]>([]);
   const [processing, setProcessing] = useState(false);
 
-  const onFiles = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const list = e.target.files ? Array.from(e.target.files) : [];
+  const onFiles = useCallback((fs: File[]) => {
+    const list = fs;
     setFiles(list);
     setResults([]);
   }, []);
@@ -63,7 +63,7 @@ export default function ImageTool() {
       <PageHeader badge="文件" title={seo.title} subtitle={seo.subtitle} tone="emerald" />
       <div className="space-y-6">
         <SectionCard title="上传图片" subtitle="JPG/PNG/WebP 批量，本地 Canvas 压缩不上传">
-          <input type="file" accept="image/*" multiple onChange={onFiles} className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-sm file:text-ink hover:file:bg-surface2" />
+          <FileDrop accept="image/*" multiple onFiles={onFiles} hint="支持 JPG / PNG / WebP 等图片格式" />
           {files.length > 0 && <p className="text-xs font-mono text-ink3 mt-2">已选 {files.length} 张，共 {(files.reduce((a, f) => a + f.size, 0) / 1024).toFixed(0)} KB</p>}
           <div className="flex flex-wrap gap-4 mt-4">
             <Segmented value={format} onChange={setFormat} options={[{ value: "jpeg", label: "JPEG" }, { value: "png", label: "PNG" }, { value: "webp", label: "WebP" }]} ariaLabel="输出格式" />

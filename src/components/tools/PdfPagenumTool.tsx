@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { findTool } from "@/lib/seo";
-import { Field, Hint, NumberInput, PageHeader, SectionCard, Toggle, downloadFile } from "@/components/ui";
+import { FileDrop, Field, Hint, NumberInput, PageHeader, SectionCard, Toggle, downloadFile } from "@/components/ui";
 import { addPageNumbers, readPdfMeta } from "@/lib/pdf";
 import type { PageNumPosition } from "@/lib/pdf";
 
@@ -45,8 +45,8 @@ export default function PdfPagenumTool() {
 
   const reset = () => { setMsg(""); setErr(""); };
 
-  const onFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
+  const onFile = useCallback(async (fs: File[]) => {
+    const f = fs[0];
     if (!f) return;
     setFile(f);
     reset();
@@ -111,12 +111,7 @@ export default function PdfPagenumTool() {
       <div className="space-y-6">
         {/* Upload */}
         <SectionCard title="上传 PDF" subtitle="纯浏览器本地运算，文件不上传">
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={onFile}
-            className="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:bg-surface file:text-ink hover:file:bg-surface2"
-          />
+          <FileDrop accept="application/pdf" onFiles={onFile} />
           {file && pageCount > 0 && (
             <p className="mt-2 text-xs font-mono text-ink3">
               {file.name} · {(file.size / 1024).toFixed(0)} KB · 共 {pageCount} 页
