@@ -1,0 +1,15 @@
+{
+  "name": "DailyBox 日常工具箱",
+  "short_name": "DailyBox",
+  "description": "33 个免费在线工具：PDF、图片、正则、哈希、房贷计算等，全部本地运算不上传。",
+  "lang": "zh-CN",
+  "start_url": "/dailybox/",
+  "scope": "/dailybox/",
+  "display": "standalone",
+  "background_color": "#f7f8f6",
+  "theme_color": "#157a4b",
+  "icons": [
+    { "src": "/dailybox/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/dailybox/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

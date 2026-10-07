@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { SITE_ORIGIN, BASE_PATH, OG_IMAGE } from "@/lib/seo";
+import { ALL_TOOLS } from "@/lib/seo";
 import SiteNav from "@/components/SiteNav";
 import { SiteFooter, SiteBrand, SiteLangToggle, NavCta } from "@/components/ui";
 
@@ -22,10 +23,14 @@ const JSON_LD = {
   offers: { "@type": "Offer", price: "0", priceCurrency: "CNY" },
 };
 
+// 首页标题：搜索词前置（品牌后置），33 个工具里挑搜索量最大的几类露出
+const N = ALL_TOOLS.length;
+const HOME_TITLE = `免费在线工具箱：PDF 合并、正则测试、房贷计算等 ${N} 个工具 - DailyBox`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN + BASE_PATH),
   title: {
-    default: "DailyBox - 日常工具箱",
+    default: HOME_TITLE,
     template: "%s",
   },
   description:
@@ -34,7 +39,12 @@ export const metadata: Metadata = {
     "在线工具", "免费工具箱", "URL编码", "MD5", "SHA256", "正则测试", "UUID生成",
     "进制转换", "JWT解析", "SQL格式化", "Cron表达式", "人民币大写", "身份证校验", "单位换算",
   ],
-  alternates: { canonical: "/" },
+  // 静态导出下 Next 不会自动补 basePath，这里显式带上
+  manifest: "/dailybox/manifest.webmanifest",
+  alternates: {
+    canonical: "/",
+    languages: { "zh-CN": "/", en: "/en/" },
+  },
   openGraph: {
     title: "DailyBox - 日常工具箱",
     description: "33 个免费在线工具：哈希、正则、UUID、进制、JWT、Cron、PDF 合并拆分、大写金额、身份证校验、单位换算等。",
